@@ -1,6 +1,7 @@
 import { Menu, X } from 'lucide-react';
 import React, { useState } from 'react';
 import LoginPopup from './LoginPopup';
+import { Link } from 'react-router-dom';
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -12,9 +13,11 @@ function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <div className="shrink-0 font-bold text-2xl tracking-tighter">
-              LMS<span className="text-blue-500">PORTAL</span>
-            </div>
+            <Link to="/">
+              <div className="shrink-0 font-bold text-2xl tracking-tighter">
+                LMS<span className="text-blue-500">PORTAL</span>
+              </div>
+            </Link>
 
             {/* Desktop Menu */}
             <div className="hidden md:block">
