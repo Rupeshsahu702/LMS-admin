@@ -12,9 +12,9 @@ import {
   Users,
   Rocket,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   // Data derived from your notes + Industry standards
   const programs = [
     {
@@ -89,12 +89,18 @@ function Home() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 font-bold text-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)]">
+              <Link
+                to="/program"
+                className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 font-bold text-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)]"
+              >
                 Explore Programs
-              </button>
-              <button className="px-8 py-4 rounded-full border border-gray-600 hover:border-blue-500 hover:text-blue-400 font-bold text-lg transition-all">
+              </Link>
+              <Link
+                to="/howitworks"
+                className="px-8 py-4 rounded-full border border-gray-600 hover:border-blue-500 hover:text-blue-400 font-bold text-lg transition-all"
+              >
                 How it Works
-              </button>
+              </Link>
             </div>
 
             {/* Stats / Social Proof */}

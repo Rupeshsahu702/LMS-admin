@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -9,9 +10,12 @@ const Footer = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
               <div className="col-span-2 md:col-span-1">
-                <div className="font-bold text-xl tracking-tighter mb-4">
-                  LMS<span className="text-blue-500">PORTAL</span>
-                </div>
+                <Link to="/">
+                  <div className="font-bold text-xl tracking-tighter mb-4">
+                    LMS<span className="text-blue-500">PORTAL</span>
+                  </div>
+                </Link>
+
                 <p className="text-gray-500 text-sm">
                   Empowering students with practical skills and industry-ready projects.
                 </p>
@@ -21,19 +25,19 @@ const Footer = () => {
                 <h4 className="font-bold mb-4 text-white">Platform</h4>
                 <ul className="space-y-2 text-sm text-gray-500">
                   <li>
-                    <a href="/browse" className="hover:text-blue-400">
+                    <Link to="/browse" className="hover:text-blue-400">
                       Browse Streams
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/pricing" className="hover:text-blue-400">
+                    <Link to="/pricing" className="hover:text-blue-400">
                       Pricing
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/verification" className="hover:text-blue-400">
+                    <Link to="/verification" className="hover:text-blue-400">
                       Verification
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -42,19 +46,14 @@ const Footer = () => {
                 <h4 className="font-bold mb-4 text-white">Community</h4>
                 <ul className="space-y-2 text-sm text-gray-500">
                   <li>
-                    <a href="/campus" className="hover:text-blue-400">
+                    <Link to="/campus" className="hover:text-blue-400">
                       Campus Ambassador
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/events" className="hover:text-blue-400">
+                    <Link to="/events" className="hover:text-blue-400">
                       Events
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-blue-400">
-                      Discord
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -63,19 +62,24 @@ const Footer = () => {
                 <h4 className="font-bold mb-4 text-white">Connect</h4>
                 <ul className="space-y-2 text-sm text-gray-500">
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <Link to="#" className="hover:text-blue-400">
                       Twitter / X
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <Link to="#" className="hover:text-blue-400">
                       LinkedIn
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="hover:text-blue-400">
+                    <Link to="#" className="hover:text-blue-400">
                       Github
-                    </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="hover:text-blue-400">
+                      Discord
+                    </Link>
                   </li>
                 </ul>
               </div>
