@@ -13,7 +13,7 @@ const StudentLayout = () => {
         <div className="w-full shrink-0">
           <StudentTopBar />
         </div>
-        <div className="grow p-6">
+        <div className="grow">
           <Outlet />
         </div>
       </div>

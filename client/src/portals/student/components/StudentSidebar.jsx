@@ -24,9 +24,9 @@ const StudentNavbar = () => {
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, navigation: '/student/' },
     { label: 'My Courses', icon: <Book size={20} />, navigation: '/student/my-courses' },
     {
-      label: 'Course Learning',
+      label: 'Current Learning',
       icon: <BookOpen size={20} />,
-      navigation: '/student/course-learning',
+      navigation: '/student/current-learning',
     },
     { label: 'Assignments', icon: <FileText size={20} />, navigation: '/student/assignments' },
     { label: 'Quizzes', icon: <ClipboardList size={20} />, navigation: '/student/quizzes' },
@@ -57,9 +57,10 @@ const StudentNavbar = () => {
             key={item.label}
             onClick={() => handleClick(item)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 
-              ${activeTab === item.navigation
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 font-medium'
-                : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
+              ${
+                activeTab === item.navigation
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 font-medium'
+                  : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }
             `}
           >
