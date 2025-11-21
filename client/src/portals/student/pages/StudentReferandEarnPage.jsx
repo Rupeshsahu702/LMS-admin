@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 const StudentReferandEarnPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const [referralCode, setReferralCode] = useState('ALEX-J-2025');
   const [inputCode, setInputCode] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);

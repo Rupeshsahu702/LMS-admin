@@ -56,7 +56,7 @@ const StudentDashboardPage = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-6">
       <div className="flex flex-col md:flex-row justify-between items-end gap-4">
         <div>
           <h2 className="text-3xl font-bold mb-1">Welcome back, {studentName.split(' ')[0]}! 👋</h2>
