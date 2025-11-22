@@ -16,7 +16,7 @@ import {
 // Link removed to prevent Router errors in preview
 // import { Link } from 'react-router-dom';
 
-const CourseViewer = () => {
+const StudentCurrentLearningPage = () => {
   const [activeModule, setActiveModule] = useState(1); // ID of expanded module
   const [activeLesson, setActiveLesson] = useState(null); // Currently viewing lesson/quiz/task
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -341,4 +341,4 @@ const CourseViewer = () => {
   );
 };
 
-export default CourseViewer;
+export default StudentCurrentLearningPage;

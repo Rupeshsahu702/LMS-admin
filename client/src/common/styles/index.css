@@ -7,8 +7,8 @@
   --font-sans: 'Inter', 'sans-serif';
 }
 
-body {
-  @apply bg-black text-white;
+html,body,#root {
+  @apply !font-sans bg-black text-white;
 }
 
 @theme inline {
@@ -122,7 +122,24 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes fadeSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeSlide {
+  animation: fadeSlide 0.5s ease-out;
 }

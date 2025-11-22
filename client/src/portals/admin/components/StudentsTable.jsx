@@ -42,7 +42,7 @@ const StudentsTable = ({ data = [] }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       {/* Filter Section */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">

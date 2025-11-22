@@ -15,7 +15,8 @@ import {
   X,
 } from 'lucide-react';
 
-const ReferAndEarn = () => {
+const StudentReferandEarnPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const [referralCode, setReferralCode] = useState('ALEX-J-2025');
   const [inputCode, setInputCode] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -288,4 +289,4 @@ const ReferAndEarn = () => {
   );
 };
 
-export default ReferAndEarn;
+export default StudentReferandEarnPage;

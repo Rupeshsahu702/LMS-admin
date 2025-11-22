@@ -7,6 +7,8 @@ const initialState = {
   token: savedToken || null,
   user: savedUser ? JSON.parse(savedUser) : null,
   loading: false,
+  currentNavigation: '/',
+  studentSidebarOpen: false,
 };
 
 const globalSlice = createSlice({
@@ -23,7 +25,6 @@ const globalSlice = createSlice({
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
     },
-
     logout: state => {
       state.token = null;
       state.user = null;
@@ -31,8 +32,14 @@ const globalSlice = createSlice({
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     },
+    setNavigation: (state, action) => {
+      state.currentNavigation = action.payload;
+    },
+    setStudentSidebarOpen: (state, action) => {
+      state.studentSidebarOpen = action.payload;
+    },
   },
 });
 
-export const { login, logout } = globalSlice.actions;
+export const { login, logout, setNavigation, setStudentSidebarOpen } = globalSlice.actions;
 export default globalSlice.reducer;
