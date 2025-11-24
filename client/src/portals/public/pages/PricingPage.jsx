@@ -84,11 +84,11 @@ const Pricing = () => {
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">Full Program Access</h3>
             <div className="flex items-end gap-2 mb-6">
-              <span className="text-5xl font-extrabold">₹500</span>
-              <span className="text-gray-400 mb-2 line-through">₹5000</span>
+              <span className="text-5xl font-extrabold">₹50</span>
+              <span className="text-gray-400 mb-2 line-through">₹500</span>
             </div>
             <p className="text-sm text-blue-200 mb-8">
-              Pay just 10% now to enroll. Pay the rest (₹4500) only after you complete the course
+              Pay just 10% now to enroll. Pay the rest 90% only after you complete the course
               and get certified.
             </p>
 

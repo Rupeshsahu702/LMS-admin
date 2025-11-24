@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
 import { Users, Target, Globe, Code, Server, Cpu, Menu, X, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Counter from '../components/Counter';
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const AboutUs = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+   const navigateAndStore = useNavigateWithRedux();
 
   const leadership = [
     {
-      name: 'Amit Sharma',
+      name: 'Pravin R. Nair',
       role: 'Chief Executive Officer',
       image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Amit',
       message:
         "We aren't building another ed-tech giant. We are building a bridge. A bridge between the raw potential of Indian students and the practical demands of the global industry.",
+        link:'https://www.linkedin.com/in/pravin-r-nair-964847318/'
     },
     {
-      name: 'Priya Singh',
+      name: 'Deepak Agrawal',
       role: 'Chief Technology Officer',
       image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya',
       message:
         "Technology changes every day, but our curriculum was stuck in the past. We decided to democratize access to 'real' engineering work through open-source intelligence.",
+        
+        link:'https://www.linkedin.com/in/agrawaldeepak05/'
     },
   ];
 
@@ -30,6 +36,7 @@ const AboutUs = () => {
       tech: <Code size={18} className="text-blue-400" />,
       message:
         'Crafting pixels into experiences. I wanted to build a platform that feels as premium as the skills we teach.',
+        link:'https://www.linkedin.com/in/rupesh-kumar-sahu-80bb51304/'
     },
     {
       name: 'Nitish Deshmukh',
@@ -38,6 +45,7 @@ const AboutUs = () => {
       tech: <Server size={18} className="text-green-400" />,
       message:
         "Scalability isn't just for servers, it's for careers. I built the engine that powers thousands of student journeys.",
+        link:'https://www.linkedin.com/in/nitish-deshmukh-a9093b25a/'
     },
     {
       name: 'Mayank Kushwaha',
@@ -46,6 +54,7 @@ const AboutUs = () => {
       tech: <Cpu size={18} className="text-purple-400" />,
       message:
         "From a student to a builder. This platform gave me my first break, and now I'm helping build it for others.",
+        link:'https://www.linkedin.com/in/mayankleo/'
     },
   ];
 
@@ -84,11 +93,11 @@ const AboutUs = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Graduates/Year</span>
-                  <span className="text-white font-bold">1,500,000+</span>
+                  <span className="text-white font-bold"> <Counter target={ 1500000} suffix="+" /> +</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Employable Skills</span>
-                  <span className="text-red-400 font-bold">~20%</span>
+                  <span className="text-red-400 font-bold"> ~ <Counter target={ 20} suffix="%" /> </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Skill Gap</span>
@@ -153,23 +162,23 @@ const AboutUs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">15K+</div>
+              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2"><Counter target={15} suffix="K+" /></div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">
                 Students Upskilled
               </div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-blue-500 mb-2">500+</div>
+              <div className="text-4xl md:text-5xl font-extrabold text-blue-500 mb-2"><Counter target={500} suffix="+" /></div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">
                 Projects Deployed
               </div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">50+</div>
+              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2"><Counter target={50} suffix="+" /></div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">College Partners</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-green-500 mb-2">₹0</div>
+              <div className="text-4xl md:text-5xl font-extrabold text-green-500 mb-2">₹ <Counter target={500}  /> </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">Content Cost</div>
             </div>
           </div>
@@ -184,7 +193,8 @@ const AboutUs = () => {
             {leadership.map((leader, i) => (
               <div
                 key={i}
-                className="flex flex-col md:flex-row gap-6 items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800"
+                onClick={()=>navigateAndStore(leader.link)}
+                className="flex flex-col md:flex-row gap-6 cursor-pointer items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800"
               >
                 <img
                   src={leader.image}
@@ -216,7 +226,8 @@ const AboutUs = () => {
             {developers.map((dev, idx) => (
               <div
                 key={idx}
-                className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl hover:-translate-y-2 transition-transform duration-300 group"
+                onClick={()=>navigateAndStore(dev.link)}
+                className="bg-zinc-900/50 border cursor-pointer border-zinc-800 p-6 rounded-2xl hover:-translate-y-2 transition-transform duration-300 group"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <img
