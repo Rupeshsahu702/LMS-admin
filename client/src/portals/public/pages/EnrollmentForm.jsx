@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, BookOpen, GraduationCap, Mail, Phone, ArrowRight, CheckCircle } from 'lucide-react';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
-// useNavigate removed to prevent Router errors in preview
-// import { useNavigate } from 'react-router-dom';
 
 const EnrollmentDetails = () => {
-  // const navigate = useNavigate();
+  const navigateAndStore = useNavigateWithRedux();
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -14,10 +12,36 @@ const EnrollmentDetails = () => {
     collegeName: '',
     degreeCourse: '',
     yearOfStudy: '',
-    email: 'alex.johnson@example.com', // Pre-filled simulation
+    email: 'alex.johnson@example.com',
     phoneNumber: '',
     alternatePhone: ''
   });
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  // Validate form whenever formData changes
+  useEffect(() => {
+    const checkFormValidity = () => {
+      const requiredFields = [
+        'firstName',
+        'lastName',
+        'collegeName',
+        'degreeCourse',
+        'yearOfStudy',
+        'email',
+        'phoneNumber'
+      ];
+
+      // Check if all required fields are filled
+      const allFieldsFilled = requiredFields.every(
+        field => formData[field] && formData[field].trim() !== ''
+      );
+
+      setIsFormValid(allFieldsFilled);
+    };
+
+    checkFormValidity();
+  }, [formData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,12 +49,12 @@ const EnrollmentDetails = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validation logic could go here
-    // Navigate to payment page with state if needed
-    // navigate('/enroll/payment'); 
-    window.location.href = '/enroll/payment';
+    
+    if (isFormValid) {
+      // Navigate to payment page
+      navigateAndStore('/enroll/payment');
+    }
   };
-   const navigateAndStore = useNavigateWithRedux();
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white flex flex-col">
@@ -72,8 +96,11 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">First Name *</label>
                             <input 
-                                type="text" name="firstName" required 
-                                value={formData.firstName} onChange={handleChange}
+                                type="text" 
+                                name="firstName" 
+                                required 
+                                value={formData.firstName} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="John"
                             />
@@ -81,8 +108,10 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Middle Name</label>
                             <input 
-                                type="text" name="middleName" 
-                                value={formData.middleName} onChange={handleChange}
+                                type="text" 
+                                name="middleName" 
+                                value={formData.middleName} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder=""
                             />
@@ -90,8 +119,11 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Last Name *</label>
                             <input 
-                                type="text" name="lastName" required
-                                value={formData.lastName} onChange={handleChange}
+                                type="text" 
+                                name="lastName" 
+                                required
+                                value={formData.lastName} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="Doe"
                             />
@@ -108,8 +140,11 @@ const EnrollmentDetails = () => {
                         <div className="md:col-span-2">
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">College Name *</label>
                             <input 
-                                type="text" name="collegeName" required
-                                value={formData.collegeName} onChange={handleChange}
+                                type="text" 
+                                name="collegeName" 
+                                required
+                                value={formData.collegeName} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="Institute of Technology"
                             />
@@ -117,8 +152,11 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Degree / Course *</label>
                             <input 
-                                type="text" name="degreeCourse" required
-                                value={formData.degreeCourse} onChange={handleChange}
+                                type="text" 
+                                name="degreeCourse" 
+                                required
+                                value={formData.degreeCourse} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="B.Tech CS"
                             />
@@ -126,8 +164,10 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Year of Study *</label>
                             <select 
-                                name="yearOfStudy" required
-                                value={formData.yearOfStudy} onChange={handleChange}
+                                name="yearOfStudy" 
+                                required
+                                value={formData.yearOfStudy} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none appearance-none" 
                             >
                                 <option value="">Select Year</option>
@@ -151,7 +191,10 @@ const EnrollmentDetails = () => {
                             <div className="relative">
                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
                                 <input 
-                                    type="email" name="email" required readOnly
+                                    type="email" 
+                                    name="email" 
+                                    required 
+                                    readOnly
                                     value={formData.email}
                                     className="w-full bg-zinc-800 border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-zinc-400 cursor-not-allowed focus:outline-none" 
                                 />
@@ -160,8 +203,11 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Phone Number *</label>
                             <input 
-                                type="tel" name="phoneNumber" required
-                                value={formData.phoneNumber} onChange={handleChange}
+                                type="tel" 
+                                name="phoneNumber" 
+                                required
+                                value={formData.phoneNumber} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="+91 98765 43210"
                             />
@@ -169,8 +215,10 @@ const EnrollmentDetails = () => {
                         <div>
                             <label className="block text-xs font-bold text-zinc-500 uppercase mb-1">Alternate Phone</label>
                             <input 
-                                type="tel" name="alternatePhone"
-                                value={formData.alternatePhone} onChange={handleChange}
+                                type="tel" 
+                                name="alternatePhone"
+                                value={formData.alternatePhone} 
+                                onChange={handleChange}
                                 className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none" 
                                 placeholder="Optional"
                             />
@@ -179,7 +227,15 @@ const EnrollmentDetails = () => {
                 </div>
 
                 <div className="pt-6 border-t border-zinc-800 flex justify-end">
-                    <button type="submit" onClick={()=>{navigateAndStore('/enroll/payment')}} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-900/20 flex items-center gap-2">
+                    <button 
+                        type="submit" 
+                        disabled={!isFormValid}
+                        className={`px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg flex items-center gap-2 ${
+                            isFormValid 
+                                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-900/20 cursor-pointer' 
+                                : 'bg-gray-700 text-gray-500 cursor-not-allowed opacity-50'
+                        }`}
+                    >
                         Proceed to Payment <ArrowRight size={20} />
                     </button>
                 </div>
