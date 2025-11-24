@@ -23,19 +23,18 @@ const AboutUs = () => {
     {
       name: 'Pravin R. Nair',
       role: 'Chief Executive Officer',
-      image: 'images/testimonials/founder.png',
+      image: 'images/testimonials/founder.webp',
       message:
         "We aren't building another ed-tech giant. We are building a bridge. A bridge between the raw potential of Indian students and the practical demands of the global industry.",
-        link:'https://www.linkedin.com/in/pravin-r-nair-964847318/'
+      link: 'https://www.linkedin.com/in/pravin-r-nair-964847318/',
     },
     {
       name: 'Deepak Agrawal',
       role: 'Chief Technology Officer',
-      image: 'images/testimonials/team02.jpeg',
+      image: 'images/testimonials/team02.webp',
       message:
         "Technology changes every day, but our curriculum was stuck in the past. We decided to democratize access to 'real' engineering work through open-source intelligence.",
-        
-        link:'https://www.linkedin.com/in/agrawaldeepak05/'
+      link: 'https://www.linkedin.com/in/agrawaldeepak05/',
     },
   ];
 
@@ -43,32 +42,31 @@ const AboutUs = () => {
     {
       name: 'Rupesh Kumar Sahu',
       role: 'Senior Frontend Developer',
-      image: 'images/testimonials/team03.jpeg',
+      image: 'images/testimonials/team03.webp',
       tech: <Code size={18} className="text-blue-400" />,
       message:
         'Crafting pixels into experiences. I wanted to build a platform that feels as premium as the skills we teach.',
-        link:'https://www.linkedin.com/in/rupesh-kumar-sahu-80bb51304/'
+      link: 'https://www.linkedin.com/in/rupesh-kumar-sahu-80bb51304/',
     },
     {
       name: 'Nitish Deshmukh',
       role: 'Backend Developer',
-      image: 'images/testimonials/team04.jpeg',
+      image: 'images/testimonials/team04.webp',
       tech: <Server size={18} className="text-green-400" />,
       message:
         "Scalability isn't just for servers, it's for careers. I built the engine that powers thousands of student journeys.",
-        link:'https://www.linkedin.com/in/nitish-deshmukh-a9093b25a/'
+      link: 'https://www.linkedin.com/in/nitish-deshmukh-a9093b25a/',
     },
     {
       name: 'Mayank Kushwaha',
       role: 'Full Stack Intern',
-      image: 'images/testimonials/team01.jpeg',
+      image: 'images/testimonials/team01.webp',
       tech: <Cpu size={18} className="text-purple-400" />,
       message:
         "From a student to a builder. This platform gave me my first break, and now I'm helping build it for others.",
-        link:'https://www.linkedin.com/in/mayankleo/'
+      link: 'https://www.linkedin.com/in/mayankleo/',
     },
   ];
-
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
@@ -105,11 +103,15 @@ const AboutUs = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Graduates/Year</span>
-                  <span className="text-white font-bold"> <Counter target={ 1500000} suffix="+" /> +</span>
+                  <span className="text-white font-bold">
+                    <Counter target={1500000} suffix="+" />
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Employable Skills</span>
-                  <span className="text-red-400 font-bold"> ~ <Counter target={ 20} suffix="%" /> </span>
+                  <span className="text-red-400 font-bold">
+                    ~<Counter target={20} suffix="%" />
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Skill Gap</span>
@@ -174,23 +176,31 @@ const AboutUs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2"><Counter target={15} suffix="K+" /></div>
+              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">
+                <Counter target={15} suffix="K+" />
+              </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">
                 Students Upskilled
               </div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-blue-500 mb-2"><Counter target={500} suffix="+" /></div>
+              <div className="text-4xl md:text-5xl font-extrabold text-blue-500 mb-2">
+                <Counter target={500} suffix="+" />
+              </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">
                 Projects Deployed
               </div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2"><Counter target={50} suffix="+" /></div>
+              <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">
+                <Counter target={50} suffix="+" />
+              </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">College Partners</div>
             </div>
             <div>
-              <div className="text-4xl md:text-5xl font-extrabold text-green-500 mb-2">₹ <Counter target={500}  /> </div>
+              <div className="text-4xl md:text-5xl font-extrabold text-green-500 mb-2">
+                ₹<Counter target={500} />
+              </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">Content Cost</div>
             </div>
           </div>
@@ -205,13 +215,15 @@ const AboutUs = () => {
             {leadership.map((leader, i) => (
               <div
                 key={i}
-                onClick={()=>navigateAndStore(leader.link)}
-                className="flex flex-col md:flex-row gap-6 cursor-pointer items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800"
+                onClick={() => navigateAndStore(leader.link)}
+                className="flex flex-col md:flex-row gap-6 cursor-pointer items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800 hover:border-blue-500/50 transition-all group"
               >
                 <img
                   src={leader.image}
                   alt={leader.name}
-                  className="w-24 h-24 rounded-full border-4 border-zinc-800"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-24 h-24 rounded-full border-4 border-zinc-800 object-cover bg-zinc-800"
                 />
                 <div className="text-center md:text-left">
                   <h3 className="text-xl font-bold text-white">{leader.name}</h3>
@@ -238,14 +250,16 @@ const AboutUs = () => {
             {developers.map((dev, idx) => (
               <div
                 key={idx}
-                onClick={()=>navigateAndStore(dev.link)}
+                onClick={() => navigateAndStore(dev.link)}
                 className="bg-zinc-900/50 border cursor-pointer border-zinc-800 p-6 rounded-2xl hover:-translate-y-2 transition-transform duration-300 group"
               >
                 <div className="flex items-center gap-4 mb-6">
                   <img
                     src={dev.image}
                     alt={dev.name}
-                    className="w-16 h-16 rounded-full border-2 border-zinc-700 group-hover:border-blue-500 transition-colors"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-16 h-16 rounded-full border-2 border-zinc-700 group-hover:border-blue-500 transition-colors object-cover bg-zinc-800"
                   />
                   <div>
                     <h4 className="font-bold text-white">{dev.name}</h4>
@@ -270,4 +284,3 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
-
