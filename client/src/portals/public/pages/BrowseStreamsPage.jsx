@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Code, BrainCircuit, Smartphone, BarChart3, Search, Filter, Menu, X } from 'lucide-react';
+import { Code, BrainCircuit, Smartphone, BarChart3, Search, Filter, Menu, X, Database } from 'lucide-react';
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+import { Link } from 'react-router-dom';
 
 const BrowseStreams = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const navigateAndStore = useNavigateWithRedux();
 
   const streamCategories = ['All', 'Development', 'Data Science', 'Design', 'Business'];
 
@@ -17,6 +20,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner to Pro',
       desc: 'Master the MERN stack and build scalable web apps.',
+      link: '/fullstack'
     },
     {
       id: 2,
@@ -26,6 +30,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Intermediate',
       desc: 'Analyze complex data and build predictive models.',
+      link: '/datascience'
     },
     {
       id: 3,
@@ -35,6 +40,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner',
       desc: 'Create iOS and Android apps using React Native.',
+      link: '/mobiledev'
     },
     {
       id: 4,
@@ -44,6 +50,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner',
       desc: 'Turn raw data into actionable insights with SQL & PowerBI.',
+      link: '/dataanalytics'
     },
     {
       id: 5,
@@ -53,17 +60,60 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'All Levels',
       desc: 'Design stunning user interfaces and experiences.',
+      link: '/UX'
     },
     {
       id: 6,
-      title: 'Digital Marketing 101',
-      category: 'Business',
+      title: 'FrontEnd Development',
+      category: 'Development',
+      desc:
+        'Learn HTML, CSS, JavaScript, and modern frameworks like React to build fast, responsive user interfaces.',
+      icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
+      price: '₹300',
+      slots: 'Limited Seats',
+      link: '/frontend',
+      level: 'All Levels',
+    },
+    {
+      id: 7,
+      title: 'BackEnd Development',
+      category: 'Development',
+      desc:
+        'Work with Node.js, APIs, authentication, and server-side programming to create scalable backends.',
+      icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
+      price: '₹300',
+      slots: 'Limited Seats',
+      link: '/backend',
+      level: 'All Levels',
+    },
+    {
+      id: 8,
+      title: 'DataBase',
+      category: 'Development',
+      desc:
+        'Learn SQL for relational databases and MongoDB for NoSQL applications to handle real-world data efficiently.',
+      icon: <Database className="w-8 h-8 text-blue-400" />,
+      price: '₹500',
+      slots: 'Limited Seats',
+      link: '/database',
+      level: 'All Levels',
+    },
+    {
+      id: 9,
+      title: 'Python with Django + Flask',
+      category: 'Development',
+      desc:
+        'Build production-ready web apps using Django’s structured approach and Flask’s lightweight flexibility.',
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹500',
-      level: 'Beginner',
-      desc: 'Learn SEO, SEM, and Social Media Marketing strategies.',
+      slots: 'Limited Seats',
+      link: '/python',
+      level: 'All Levels',
     },
   ];
+  const handleClick = item => {
+    navigateAndStore(item.link);
+  };
 
   const filteredStreams = allStreams.filter(stream => {
     const matchesSearch = stream.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -72,6 +122,7 @@ const BrowseStreams = () => {
   });
 
   return (
+
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
       <div className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -108,11 +159,10 @@ const BrowseStreams = () => {
               <button
                 key={category}
                 onClick={() => setActiveFilter(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                  activeFilter === category
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                    : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700 hover:text-white'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilter === category
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
+                  : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700 hover:text-white'
+                  }`}
               >
                 {category}
               </button>
@@ -125,7 +175,9 @@ const BrowseStreams = () => {
           {filteredStreams.map(stream => (
             <div
               key={stream.id}
-              className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 group"
+              onClick={() => handleClick(stream)}
+              className="cursor-pointer bg-zinc-900 border border-zinc-800 rounded-2xl p-6 
+                 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 group"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center border border-zinc-800 group-hover:border-blue-500/30">
@@ -135,9 +187,11 @@ const BrowseStreams = () => {
                   {stream.category}
                 </span>
               </div>
+
               <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">
                 {stream.title}
               </h3>
+
               <p className="text-gray-400 text-sm mb-6 line-clamp-2">{stream.desc}</p>
 
               <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
@@ -151,13 +205,19 @@ const BrowseStreams = () => {
                 </div>
               </div>
 
-              <button className="w-full mt-6 bg-white text-black font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();   // prevents double trigger
+                  handleClick(stream);
+                }}
+                className="w-full mt-6 bg-white text-black font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors"
+              >
                 View Details
               </button>
             </div>
           ))}
         </div>
-
+        
         {filteredStreams.length === 0 && (
           <div className="text-center py-20 text-gray-500">
             <Filter size={48} className="mx-auto mb-4 opacity-20" />

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProgramsGrid from '../components/ProgramGrid';
+import Counter from '../components/Counter';
 
 function Home() {
   const programs = [
@@ -262,19 +263,19 @@ function Home() {
 
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-gray-800 pt-8">
               <div>
-                <div className="text-3xl font-bold">500+</div>
+                <div className="text-3xl font-bold"><Counter target={500} suffix="+" /></div>
                 <div className="text-sm text-gray-500 uppercase">Active Students</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">10+</div>
+                <div className="text-3xl font-bold"><Counter target={10} suffix="+" /></div>
                 <div className="text-sm text-gray-500 uppercase">Tech Streams</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">100%</div>
+                <div className="text-3xl font-bold"><Counter target={100} suffix="%" /></div>
                 <div className="text-sm text-gray-500 uppercase">Project Based</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">24/7</div>
+                <div className="text-3xl font-bold"><Counter target={24} suffix="/7" /></div>
                 <div className="text-sm text-gray-500 uppercase">Mentor Support</div>
               </div>
             </div>
@@ -304,7 +305,7 @@ function Home() {
         </section>
 
         {/* BENEFITS SECTION */}
-        <section className="py-24 bg-gradient-to-b from-black to-zinc-900">
+        <section className="py-24 bg-linear-to-b from-black to-zinc-900">
           <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl font-bold mb-6">More Than Just A Course</h2>
@@ -338,7 +339,7 @@ function Home() {
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <div className="text-xs text-gray-500 font-mono">Task_Dashboard.jsx</div>
+                  <div className="text-xs text-gray-500 font-mono">Student Dashboard</div>
                 </div>
 
                 <div className="space-y-4">

@@ -1,4 +1,4 @@
-import { Megaphone, TrendingUp, Users, Gift, Trophy, Star, Zap } from 'lucide-react';
+import { Megaphone, TrendingUp, Users, Gift, Trophy, Star, Zap, GiftIcon } from 'lucide-react';
 import React from 'react';
 
 function CampusAmbassador() {
@@ -128,7 +128,7 @@ function CampusAmbassador() {
       </section>
 
       <div className="px-[10vw]">
-        <div className="bg-gradient-to-r from-blue-500 flex justify-between rounded-2xl px-16  py-14 to-purple-500">
+        <div className="bg-linear-to-r from-blue-500 flex justify-between rounded-2xl px-16  py-14 to-purple-500">
           <div className="flex flex-col gap-3">
             <h2 className="text-4xl font-bold ">Top Performer Rewards</h2>
             <p className="text-lg text-gray-200">
@@ -138,8 +138,8 @@ function CampusAmbassador() {
               View Leaderboard
             </button>
           </div>
-          <div className="backdrop-blur-md w-[20vw] transform rotate-6 origin-right h-[10vw] items-center justify-center bg-white bg-opacity-10 border border-white/10 flex flex-col  gap-5  shadow-lg transition p-7 rounded-xl">
-            <Gift size={70} className="" />
+          <div className="backdrop-blur-md w-[20vw] transform rotate-6 origin-right h-[10vw] items-center justify-center border border-white/10 flex flex-col  gap-5  shadow-lg transition p-7 rounded-xl">
+            <GiftIcon size={70} className="text-white" />
           </div>
         </div>
       </div>
