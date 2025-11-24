@@ -28,8 +28,7 @@ import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 const AboutUs = () => {
   const [api, setApi] = useState(null);
   const [current, setCurrent] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-   const navigateAndStore = useNavigateWithRedux();
+  const navigateAndStore = useNavigateWithRedux();
 
   const leadership = [
     {

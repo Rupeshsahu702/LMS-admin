@@ -468,14 +468,7 @@ function Home() {
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <div className="flex items-center gap-3">
-                <a
-                  href={item.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`w-10 h-10 rounded-full bg-linear-to-br ${item.color} flex items-center justify-center text-white font-bold hover:scale-110 transition`}
-                >
-                  {item.name.charAt(0)}
-                </a>
+                
 
                 <button
                   onClick={() => scroll('right')}
