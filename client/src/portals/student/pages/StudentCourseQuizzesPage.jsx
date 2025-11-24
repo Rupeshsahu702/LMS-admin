@@ -1,10 +1,15 @@
 import React from 'react';
-import { ClipboardList } from 'lucide-react';
+import { ClipboardList, ArrowLeft } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 
-import LearningCard from '../components/LearningCard';
+import ShortCard from '../components/ShortCard';
+import QuizCard from '../components/QuizCard';
 
-const StudentQuizzesPage = () => {
-  const courses = [
+const StudentCourseQuizzesPage = () => {
+  // eslint-disable-next-line no-unused-vars
+  const { coursename } = useParams();
+  const [module, setModule] = React.useState(null);
+  const allModules = [
     {
       id: 1,
       title: 'Full Stack Web Development',
@@ -35,13 +40,22 @@ const StudentQuizzesPage = () => {
 
   return (
     <div className="p-6 sm:p-8 h-full overflow-y-auto custom-scrollbar bg-black text-white w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map(course => (
-          <LearningCard key={course.id} course={course} destination={`quizzes/${course.link}`} />
-        ))}
-      </div>
+      {module ? (
+        <div>
+          <button onClick={() => setModule(null)} className="flex gap-2 cursor-pointer p-2">
+            <ArrowLeft /> <span>back to modules</span>
+          </button>
+          <QuizCard />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          {allModules.map(course => (
+            <ShortCard key={course.id} course={course} setModule={setModule} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default StudentQuizzesPage;
+export default StudentCourseQuizzesPage;

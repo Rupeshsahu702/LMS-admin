@@ -1,9 +1,12 @@
 import { PlayCircle, Clock } from 'lucide-react';
 
-const LearningCard = ({ course }) => {
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+
+const LearningCard = ({ course, destination }) => {
+  const navigate = useNavigateWithRedux();
   return (
-    <a
-      href={`/app/course/${course.id}`}
+    <div
+      onClick={() => navigate(`/student/${destination}`)}
       key={course.id}
       className="group block bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-700 transition-all duration-300 hover:-translate-y-1"
     >
@@ -42,7 +45,7 @@ const LearningCard = ({ course }) => {
           {course.buttonText}
         </button>
       </div>
-    </a>
+    </div>
   );
 };
 

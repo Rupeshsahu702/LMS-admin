@@ -8,6 +8,7 @@ const StudentMyCoursesPage = () => {
     {
       id: 1,
       title: 'Full Stack Web Development',
+      link: 'full-stack-web-development',
       progress: 65,
       type: 'Modules',
       total: 8,
@@ -20,6 +21,7 @@ const StudentMyCoursesPage = () => {
     {
       id: 2,
       title: 'Data Structures & Algorithms',
+      link: 'data-structures-algorithms',
       progress: 10,
       type: 'Modules',
       total: 12,
@@ -35,7 +37,7 @@ const StudentMyCoursesPage = () => {
     <div className="p-6 sm:p-8 h-full overflow-y-auto custom-scrollbar bg-black text-white w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {courses.map(course => (
-          <LearningCard key={course.id} course={course} />
+          <LearningCard key={course.id} course={course} destination={`my-courses/${course.link}`} />
         ))}
       </div>
     </div>

@@ -23,15 +23,10 @@ const StudentNavbar = () => {
   const sidebarItems = [
     { label: 'Dashboard', icon: <LayoutDashboard size={20} />, navigation: '/student/' },
     { label: 'My Courses', icon: <Book size={20} />, navigation: '/student/my-courses' },
-    {
-      label: 'Current Learning',
-      icon: <BookOpen size={20} />,
-      navigation: '/student/current-learning',
-    },
     { label: 'Assignments', icon: <FileText size={20} />, navigation: '/student/assignments' },
     { label: 'Quizzes', icon: <ClipboardList size={20} />, navigation: '/student/quizzes' },
-    { label: 'Leaderboard', icon: <Crown size={20} />, navigation: '/student/leaderboard' },
     { label: 'Certificates', icon: <Award size={20} />, navigation: '/student/certificates' },
+    { label: 'Leaderboard', icon: <Crown size={20} />, navigation: '/student/leaderboard' },
     { label: 'Refer and Earn', icon: <Gift size={20} />, navigation: '/student/refer-and-earn' },
     { label: 'Support', icon: <Headphones size={20} />, navigation: '/student/support' },
     { label: 'Settings', icon: <Settings size={20} />, navigation: '/student/settings' },
