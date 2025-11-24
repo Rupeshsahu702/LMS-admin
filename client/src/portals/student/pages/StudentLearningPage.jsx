@@ -13,85 +13,104 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
-// Link removed to prevent Router errors in preview
-// import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-const StudentCurrentLearningPage = () => {
+import QuizCard from '../components/QuizCard';
+import AssignmentCard from '../components/AssignmentCard';
+
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+
+const StudentLearningPage = () => {
+  const { coursename } = useParams();
+  const navigate = useNavigateWithRedux();
   const [activeModule, setActiveModule] = useState(1); // ID of expanded module
   const [activeLesson, setActiveLesson] = useState(null); // Currently viewing lesson/quiz/task
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // --- MOCK COURSE DATA ---
-  const courseData = {
-    id: 1,
-    title: 'Full Stack Web Development',
-    progress: 40,
-    modules: [
-      {
-        id: 1,
-        title: 'Module 1: HTML & CSS Fundamentals',
-        isLocked: false,
-        isCompleted: true,
-        lessons: [
-          {
-            id: 'l1',
-            title: 'Introduction to HTML5',
-            type: 'video',
-            duration: '10m',
-            completed: true,
-          },
-          {
-            id: 'l2',
-            title: 'CSS Box Model & Flexbox',
-            type: 'video',
-            duration: '25m',
-            completed: true,
-          },
-          { id: 'q1', title: 'Frontend Basics Quiz', type: 'quiz', completed: true, score: '8/10' },
-          {
-            id: 't1',
-            title: 'Build a Landing Page',
-            type: 'task',
-            completed: true,
-            status: 'Submitted',
-          },
-        ],
+  // Mock courses data
+  const courses = {
+    'full-stack-web-development': {
+      id: 1,
+      title: 'Full Stack Web Development',
+      progress: 40,
+      modules: [
+        {
+          id: 1,
+          title: 'Module 1: HTML & CSS Fundamentals',
+          isLocked: false,
+          isCompleted: true,
+          lessons: [
+            {
+              id: 'l1',
+              title: 'Introduction to HTML5',
+              type: 'video',
+              duration: '10m',
+              completed: true,
+            },
+            {
+              id: 'l2',
+              title: 'CSS Box Model & Flexbox',
+              type: 'video',
+              duration: '25m',
+              completed: true,
+            },
+            {
+              id: 'q1',
+              title: 'Frontend Basics Quiz',
+              type: 'quiz',
+              completed: true,
+              score: '8/10',
+            },
+            {
+              id: 't1',
+              title: 'Build a Landing Page',
+              type: 'task',
+              completed: true,
+              status: 'Submitted',
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: 'Module 2: JavaScript Essentials',
+          isLocked: false, // Unlocked because Module 1 is done
+          isCompleted: false,
+          lessons: [
+            {
+              id: 'l3',
+              title: 'Variables, Types & Functions',
+              type: 'video',
+              duration: '15m',
+              completed: false,
+            },
+            {
+              id: 'l4',
+              title: 'DOM Manipulation',
+              type: 'video',
+              duration: '30m',
+              completed: false,
+            },
+            { id: 'q2', title: 'JS Logic Quiz', type: 'quiz', completed: false },
+            { id: 't2', title: 'Interactive To-Do List', type: 'task', completed: false },
+          ],
+        },
+        {
+          id: 3,
+          title: 'Module 3: React Framework',
+          isLocked: true, // Locked until Module 2 is done
+          isCompleted: false,
+          lessons: [],
+        },
+      ],
+      capstone: {
+        isLocked: true,
+        title: 'Capstone: E-Commerce Platform',
       },
-      {
-        id: 2,
-        title: 'Module 2: JavaScript Essentials',
-        isLocked: false, // Unlocked because Module 1 is done
-        isCompleted: false,
-        lessons: [
-          {
-            id: 'l3',
-            title: 'Variables, Types & Functions',
-            type: 'video',
-            duration: '15m',
-            completed: false,
-          },
-          { id: 'l4', title: 'DOM Manipulation', type: 'video', duration: '30m', completed: false },
-          { id: 'q2', title: 'JS Logic Quiz', type: 'quiz', completed: false },
-          { id: 't2', title: 'Interactive To-Do List', type: 'task', completed: false },
-        ],
-      },
-      {
-        id: 3,
-        title: 'Module 3: React Framework',
-        isLocked: true, // Locked until Module 2 is done
-        isCompleted: false,
-        lessons: [],
-      },
-    ],
-    capstone: {
-      isLocked: true,
-      title: 'Capstone: E-Commerce Platform',
     },
   };
 
-  // --- RENDER HELPERS ---
+  const courseData = courses[coursename];
 
-  // Render the Main Content Area (Video, Quiz, or Task)
   const renderContent = () => {
     if (!activeLesson)
       return (
@@ -128,65 +147,11 @@ const StudentCurrentLearningPage = () => {
     }
 
     if (activeLesson.type === 'quiz') {
-      return (
-        <div className="max-w-3xl mx-auto bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
-          <div className="flex justify-between items-center mb-8 border-b border-zinc-800 pb-4">
-            <h2 className="text-2xl font-bold">{activeLesson.title}</h2>
-            <span className="bg-blue-900/30 text-blue-400 px-3 py-1 rounded text-sm font-bold">
-              10 Questions
-            </span>
-          </div>
-
-          {/* Mock Question */}
-          <div className="space-y-6 mb-8">
-            <div>
-              <p className="text-lg font-medium mb-4">
-                1. Which HTML tag is used to define an internal style sheet?
-              </p>
-              <div className="space-y-3">
-                {['<css>', '<script>', '<style>', '<link>'].map((opt, i) => (
-                  <label
-                    key={i}
-                    className="flex items-center p-4 border border-zinc-700 rounded-lg hover:bg-zinc-800 cursor-pointer transition-colors"
-                  >
-                    <input type="radio" name="q1" className="mr-4 accent-blue-600 w-5 h-5" />
-                    <span>{opt}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end">
-            <button className="px-8 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold text-white shadow-lg transition-colors">
-              Submit Quiz
-            </button>
-          </div>
-        </div>
-      );
+      return <QuizCard />;
     }
 
     if (activeLesson.type === 'task') {
-      return (
-        <div className="max-w-2xl mx-auto bg-zinc-900 border border-zinc-800 rounded-2xl p-8 text-center">
-          <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
-            <UploadCloud size={32} className="text-blue-500" />
-          </div>
-          <h2 className="text-2xl font-bold mb-2">{activeLesson.title}</h2>
-          <p className="text-zinc-400 mb-8">
-            Upload your project files (ZIP or link to GitHub) for review.
-          </p>
-
-          <div className="border-2 border-dashed border-zinc-700 rounded-xl p-10 hover:border-blue-500 hover:bg-zinc-800/50 transition-all cursor-pointer mb-6">
-            <p className="font-medium text-zinc-300">Drag & Drop or Click to Upload</p>
-            <p className="text-xs text-zinc-500 mt-2">Max file size: 10MB</p>
-          </div>
-
-          <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-white transition-colors">
-            Submit Assignment
-          </button>
-        </div>
-      );
+      return <AssignmentCard />;
     }
   };
 
@@ -320,15 +285,15 @@ const StudentCurrentLearningPage = () => {
         {' '}
         {/* md:mr-80 if sidebar was not flex */}
         {/* Top Bar */}
-        <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-6 bg-zinc-900/50 backdrop-blur">
+        <header className="h-14 border-b border-zinc-800 flex items-center justify-between px-6 bg-zinc-900/50 backdrop-blur">
           <div className="flex items-center gap-4">
             {/* Replaced Link with <a> for preview compatibility */}
-            <a
-              href="/app/courses"
-              className="text-zinc-400 hover:text-white text-sm flex items-center gap-1"
+            <span
+              onClick={() => navigate('/student/my-courses')}
+              className="text-zinc-400 hover:text-white text-sm cursor-pointer flex items-center gap-1"
             >
               ← Back to Courses
-            </a>
+            </span>
           </div>
           <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-zinc-400">
             <Menu size={24} />
@@ -341,4 +306,4 @@ const StudentCurrentLearningPage = () => {
   );
 };
 
-export default StudentCurrentLearningPage;
+export default StudentLearningPage;

@@ -4,23 +4,8 @@ import { Shield, Lock, LogOut, User, Save } from 'lucide-react';
 // Reusing Sidebar Layout
 
 const StudentSettingsPage = () => {
-  // --- STATE ---
-  const [profileData, setProfileData] = useState({
-    firstName: 'Alex',
-    lastName: 'Johnson',
-    college: 'Indore Institute of Science & Technology',
-    course: 'B.Tech Computer Science',
-    year: '3rd Year',
-  });
-
   const [isProfileLocked, setIsProfileLocked] = useState(false);
   const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
-
-  // Handlers
-  const handleProfileUpdate = e => {
-    e.preventDefault();
-    alert('Profile details updated successfully!');
-  };
 
   const handlePasswordChange = e => {
     e.preventDefault();
@@ -47,80 +32,6 @@ const StudentSettingsPage = () => {
         {/* Settings Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
           <div className="max-w-3xl mx-auto space-y-8">
-            {/* 1. Update Profile Section */}
-            <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <User size={20} className="text-blue-500" /> Profile Details
-              </h2>
-              <form onSubmit={handleProfileUpdate} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.firstName}
-                      onChange={e => setProfileData({ ...profileData, firstName: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.lastName}
-                      onChange={e => setProfileData({ ...profileData, lastName: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2 sm:col-span-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      College / University
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.college}
-                      onChange={e => setProfileData({ ...profileData, college: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      Course
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.course}
-                      onChange={e => setProfileData({ ...profileData, course: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      Year
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.year}
-                      onChange={e => setProfileData({ ...profileData, year: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold transition-colors flex items-center gap-2"
-                  >
-                    <Save size={18} /> Update Profile
-                  </button>
-                </div>
-              </form>
-            </section>
-
             {/* 2. Privacy / Lock Profile Section */}
             <section className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
