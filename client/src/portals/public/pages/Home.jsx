@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Code,
   Database,
@@ -10,12 +10,24 @@ import {
   Award,
   Users,
   Rocket,
+  ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProgramsGrid from '../components/ProgramGrid';
 import Counter from '../components/Counter';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/common/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 function Home() {
+  const [api, setApi] = useState(null);
+  const [current, setCurrent] = useState(0);
+
   const programs = [
     {
       title: 'Full Stack Web Development',
@@ -104,7 +116,7 @@ function Home() {
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹500',
       slots: 'Limited Seats',
-      link: '/git',
+      link: '/github',
     },
   ];
 
@@ -209,6 +221,73 @@ function Home() {
     },
   ];
 
+  // IBM-style testimonials
+  const testimonial = [
+    {
+      id: 1,
+      image: 'images/testimonials/Pravin-R-Nair.jpeg',
+      quote:
+        'You need to understand that you will make mistakes. I made so many when I first started ... But the more mistakes you make, and the more you fail initially, the stronger you become later on.',
+      name: 'Pravin R Nair',
+      role: 'CEO',
+      redirectLink: 'https://www.linkedin.com/in/pravin-r-nair-964847318',
+    },
+  ];
+
+  // Video testimonials data
+  const videoTestimonials = [
+    {
+      id: 1,
+      name: 'Rahul Verma',
+      role: 'Software Engineer',
+      company: 'Google',
+      videoUrl: 'https://www.youtube.com/embed/P5rkkl18nb0?si=Civb6yCAJe7p92gC',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul',
+    },
+    {
+      id: 2,
+      name: 'Priya Sharma',
+      role: 'Full Stack Developer',
+      company: 'Microsoft',
+      videoUrl: 'https://www.youtube.com/embed/RGaW82k4dK4?si=4nJWYGIQse44Drnt',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya',
+    },
+    {
+      id: 3,
+      name: 'Arjun Singh',
+      role: 'DevOps Engineer',
+      company: 'Amazon',
+      videoUrl: 'https://www.youtube.com/embed/8ashfLSm3tc?si=I_wyatJNJRtXQcw0',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun',
+    },
+    {
+      id: 4,
+      name: 'Sneha Patel',
+      role: 'Data Scientist',
+      company: 'Netflix',
+      videoUrl: 'https://www.youtube.com/embed/lt-9uqa7A6c?si=JI9yVaEPyNAyc9in',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha',
+    },
+    {
+      id: 5,
+      name: 'Karthik Reddy',
+      role: 'Product Manager',
+      company: 'Meta',
+      videoUrl: 'https://www.youtube.com/embed/2g3l5q2nPkE?si=YiVHZX_sjcmcTf6g',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Karthik',
+    },
+    {
+      id: 6,
+      name: 'Ananya Desai',
+      role: 'AI/ML Engineer',
+      company: 'Adobe',
+      videoUrl: 'https://www.youtube.com/embed/k-PFsbZ9yVs?si=CuG0At6X1-TGv_yG',
+      thumbnail: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ananya',
+    },
+  ];
+
+  const plugin = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+
   const scrollRef = useRef(null);
 
   const scroll = direction => {
@@ -222,6 +301,19 @@ function Home() {
       });
     }
   };
+
+  // Track carousel current slide
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on('select', () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   return (
     <>
@@ -263,19 +355,27 @@ function Home() {
 
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-gray-800 pt-8">
               <div>
-                <div className="text-3xl font-bold"><Counter target={500} suffix="+" /></div>
+                <div className="text-3xl font-bold">
+                  <Counter target={500} suffix="+" />
+                </div>
                 <div className="text-sm text-gray-500 uppercase">Active Students</div>
               </div>
               <div>
-                <div className="text-3xl font-bold"><Counter target={10} suffix="+" /></div>
+                <div className="text-3xl font-bold">
+                  <Counter target={10} suffix="+" />
+                </div>
                 <div className="text-sm text-gray-500 uppercase">Tech Streams</div>
               </div>
               <div>
-                <div className="text-3xl font-bold"><Counter target={100} suffix="%" /></div>
+                <div className="text-3xl font-bold">
+                  <Counter target={100} suffix="%" />
+                </div>
                 <div className="text-sm text-gray-500 uppercase">Project Based</div>
               </div>
               <div>
-                <div className="text-3xl font-bold"><Counter target={24} suffix="/7" /></div>
+                <div className="text-3xl font-bold">
+                  <Counter target={24} suffix="/7" />
+                </div>
                 <div className="text-sm text-gray-500 uppercase">Mentor Support</div>
               </div>
             </div>
@@ -369,63 +469,218 @@ function Home() {
           </div>
         </section>
 
-        {/* TESTIMONIAL CAROUSEL */}
-        <section className="py-24 max-w-7xl mx-auto px-4 relative">
-          <h2 className="text-3xl font-bold text-center mb-12">Student Stories</h2>
+        <section className="py-16 bg-black relative overflow-hidden">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold">
+                Becoming Stronger Through Challenges
+              </h2>
+            </div>
 
-          <div className="relative group">
-            <button
-              onClick={() => scroll('left')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-3 rounded-full bg-zinc-800 border border-zinc-700 text-white hover:bg-blue-600 hover:border-blue-500 transition opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => scroll('right')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-3 rounded-full bg-zinc-800 border border-zinc-700 text-white hover:bg-blue-600 hover:border-blue-500 transition opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div
-              ref={scrollRef}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 scrollbar-none"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {testimonials.map(item => (
+            <div className="space-y-4">
+              {testimonial.map(testimonial => (
                 <div
-                  key={item.id}
-                  className="min-w-[85vw] md:min-w-[calc(33%-1rem)] snap-center bg-zinc-900 p-8 rounded-2xl border border-zinc-800 flex flex-col justify-between hover:border-blue-500/50 transition"
+                  key={testimonial.id}
+                  className="bg-gradient-to-r from-zinc-900/50 to-transparent group overflow-hidden"
                 >
-                  <div>
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(5)].map((_, star) => (
-                        <span key={star} className="text-yellow-500 text-sm">
-                          ★
-                        </span>
-                      ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch">
+                    {/* Left: Image - 50% */}
+                    <div className="relative h-full min-h-[280px] md:min-h-[400px]">
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      {/* Gradient overlay for better text visibility on mobile */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden"></div>
                     </div>
 
-                    <p className="text-gray-400 italic mb-6">"{item.text}"</p>
-                  </div>
+                    {/* Right: Content - 50% */}
+                    <div className="flex flex-col justify-center p-6 md:p-8 bg-gradient-to-r from-zinc-900/80 to-zinc-900/40">
+                      <div className="relative mb-6">
+                        <p className="text-base md:text-lg lg:text-xl text-zinc-100 leading-relaxed font-light">
+                          "{testimonial.quote}"
+                        </p>
+                      </div>
 
-                  <div className="flex items-center gap-3">
-                    <a
-                      href={item.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-10 h-10 rounded-full bg-linear-to-br ${item.color} flex items-center justify-center text-white font-bold hover:scale-110 transition`}
-                    >
-                      {item.name.charAt(0)}
-                    </a>
-
-                    <div>
-                      <div className="font-bold text-sm">{item.name}</div>
-                      <div className="text-xs text-blue-400">{item.role}</div>
+                      <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+                        <div>
+                          <h3 className="text-lg font-semibold text-white mb-1">
+                            {testimonial.name}
+                          </h3>
+                          <p className="text-xs text-zinc-400">{testimonial.role}</p>
+                        </div>
+                        <a
+                          href={testimonial.redirectLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="opacity-0 group-hover:opacity-100 transition-all"
+                          aria-label={`Visit ${testimonial.name}'s profile`}
+                        >
+                          <ArrowRight className="w-5 h-5 text-blue-500 group-hover:translate-x-2 transition-transform cursor-pointer hover:text-blue-400" />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* TESTIMONIAL CAROUSEL */}
+        <section className="bg-zinc-900 border border-zinc-700">
+          <div className="py-24 max-w-7xl mx-auto px-4 relative">
+            <h2 className="text-3xl font-bold text-center mb-12">Student Stories</h2>
+
+            <div className="relative group">
+              <button
+                onClick={() => scroll('left')}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-3 rounded-full bg-zinc-800 border border-zinc-700 text-white hover:bg-blue-600 hover:border-blue-500 transition opacity-0 group-hover:opacity-100 hidden md:block"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => scroll('right')}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-3 rounded-full bg-zinc-800 border border-zinc-700 text-white hover:bg-blue-600 hover:border-blue-500 transition opacity-0 group-hover:opacity-100 hidden md:block"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+
+                <div
+                  ref={scrollRef}
+                  className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 scrollbar-none"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {testimonials.map(item => (
+                    <div
+                      key={item.id}
+                      className="min-w-[85vw] md:min-w-[calc(33%-1rem)] snap-center bg-zinc-950 p-8 rounded-2xl border border-zinc-800 flex flex-col justify-between hover:border-blue-500/50 transition"
+                    >
+                      <div>
+                        <div className="flex gap-1 mb-4">
+                          {[...Array(5)].map((_, star) => (
+                            <span key={star} className="text-yellow-500 text-sm">
+                              ★
+                            </span>
+                          ))}
+                        </div>
+
+                        <p className="text-gray-400 italic mb-6">"{item.text}"</p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <a
+                          href={item.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-10 h-10 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-white font-bold hover:scale-110 transition`}
+                        >
+                          {item.name.charAt(0)}
+                        </a>
+
+                        <div>
+                          <div className="font-bold text-sm">{item.name}</div>
+                          <div className="text-xs text-blue-400">{item.role}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* --- VIDEO TESTIMONIALS CAROUSEL  --- */}
+        <section className="py-20 bg-black relative overflow-hidden">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Watch Their Journey</h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Real stories from students who transformed their careers
+              </p>
+            </div>
+
+            <Carousel
+              setApi={setApi}
+              plugins={[plugin.current]}
+              className="w-full mx-auto"
+              onMouseEnter={plugin.current.stop}
+              onMouseLeave={plugin.current.reset}
+              opts={{
+                align: 'start',
+                loop: true,
+              }}
+            >
+              <CarouselContent className="-ml-4">
+                {videoTestimonials.map(testimonial => (
+                  <CarouselItem key={testimonial.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                    <div className="h-full">
+                      <div className="relative bg-zinc-900 border-2 border-zinc-800 rounded-xl overflow-hidden hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300 shadow-lg h-full flex flex-col group">
+                        {/* Gradient border effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
+
+                        {/* Video Embed */}
+                        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                          <iframe
+                            className="absolute top-0 left-0 w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`${testimonial.name} testimonial`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+
+                        {/* Testimonial Info */}
+                        <div className="relative p-4 bg-zinc-900 flex-1 border-t border-zinc-800/50">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={testimonial.thumbnail}
+                              alt={testimonial.name}
+                              className="w-12 h-12 rounded-full border-2 border-zinc-700 group-hover:border-blue-500 transition-colors shadow-lg"
+                            />
+                            <div className="flex-1">
+                              <h4 className="font-bold text-white text-sm">{testimonial.name}</h4>
+                              <p className="text-xs text-blue-400">{testimonial.role}</p>
+                              <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">
+                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_4px_rgba(34,197,94,0.6)]"></span>
+                                {testimonial.company}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              {/* Enhanced Previous Button */}
+              <CarouselPrevious className="hidden lg:flex -left-12 bg-zinc-900 border-2 border-zinc-700 hover:bg-zinc-800 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] text-white h-12 w-12 backdrop-blur-sm transition-all duration-300 hover:scale-110" />
+
+              {/* Enhanced Next Button */}
+              <CarouselNext className="hidden lg:flex -right-12 bg-zinc-900 border-2 border-zinc-700 hover:bg-zinc-800 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] text-white h-12 w-12 backdrop-blur-sm transition-all duration-300 hover:scale-110" />
+            </Carousel>
+
+            {/* Enhanced Carousel Indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {videoTestimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => api?.scrollTo(index)}
+                  className={`rounded-full transition-all duration-300 ${
+                    current === index
+                      ? 'w-8 h-2 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]'
+                      : 'w-2 h-2 bg-zinc-700 hover:bg-blue-400 hover:shadow-[0_0_8px_rgba(96,165,250,0.4)] hover:scale-125'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
               ))}
             </div>
           </div>
@@ -436,3 +691,4 @@ function Home() {
 }
 
 export default Home;
+

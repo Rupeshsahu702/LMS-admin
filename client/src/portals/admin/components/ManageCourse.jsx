@@ -30,15 +30,22 @@ import {
 } from '@/common/components/ui/select';
 
 const formSchema = z.object({
-  courseTitle: z.string().min(5, 'Course title must be at least 5 characters'),
-  courseId: z.string().min(3, 'Course ID is required'),
-  category: z.string().min(1, 'Please select a category'),
+  title: z.string().min(5, 'Course title must be at least 5 characters'),
   description: z
     .string()
     .min(20, 'Description must be at least 20 characters')
     .max(500, 'Description must be at most 500 characters'),
-  instructor: z.string().min(1, 'Please select an instructor'),
+  stream: z.string().min(1, 'Please select a stream'),
+  level: z.enum(['Beginner', 'Intermediate', 'Advanced'], {
+    errorMap: () => ({ message: 'Please select a level' }),
+  }),
   price: z.string().min(1, 'Price is required'),
+  discountedPrice: z.string().optional(),
+  instructor: z.string().min(1, 'Please select an instructor'),
+  totalDuration: z.string().optional(),
+  tags: z.string().optional(),
+  difficultyIndex: z.string().optional(),
+  courseVersion: z.string().optional(),
 });
 
 const ManageCourse = ({ course, onBack }) => {
@@ -47,21 +54,37 @@ const ManageCourse = ({ course, onBack }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      courseTitle: course?.title || '',
-      courseId: course?.id || '',
-      category: course?.category || '',
+      title: course?.title || '',
       description: course?.description || '',
-      instructor: course?.instructor || '',
+      stream: course?.stream || '',
+      level: course?.level || 'Beginner',
       price: course?.price?.toString() || '',
+      discountedPrice: course?.discountedPrice?.toString() || '',
+      instructor: course?.instructor?._id || course?.instructor || '',
+      totalDuration: course?.totalDuration || '',
+      tags: course?.tags?.join(', ') || '',
+      difficultyIndex: course?.difficultyIndex?.toString() || '1',
+      courseVersion: course?.courseVersion || '1.0.0',
     },
   });
 
   const onSubmit = values => {
-    console.log('Updating course:', values, thumbnail);
+    // Transform data to match MongoDB schema
+    const courseData = {
+      ...values,
+      price: parseFloat(values.price),
+      discountedPrice: values.discountedPrice ? parseFloat(values.discountedPrice) : undefined,
+      tags: values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(Boolean) : [],
+      difficultyIndex: values.difficultyIndex ? parseInt(values.difficultyIndex) : 1,
+      thumbnail,
+      slug: values.title.toLowerCase().replace(/\s+/g, '-'),
+    };
+
+    console.log('Updating course:', courseData);
     toast('Course updated successfully!', {
       description: (
         <pre className="bg-zinc-800 text-zinc-200 mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-          <code>{JSON.stringify(values, null, 2)}</code>
+          <code>{JSON.stringify(courseData, null, 2)}</code>
         </pre>
       ),
       position: 'bottom-right',
@@ -85,7 +108,7 @@ const ManageCourse = ({ course, onBack }) => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 ">
+    <div className="flex-1 overflow-y-auto p-8">
       <div className="max-w-full mx-auto">
         {/* Back Button */}
         <button
@@ -109,7 +132,7 @@ const ManageCourse = ({ course, onBack }) => {
           <FieldGroup>
             {/* Course Title */}
             <Controller
-              name="courseTitle"
+              name="title"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -126,43 +149,21 @@ const ManageCourse = ({ course, onBack }) => {
               )}
             />
 
-            {/* Course ID and Category Row */}
+            {/* Stream and Level Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
-                name="courseId"
+                name="stream"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="edit-course-id">Course ID</FieldLabel>
-                    <Input
-                      {...field}
-                      id="edit-course-id"
-                      placeholder="e.g., PY101"
-                      aria-invalid={fieldState.invalid}
-                      className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
-                      disabled
-                    />
-                    <FieldDescription className="text-zinc-500">
-                      Course ID cannot be changed
-                    </FieldDescription>
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="category"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="edit-course-category">Course Category</FieldLabel>
+                    <FieldLabel htmlFor="edit-course-stream">Course Stream</FieldLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger
-                        id="edit-course-category"
+                        id="edit-course-stream"
                         aria-invalid={fieldState.invalid}
                         className="bg-zinc-800 border-zinc-700 text-zinc-100"
                       >
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="Select stream" />
                       </SelectTrigger>
                       <SelectContent className="bg-zinc-800 border-zinc-700">
                         <SelectItem
@@ -185,6 +186,46 @@ const ManageCourse = ({ course, onBack }) => {
                           className="text-zinc-200 hover:bg-zinc-700"
                         >
                           Backend Development
+                        </SelectItem>
+                        <SelectItem
+                          value="Mobile Development"
+                          className="text-zinc-200 hover:bg-zinc-700"
+                        >
+                          Mobile Development
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="level"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-course-level">Course Level</FieldLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <SelectTrigger
+                        id="edit-course-level"
+                        aria-invalid={fieldState.invalid}
+                        className="bg-zinc-800 border-zinc-700 text-zinc-100"
+                      >
+                        <SelectValue placeholder="Select level" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-zinc-800 border-zinc-700">
+                        <SelectItem value="Beginner" className="text-zinc-200 hover:bg-zinc-700">
+                          Beginner
+                        </SelectItem>
+                        <SelectItem
+                          value="Intermediate"
+                          className="text-zinc-200 hover:bg-zinc-700"
+                        >
+                          Intermediate
+                        </SelectItem>
+                        <SelectItem value="Advanced" className="text-zinc-200 hover:bg-zinc-700">
+                          Advanced
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -224,7 +265,7 @@ const ManageCourse = ({ course, onBack }) => {
               )}
             />
 
-            {/* Instructor and Price Row */}
+            {/* Instructor and Total Duration Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
                 name="instructor"
@@ -242,27 +283,57 @@ const ManageCourse = ({ course, onBack }) => {
                       </SelectTrigger>
                       <SelectContent className="bg-zinc-800 border-zinc-700">
                         <SelectItem
-                          value="Dr. Ada Lovelace"
+                          value="67890abc12345def67890abc"
                           className="text-zinc-200 hover:bg-zinc-700"
                         >
                           Dr. Ada Lovelace
                         </SelectItem>
                         <SelectItem
-                          value="Prof. Alan Turing"
+                          value="67890abc12345def67890abd"
                           className="text-zinc-200 hover:bg-zinc-700"
                         >
                           Prof. Alan Turing
                         </SelectItem>
-                        <SelectItem value="Sarah Chen" className="text-zinc-200 hover:bg-zinc-700">
+                        <SelectItem
+                          value="67890abc12345def67890abe"
+                          className="text-zinc-200 hover:bg-zinc-700"
+                        >
                           Sarah Chen
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                    <FieldDescription className="text-zinc-500">
+                      Select from registered instructors (MongoDB ObjectId reference)
+                    </FieldDescription>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
 
+              <Controller
+                name="totalDuration"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-course-duration">Total Duration</FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-course-duration"
+                      placeholder="e.g., 8 weeks or 40 hours"
+                      aria-invalid={fieldState.invalid}
+                      className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    />
+                    <FieldDescription className="text-zinc-500">
+                      Total course duration (optional)
+                    </FieldDescription>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+            </div>
+
+            {/* Price and Discounted Price Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
                 name="price"
                 control={form.control}
@@ -274,7 +345,7 @@ const ManageCourse = ({ course, onBack }) => {
                       id="edit-course-price"
                       type="number"
                       step="0.01"
-                      placeholder="e.g., 299.99"
+                      placeholder="e.g., 500"
                       aria-invalid={fieldState.invalid}
                       className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
                     />
@@ -282,7 +353,103 @@ const ManageCourse = ({ course, onBack }) => {
                   </Field>
                 )}
               />
+
+              <Controller
+                name="discountedPrice"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-course-discounted-price">
+                      Discounted Price ($)
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-course-discounted-price"
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g., 399"
+                      aria-invalid={fieldState.invalid}
+                      className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    />
+                    <FieldDescription className="text-zinc-500">
+                      Optional discounted price
+                    </FieldDescription>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
             </div>
+
+            {/* Tags and Difficulty Index Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Controller
+                name="tags"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-course-tags">Tags</FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-course-tags"
+                      placeholder="e.g., javascript, react, nodejs"
+                      aria-invalid={fieldState.invalid}
+                      className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    />
+                    <FieldDescription className="text-zinc-500">
+                      Comma-separated tags (optional)
+                    </FieldDescription>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="difficultyIndex"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="edit-course-difficulty">Difficulty Index</FieldLabel>
+                    <Input
+                      {...field}
+                      id="edit-course-difficulty"
+                      type="number"
+                      min="0"
+                      max="5"
+                      step="1"
+                      placeholder="1-5"
+                      aria-invalid={fieldState.invalid}
+                      className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                    />
+                    <FieldDescription className="text-zinc-500">
+                      Rate difficulty from 0 to 5
+                    </FieldDescription>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+            </div>
+
+            {/* Course Version (Optional) */}
+            <Controller
+              name="courseVersion"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="edit-course-version">Course Version</FieldLabel>
+                  <Input
+                    {...field}
+                    id="edit-course-version"
+                    placeholder="e.g., 1.0.0"
+                    aria-invalid={fieldState.invalid}
+                    className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                  />
+                  <FieldDescription className="text-zinc-500">
+                    Semantic versioning for course updates (optional)
+                  </FieldDescription>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
 
             {/* Course Thumbnail */}
             <div>

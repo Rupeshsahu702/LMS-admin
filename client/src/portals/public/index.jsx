@@ -22,6 +22,7 @@ import UX from './pages/UXSalesPage.jsx';
 import AboutUs from './pages/AboutUSPage.jsx';
 import EnrollmentDetails from './pages/EnrollmentForm.jsx';
 import EnrollmentPayment from './components/UpdatedPaymentPage.jsx';
+import Github from './pages/VersionControlWithGit.jsx';
 
 const PublicPortal = () => {
   return (
@@ -47,6 +48,7 @@ const PublicPortal = () => {
           <Route path="/python" element={<Python />} />
           <Route path="/mobiledev" element={<MobileDev />} />
           <Route path="/ux" element={<UX />} />
+          <Route path="/github" element={<Github />} />
           <Route path="/enroll" element={<EnrollmentDetails />} />
           <Route path="/enroll/payment" element={<EnrollmentPayment />} />
         </Route>
