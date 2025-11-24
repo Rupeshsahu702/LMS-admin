@@ -116,7 +116,7 @@ function Home() {
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹500',
       slots: 'Limited Seats',
-      link: '/git',
+      link: '/github',
     },
   ];
 
