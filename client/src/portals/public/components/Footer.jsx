@@ -1,4 +1,4 @@
-import { Github, Linkedin, MessageSquareQuote, Twitter } from 'lucide-react';
+import { Facebook, Github, InstagramIcon, Linkedin, MessageSquareQuote, Twitter, Youtube } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
@@ -108,7 +108,7 @@ const Footer = () => {
               <ul className="space-y-2 text-sm text-gray-500">
                 <li className="flex ">
                   <a
-                    href="https://twitter.com/your_twitter" // <-- replace with real url
+                    href="https://x.com/research19049" // <-- replace with real url
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400 gap-3 text-lg flex items-center"
@@ -118,7 +118,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="https://www.linkedin.com/in/your_profile" // <-- replace with real url
+                    href="https://www.linkedin.com/company/code2dbug" // <-- replace with real url
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400 gap-3 text-lg flex items-center"
@@ -138,12 +138,32 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    href="https://discord.gg/your_invite" // <-- replace with real url
+                    href="https://www.facebook.com/share/1C3ETHuKWq/?mibextid=wwXIfr" // <-- replace with real url
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-blue-400 gap-3 text-lg flex items-center"
                   >
-                    <MessageSquareQuote /> <span className="ml-2">Discord</span>
+                    <Facebook /> <span className="ml-2">Facebook</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.youtube.com/@CODE2DBUG" // <-- replace with real url
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 gap-3 text-lg flex items-center"
+                  >
+                    <Youtube /> <span className="ml-2">Youtube</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.instagram.com/code2dbug?igsh=Y3BqZ3oydno1aWd2" // <-- replace with real url
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 gap-3 text-lg flex items-center"
+                  >
+                    <InstagramIcon /> <span className="ml-2">Instagram</span>
                   </a>
                 </li>
               </ul>
