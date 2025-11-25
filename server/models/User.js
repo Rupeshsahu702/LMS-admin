@@ -25,6 +25,22 @@ const userSchema = new mongoose.Schema(
       default: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
     },
 
+    // SOCIAL LINKS
+    linkedin: { type: String },
+    github: { type: String },
+    portfolio: { type: String },
+
+    // PRIVACY
+    isProfileLocked: { type: Boolean, default: false },
+
+    // GAMIFICATION
+    xp: { type: Number, default: 0 },
+    streak: { type: Number, default: 0 },
+    lastStreakDate: { type: Date },
+    hoursLearned: { type: Number, default: 0 },
+    quizzesCompleted: { type: Number, default: 0 },
+    assignmentsCompleted: { type: Number, default: 0 },
+
     // ROLES & ACCOUNT STATE
     role: {
       type: String,

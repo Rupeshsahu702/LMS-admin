@@ -16,10 +16,12 @@ import StudentSettingsPage from './pages/StudentSettingsPage';
 import StudentProfilePage from './pages/StudentProfilePage';
 import StudentCourseModulesPage from './pages/StudentCourseModulesPage';
 import StudentCourseCertificatesPage from './pages/StudentCourseCertificatesPage';
+import StudentLoginPage from './pages/StudentLoginPage';
 
 const StudentPortal = () => {
   return (
     <Routes>
+      <Route path="/" element={<StudentLoginPage />} />
       <Route element={<StudentLayout />}>
         <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/my-courses" element={<StudentMyCoursesPage />} />

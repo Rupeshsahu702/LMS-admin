@@ -22,9 +22,25 @@ export const userSchema = z.object({
 
     avatar: z.string().optional(),
 
-    // ROLES & ACCOUNT STATE
-    role: z.enum(["student", "admin"]).optional(),
-    accountStatus: z.enum(["pending", "verified", "blocked"]).optional(),
+  // SOCIAL LINKS
+  linkedin: z.string().url().optional().or(z.literal("")),
+  github: z.string().url().optional().or(z.literal("")),
+  portfolio: z.string().url().optional().or(z.literal("")),
+
+  // PRIVACY
+  isProfileLocked: z.boolean().optional(),
+
+  // GAMIFICATION
+  xp: z.number().int().optional(),
+  streak: z.number().int().optional(),
+  lastStreakDate: z.date().optional(),
+  hoursLearned: z.number().optional(),
+  quizzesCompleted: z.number().int().optional(),
+  assignmentsCompleted: z.number().int().optional(),
+
+  // ROLES & ACCOUNT STATE
+  role: z.enum(["student", "admin"]).optional(),
+  accountStatus: z.enum(["pending", "verified", "blocked"]).optional(),
 
     // ⚡ LMS LOGIN CREDENTIALS (Admin-assigned)
     lmsId: z.string().optional(),
