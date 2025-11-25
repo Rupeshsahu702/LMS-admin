@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Users,
   Target,
@@ -13,7 +12,9 @@ import {
   Quote,
   ArrowRight,
 } from 'lucide-react';
+
 import Counter from '../components/Counter';
+
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const AboutUs = () => {
@@ -23,7 +24,7 @@ const AboutUs = () => {
     {
       name: 'Pravin R. Nair',
       role: 'Chief Executive Officer',
-      image: 'images/testimonials/founder.png',
+      image: 'images/testimonials/founder.webp',
       message:
         "We aren't building another ed-tech giant. We are building a bridge. A bridge between the raw potential of Indian students and the practical demands of the global industry.",
       link: 'https://www.linkedin.com/in/pravin-r-nair-964847318/',
@@ -31,10 +32,9 @@ const AboutUs = () => {
     {
       name: 'Deepak Agrawal',
       role: 'Chief Technology Officer',
-      image: 'images/testimonials/team02.jpeg',
+      image: 'images/testimonials/team02.webp',
       message:
         "Technology changes every day, but our curriculum was stuck in the past. We decided to democratize access to 'real' engineering work through open-source intelligence.",
-
       link: 'https://www.linkedin.com/in/agrawaldeepak05/',
     },
   ];
@@ -43,7 +43,7 @@ const AboutUs = () => {
     {
       name: 'Rupesh Kumar Sahu',
       role: 'Senior Frontend Developer',
-      image: 'images/testimonials/team03.jpeg',
+      image: 'images/testimonials/team03.webp',
       tech: <Code size={18} className="text-blue-400" />,
       message:
         'Crafting pixels into experiences. I wanted to build a platform that feels as premium as the skills we teach.',
@@ -52,7 +52,7 @@ const AboutUs = () => {
     {
       name: 'Nitish Deshmukh',
       role: 'Backend Developer',
-      image: 'images/testimonials/team04.jpeg',
+      image: 'images/testimonials/team04.webp',
       tech: <Server size={18} className="text-green-400" />,
       message:
         "Scalability isn't just for servers, it's for careers. I built the engine that powers thousands of student journeys.",
@@ -61,7 +61,7 @@ const AboutUs = () => {
     {
       name: 'Mayank Kushwaha',
       role: 'Full Stack Intern',
-      image: 'images/testimonials/team01.jpeg',
+      image: 'images/testimonials/team01.webp',
       tech: <Cpu size={18} className="text-purple-400" />,
       message:
         "From a student to a builder. This platform gave me my first break, and now I'm helping build it for others.",
@@ -105,15 +105,13 @@ const AboutUs = () => {
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Graduates/Year</span>
                   <span className="text-white font-bold">
-                    {' '}
-                    <Counter target={1500000} suffix="+" /> +
+                    <Counter target={1500000} suffix="+" />
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
                   <span className="text-zinc-400">Employable Skills</span>
                   <span className="text-red-400 font-bold">
-                    {' '}
-                    ~ <Counter target={20} suffix="%" />{' '}
+                    ~<Counter target={20} suffix="%" />
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-black rounded-xl border border-zinc-800">
@@ -202,7 +200,7 @@ const AboutUs = () => {
             </div>
             <div>
               <div className="text-4xl md:text-5xl font-extrabold text-green-500 mb-2">
-                ₹ <Counter target={500} />{' '}
+                ₹<Counter target={500} />
               </div>
               <div className="text-sm text-zinc-500 uppercase tracking-wider">Content Cost</div>
             </div>
@@ -219,12 +217,14 @@ const AboutUs = () => {
               <div
                 key={i}
                 onClick={() => navigateAndStore(leader.link)}
-                className="flex flex-col md:flex-row gap-6 cursor-pointer items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800"
+                className="flex flex-col md:flex-row gap-6 cursor-pointer items-center md:items-start bg-black p-8 rounded-2xl border border-zinc-800 hover:border-blue-500/50 transition-all group"
               >
                 <img
                   src={leader.image}
                   alt={leader.name}
-                  className="w-24 h-24 rounded-full border-4 border-zinc-800"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-24 h-24 rounded-full border-4 border-zinc-800 object-cover bg-zinc-800"
                 />
                 <div className="text-center md:text-left">
                   <h3 className="text-xl font-bold text-white">{leader.name}</h3>
@@ -258,7 +258,9 @@ const AboutUs = () => {
                   <img
                     src={dev.image}
                     alt={dev.name}
-                    className="w-16 h-16 rounded-full border-2 border-zinc-700 group-hover:border-blue-500 transition-colors"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-16 h-16 rounded-full border-2 border-zinc-700 group-hover:border-blue-500 transition-colors object-cover bg-zinc-800"
                   />
                   <div>
                     <h4 className="font-bold text-white">{dev.name}</h4>
