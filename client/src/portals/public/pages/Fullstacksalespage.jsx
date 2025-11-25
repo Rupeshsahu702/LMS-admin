@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
-
 const Fullstack = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState(null);
@@ -393,7 +392,10 @@ const Fullstack = () => {
                     Pay just 10% of the course to Start Learning
                   </p>
 
-                  <button onClick={()=>navigateAndStore('/enroll')} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mb-4 transition-colors shadow-lg shadow-blue-600/25">
+                  <button
+                    onClick={() => navigateAndStore('/enroll')}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mb-4 transition-colors shadow-lg shadow-blue-600/25"
+                  >
                     Enroll Now
                   </button>
 

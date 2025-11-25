@@ -88,8 +88,8 @@ const Pricing = () => {
               <span className="text-gray-400 mb-2 line-through">₹500</span>
             </div>
             <p className="text-sm text-blue-200 mb-8">
-              Pay just 10% now to enroll. Pay the rest 90% only after you complete the course
-              and get certified.
+              Pay just 10% now to enroll. Pay the rest 90% only after you complete the course and
+              get certified.
             </p>
 
             <ul className="space-y-4 mb-8">

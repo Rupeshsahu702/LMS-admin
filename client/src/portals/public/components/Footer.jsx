@@ -1,4 +1,12 @@
-import { Facebook, Github, InstagramIcon, Linkedin, MessageSquareQuote, Twitter, Youtube } from 'lucide-react';
+import {
+  Facebook,
+  Github,
+  InstagramIcon,
+  Linkedin,
+  MessageSquareQuote,
+  Twitter,
+  Youtube,
+} from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
@@ -32,7 +40,7 @@ const Footer = () => {
               {/* Use anchor so middle-click/open-in-new-tab still works; onClick uses navigateAndStore */}
               <a
                 href="/"
-                onClick={(e) => handleInternalNav(e, '/')}
+                onClick={e => handleInternalNav(e, '/')}
                 className="inline-block"
                 aria-label="Go to home"
               >
@@ -52,7 +60,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/browse"
-                    onClick={(e) => handleInternalNav(e, '/browse')}
+                    onClick={e => handleInternalNav(e, '/browse')}
                     className="hover:text-blue-400"
                   >
                     Browse Streams
@@ -61,7 +69,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/pricing"
-                    onClick={(e) => handleInternalNav(e, '/pricing')}
+                    onClick={e => handleInternalNav(e, '/pricing')}
                     className="hover:text-blue-400"
                   >
                     Pricing
@@ -70,7 +78,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/verification"
-                    onClick={(e) => handleInternalNav(e, '/verification')}
+                    onClick={e => handleInternalNav(e, '/verification')}
                     className="hover:text-blue-400"
                   >
                     Verification
@@ -85,7 +93,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/campus"
-                    onClick={(e) => handleInternalNav(e, '/campus')}
+                    onClick={e => handleInternalNav(e, '/campus')}
                     className="hover:text-blue-400"
                   >
                     Campus Ambassador
@@ -94,7 +102,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/events"
-                    onClick={(e) => handleInternalNav(e, '/events')}
+                    onClick={e => handleInternalNav(e, '/events')}
                     className="hover:text-blue-400"
                   >
                     Events
@@ -175,14 +183,14 @@ const Footer = () => {
             <div className="flex gap-4 mt-4 md:mt-0">
               <a
                 href="/privacy"
-                onClick={(e) => handleInternalNav(e, '/privacy')}
+                onClick={e => handleInternalNav(e, '/privacy')}
                 className="text-gray-600  hover:text-blue-600 hover:underline transition duration-300"
               >
                 Privacy Policy
               </a>
               <a
                 href="/terms"
-                onClick={(e) => handleInternalNav(e, '/terms')}
+                onClick={e => handleInternalNav(e, '/terms')}
                 className="text-gray-600  hover:text-blue-600 hover:underline transition duration-300"
               >
                 Terms of Service

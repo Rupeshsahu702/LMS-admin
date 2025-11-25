@@ -99,7 +99,12 @@ const CreateCourse = ({ onBack }) => {
       ...values,
       price: parseFloat(values.price),
       discountedPrice: values.discountedPrice ? parseFloat(values.discountedPrice) : undefined,
-      tags: values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(Boolean) : [],
+      tags: values.tags
+        ? values.tags
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(Boolean)
+        : [],
       difficultyIndex: values.difficultyIndex ? parseInt(values.difficultyIndex) : 1,
       modules: modules.map((module, index) => ({
         title: module.title,
@@ -182,9 +187,7 @@ const CreateCourse = ({ onBack }) => {
   // Text/Video Link management
   const addTextLink = moduleId => {
     setModules(
-      modules.map(m =>
-        m.id === moduleId ? { ...m, textLinks: [...m.textLinks, ''] } : m
-      )
+      modules.map(m => (m.id === moduleId ? { ...m, textLinks: [...m.textLinks, ''] } : m)),
     );
   };
 
@@ -196,8 +199,8 @@ const CreateCourse = ({ onBack }) => {
               ...m,
               textLinks: m.textLinks.map((link, idx) => (idx === linkIndex ? value : link)),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -206,16 +209,14 @@ const CreateCourse = ({ onBack }) => {
       modules.map(m =>
         m.id === moduleId
           ? { ...m, textLinks: m.textLinks.filter((_, idx) => idx !== linkIndex) }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
   const addVideoLink = moduleId => {
     setModules(
-      modules.map(m =>
-        m.id === moduleId ? { ...m, videoLinks: [...m.videoLinks, ''] } : m
-      )
+      modules.map(m => (m.id === moduleId ? { ...m, videoLinks: [...m.videoLinks, ''] } : m)),
     );
   };
 
@@ -227,8 +228,8 @@ const CreateCourse = ({ onBack }) => {
               ...m,
               videoLinks: m.videoLinks.map((link, idx) => (idx === linkIndex ? value : link)),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -237,8 +238,8 @@ const CreateCourse = ({ onBack }) => {
       modules.map(m =>
         m.id === moduleId
           ? { ...m, videoLinks: m.videoLinks.filter((_, idx) => idx !== linkIndex) }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -265,8 +266,8 @@ const CreateCourse = ({ onBack }) => {
                 },
               ],
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -278,8 +279,8 @@ const CreateCourse = ({ onBack }) => {
               ...m,
               quizzes: m.quizzes.filter(q => q.id !== quizId),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -291,8 +292,8 @@ const CreateCourse = ({ onBack }) => {
               ...m,
               quizzes: m.quizzes.map(q => (q.id === quizId ? { ...q, [field]: value } : q)),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -317,11 +318,11 @@ const CreateCourse = ({ onBack }) => {
                         },
                       ],
                     }
-                  : q
+                  : q,
               ),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -337,11 +338,11 @@ const CreateCourse = ({ onBack }) => {
                       ...q,
                       questions: q.questions.filter((_, idx) => idx !== questionIndex),
                     }
-                  : q
+                  : q,
               ),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -356,14 +357,14 @@ const CreateCourse = ({ onBack }) => {
                   ? {
                       ...q,
                       questions: q.questions.map((question, idx) =>
-                        idx === questionIndex ? { ...question, [field]: value } : question
+                        idx === questionIndex ? { ...question, [field]: value } : question,
                       ),
                     }
-                  : q
+                  : q,
               ),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -380,14 +381,14 @@ const CreateCourse = ({ onBack }) => {
                       questions: q.questions.map((question, idx) =>
                         idx === questionIndex
                           ? { ...question, options: [...question.options, ''] }
-                          : question
+                          : question,
                       ),
                     }
-                  : q
+                  : q,
               ),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -406,17 +407,17 @@ const CreateCourse = ({ onBack }) => {
                           ? {
                               ...question,
                               options: question.options.map((opt, optIdx) =>
-                                optIdx === optionIndex ? value : opt
+                                optIdx === optionIndex ? value : opt,
                               ),
                             }
-                          : question
+                          : question,
                       ),
                     }
-                  : q
+                  : q,
               ),
             }
-          : m
-      )
+          : m,
+      ),
     );
   };
 
@@ -441,15 +442,15 @@ const CreateCourse = ({ onBack }) => {
 
   const updateCapstoneProject = (projectId, field, value) => {
     setCapstoneProjects(
-      capstoneProjects.map(p => (p.id === projectId ? { ...p, [field]: value } : p))
+      capstoneProjects.map(p => (p.id === projectId ? { ...p, [field]: value } : p)),
     );
   };
 
   const addRequirement = projectId => {
     setCapstoneProjects(
       capstoneProjects.map(p =>
-        p.id === projectId ? { ...p, requirements: [...p.requirements, ''] } : p
-      )
+        p.id === projectId ? { ...p, requirements: [...p.requirements, ''] } : p,
+      ),
     );
   };
 
@@ -461,8 +462,8 @@ const CreateCourse = ({ onBack }) => {
               ...p,
               requirements: p.requirements.map((req, idx) => (idx === reqIndex ? value : req)),
             }
-          : p
-      )
+          : p,
+      ),
     );
   };
 
@@ -471,16 +472,16 @@ const CreateCourse = ({ onBack }) => {
       capstoneProjects.map(p =>
         p.id === projectId
           ? { ...p, requirements: p.requirements.filter((_, idx) => idx !== reqIndex) }
-          : p
-      )
+          : p,
+      ),
     );
   };
 
   const addDeliverable = projectId => {
     setCapstoneProjects(
       capstoneProjects.map(p =>
-        p.id === projectId ? { ...p, deliverables: [...p.deliverables, ''] } : p
-      )
+        p.id === projectId ? { ...p, deliverables: [...p.deliverables, ''] } : p,
+      ),
     );
   };
 
@@ -492,8 +493,8 @@ const CreateCourse = ({ onBack }) => {
               ...p,
               deliverables: p.deliverables.map((del, idx) => (idx === delIndex ? value : del)),
             }
-          : p
-      )
+          : p,
+      ),
     );
   };
 
@@ -502,8 +503,8 @@ const CreateCourse = ({ onBack }) => {
       capstoneProjects.map(p =>
         p.id === projectId
           ? { ...p, deliverables: p.deliverables.filter((_, idx) => idx !== delIndex) }
-          : p
-      )
+          : p,
+      ),
     );
   };
 
@@ -620,7 +621,10 @@ const CreateCourse = ({ onBack }) => {
                             <SelectValue placeholder="Select level" />
                           </SelectTrigger>
                           <SelectContent className="bg-zinc-800 border-zinc-700">
-                            <SelectItem value="Beginner" className="text-zinc-200 hover:bg-zinc-700">
+                            <SelectItem
+                              value="Beginner"
+                              className="text-zinc-200 hover:bg-zinc-700"
+                            >
                               Beginner
                             </SelectItem>
                             <SelectItem
@@ -629,7 +633,10 @@ const CreateCourse = ({ onBack }) => {
                             >
                               Intermediate
                             </SelectItem>
-                            <SelectItem value="Advanced" className="text-zinc-200 hover:bg-zinc-700">
+                            <SelectItem
+                              value="Advanced"
+                              className="text-zinc-200 hover:bg-zinc-700"
+                            >
                               Advanced
                             </SelectItem>
                           </SelectContent>
@@ -669,7 +676,10 @@ const CreateCourse = ({ onBack }) => {
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="course-instructor" className="text-zinc-300 font-medium">
+                        <FieldLabel
+                          htmlFor="course-instructor"
+                          className="text-zinc-300 font-medium"
+                        >
                           Instructor
                         </FieldLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -760,7 +770,10 @@ const CreateCourse = ({ onBack }) => {
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="discounted-price" className="text-zinc-300 font-medium">
+                        <FieldLabel
+                          htmlFor="discounted-price"
+                          className="text-zinc-300 font-medium"
+                        >
                           Discounted Price (Optional)
                         </FieldLabel>
                         <div className="relative">
@@ -807,7 +820,10 @@ const CreateCourse = ({ onBack }) => {
                     control={form.control}
                     render={({ field }) => (
                       <Field>
-                        <FieldLabel htmlFor="difficulty-index" className="text-zinc-300 font-medium">
+                        <FieldLabel
+                          htmlFor="difficulty-index"
+                          className="text-zinc-300 font-medium"
+                        >
                           Difficulty Index (0-5)
                         </FieldLabel>
                         <Input
@@ -944,7 +960,9 @@ const CreateCourse = ({ onBack }) => {
                             <div key={linkIndex} className="flex items-center gap-3">
                               <Input
                                 value={link}
-                                onChange={e => updateVideoLink(module.id, linkIndex, e.target.value)}
+                                onChange={e =>
+                                  updateVideoLink(module.id, linkIndex, e.target.value)
+                                }
                                 placeholder="https://youtube.com/watch?v=..."
                                 className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
                               />
@@ -1005,7 +1023,9 @@ const CreateCourse = ({ onBack }) => {
                               </FieldLabel>
                               <Input
                                 value={quiz.title}
-                                onChange={e => updateQuiz(module.id, quiz.id, 'title', e.target.value)}
+                                onChange={e =>
+                                  updateQuiz(module.id, quiz.id, 'title', e.target.value)
+                                }
                                 placeholder="e.g., Module 1 Assessment"
                                 className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
                               />
@@ -1046,7 +1066,7 @@ const CreateCourse = ({ onBack }) => {
                                         quiz.id,
                                         questionIndex,
                                         'questionText',
-                                        e.target.value
+                                        e.target.value,
                                       )
                                     }
                                     placeholder="What is a variable?"
@@ -1071,7 +1091,7 @@ const CreateCourse = ({ onBack }) => {
                                                 quiz.id,
                                                 questionIndex,
                                                 'correctAnswer',
-                                                optionIndex
+                                                optionIndex,
                                               )
                                             }
                                             className="w-4 h-4 text-blue-600 bg-zinc-900 border-zinc-700"
@@ -1084,7 +1104,7 @@ const CreateCourse = ({ onBack }) => {
                                                 quiz.id,
                                                 questionIndex,
                                                 optionIndex,
-                                                e.target.value
+                                                e.target.value,
                                               )
                                             }
                                             placeholder={`Option ${optionIndex + 1}`}
@@ -1114,7 +1134,7 @@ const CreateCourse = ({ onBack }) => {
                                         quiz.id,
                                         questionIndex,
                                         'explanation',
-                                        e.target.value
+                                        e.target.value,
                                       )
                                     }
                                     placeholder="Explain the correct answer (optional)..."
@@ -1190,14 +1210,10 @@ const CreateCourse = ({ onBack }) => {
                   <CardContent>
                     <FieldGroup>
                       <Field>
-                        <FieldLabel className="text-zinc-300 font-medium">
-                          Project Title
-                        </FieldLabel>
+                        <FieldLabel className="text-zinc-300 font-medium">Project Title</FieldLabel>
                         <Input
                           value={project.title}
-                          onChange={e =>
-                            updateCapstoneProject(project.id, 'title', e.target.value)
-                          }
+                          onChange={e => updateCapstoneProject(project.id, 'title', e.target.value)}
                           placeholder="e.g., Build a Personal Portfolio Website"
                           className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
                         />
@@ -1313,10 +1329,7 @@ const CreateCourse = ({ onBack }) => {
                           }
                           className="w-4 h-4 text-blue-600 bg-zinc-900 border-zinc-700 rounded"
                         />
-                        <label
-                          htmlFor={`locked-${project.id}`}
-                          className="text-sm text-zinc-300"
-                        >
+                        <label htmlFor={`locked-${project.id}`} className="text-sm text-zinc-300">
                           Lock this project (students must complete prerequisites)
                         </label>
                       </div>

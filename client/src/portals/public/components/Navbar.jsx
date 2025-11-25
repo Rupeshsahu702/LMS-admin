@@ -12,8 +12,7 @@ function Navbar() {
   const handleInternalNav = (e, path) => {
     // If left click without modifiers => intercept and use navigateAndStore
     const isLeftClick = e.button === 0;
-    const hasModifier =
-      e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
+    const hasModifier = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey;
 
     if (isLeftClick && !hasModifier) {
       e.preventDefault();
@@ -34,7 +33,7 @@ function Navbar() {
             {/* Logo: use anchor so middle-click works, but intercept left-click */}
             <a
               href="/"
-              onClick={(e) => handleInternalNav(e, '/')}
+              onClick={e => handleInternalNav(e, '/')}
               className="shrink-0 font-bold text-2xl tracking-tighter"
               aria-label="Go to home"
             >
@@ -46,7 +45,7 @@ function Navbar() {
               <div className="ml-10 flex items-baseline space-x-8">
                 <a
                   href="/"
-                  onClick={(e) => handleInternalNav(e, '/')}
+                  onClick={e => handleInternalNav(e, '/')}
                   className="hover:text-blue-400 transition-colors px-3 py-2 text-white rounded-md text-sm font-medium"
                 >
                   Home
@@ -54,7 +53,7 @@ function Navbar() {
 
                 <a
                   href="/aboutus"
-                  onClick={(e) => handleInternalNav(e, '/aboutus')}
+                  onClick={e => handleInternalNav(e, '/aboutus')}
                   className="hover:text-blue-400 transition-colors px-3 py-2 text-white rounded-md text-sm font-medium"
                 >
                   About Us
@@ -62,7 +61,7 @@ function Navbar() {
 
                 <a
                   href="/howitworks"
-                  onClick={(e) => handleInternalNav(e, '/howitworks')}
+                  onClick={e => handleInternalNav(e, '/howitworks')}
                   className="hover:text-blue-400 transition-colors px-3 py-2 text-white rounded-md text-sm font-medium"
                 >
                   How it works
@@ -102,7 +101,7 @@ function Navbar() {
             <div className="px-2 pt-2 flex flex-col items-center pb-3 space-y-1 sm:px-3">
               <a
                 href="/"
-                onClick={(e) => handleInternalNav(e, '/')}
+                onClick={e => handleInternalNav(e, '/')}
                 className="block px-3 py-2 rounded-md text-2xl font-medium hover:bg-gray-800"
               >
                 Home
@@ -110,7 +109,7 @@ function Navbar() {
 
               <a
                 href="/aboutus"
-                onClick={(e) => handleInternalNav(e, '/aboutus')}
+                onClick={e => handleInternalNav(e, '/aboutus')}
                 className="block px-3 py-2 rounded-md text-2xl font-medium hover:bg-gray-800"
               >
                 About Us
@@ -118,7 +117,7 @@ function Navbar() {
 
               <a
                 href="/howitworks"
-                onClick={(e) => handleInternalNav(e, '/howitworks')}
+                onClick={e => handleInternalNav(e, '/howitworks')}
                 className="block px-3 py-2 rounded-md text-2xl font-medium hover:bg-gray-800"
               >
                 How it works

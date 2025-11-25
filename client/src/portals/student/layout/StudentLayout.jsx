@@ -6,6 +6,7 @@ import StudentTopBar from '../components/StudentTopBar';
 
 const StudentLayout = () => {
   const studentSidebarOpen = useSelector(state => state.global.studentSidebarOpen);
+  const currentNavigation = useSelector(state => state.global.currentNavigation);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -14,11 +15,13 @@ const StudentLayout = () => {
       >
         <StudentSidebar />
       </div>
-      <div className="grow flex flex-col">
+      <div className="grow flex overflow-auto flex-col">
         <div className="w-full shrink-0 sticky top-0 z-10">
           <StudentTopBar />
         </div>
-        <div className="grow overflow-auto">
+        <div
+          className={`grow ${currentNavigation.split('/').at(-2) === 'my-courses' ? '' : 'container mx-auto'}`}
+        >
           <Outlet />
         </div>
       </div>

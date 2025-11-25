@@ -11,17 +11,32 @@ import {
   Book,
   LogOut,
 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+
+import { setStudentSidebarOpen } from '../../../redux/slice';
 
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const StudentNavbar = () => {
   const navigateAndStore = useNavigateWithRedux();
+  const dispatch = useDispatch();
 
   const activeTab = useSelector(state => state.global.currentNavigation);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const sidebarItems = [
-    { label: 'Dashboard', icon: <LayoutDashboard size={20} />, navigation: '/student/' },
+    { label: 'Dashboard', icon: <LayoutDashboard size={20} />, navigation: '/student/dashboard' },
     { label: 'My Courses', icon: <Book size={20} />, navigation: '/student/my-courses' },
     { label: 'Assignments', icon: <FileText size={20} />, navigation: '/student/assignments' },
     { label: 'Quizzes', icon: <ClipboardList size={20} />, navigation: '/student/quizzes' },
@@ -34,6 +49,9 @@ const StudentNavbar = () => {
 
   const handleClick = item => {
     navigateAndStore(item.navigation);
+    if (isMobile) {
+      dispatch(setStudentSidebarOpen(false));
+    }
   };
 
   return (
@@ -53,7 +71,7 @@ const StudentNavbar = () => {
             onClick={() => handleClick(item)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 
               ${
-                activeTab === item.navigation
+                activeTab.includes(item.navigation)
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 font-medium'
                   : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }

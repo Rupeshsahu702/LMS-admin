@@ -50,17 +50,17 @@ const Sidebar = () => {
       // Clear authentication token from localStorage
       localStorage.removeItem('authToken');
       localStorage.removeItem('userInfo');
-      
+
       // Clear session storage if you use it
       sessionStorage.clear();
-      
+
       // Optional: Call logout API endpoint
       // await fetch('/api/logout', { method: 'POST' });
-      
+
       // Optional: Clear Redux state
       // dispatch(clearUserData());
       // dispatch(resetStore());
-      
+
       console.log('Logout successful');
     } catch (error) {
       console.error('Logout error:', error);
@@ -78,10 +78,10 @@ const Sidebar = () => {
   const confirmLogout = async () => {
     // Perform logout operations first
     await handleLogout();
-    
+
     // Close dialog
     setShowLogoutDialog(false);
-    
+
     // Navigate to home page after logout operations complete
     navigateAndStore('/');
   };
@@ -159,7 +159,8 @@ const Sidebar = () => {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-zinc-100">Confirm Logout</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400">
-              Are you sure you want to log out? You will need to log in again to access the admin panel.
+              Are you sure you want to log out? You will need to log in again to access the admin
+              panel.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

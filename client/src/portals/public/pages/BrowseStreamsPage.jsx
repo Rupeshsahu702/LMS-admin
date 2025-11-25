@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Code, BrainCircuit, Smartphone, BarChart3, Search, Filter, Menu, X, Database } from 'lucide-react';
+import {
+  Code,
+  BrainCircuit,
+  Smartphone,
+  BarChart3,
+  Search,
+  Filter,
+  Menu,
+  X,
+  Database,
+} from 'lucide-react';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +30,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner to Pro',
       desc: 'Master the MERN stack and build scalable web apps.',
-      link: '/fullstack'
+      link: '/fullstack',
     },
     {
       id: 2,
@@ -30,7 +40,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Intermediate',
       desc: 'Analyze complex data and build predictive models.',
-      link: '/datascience'
+      link: '/datascience',
     },
     {
       id: 3,
@@ -40,7 +50,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner',
       desc: 'Create iOS and Android apps using React Native.',
-      link: '/mobiledev'
+      link: '/mobiledev',
     },
     {
       id: 4,
@@ -50,7 +60,7 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'Beginner',
       desc: 'Turn raw data into actionable insights with SQL & PowerBI.',
-      link: '/dataanalytics'
+      link: '/dataanalytics',
     },
     {
       id: 5,
@@ -60,14 +70,13 @@ const BrowseStreams = () => {
       price: '₹500',
       level: 'All Levels',
       desc: 'Design stunning user interfaces and experiences.',
-      link: '/UX'
+      link: '/UX',
     },
     {
       id: 6,
       title: 'FrontEnd Development',
       category: 'Development',
-      desc:
-        'Learn HTML, CSS, JavaScript, and modern frameworks like React to build fast, responsive user interfaces.',
+      desc: 'Learn HTML, CSS, JavaScript, and modern frameworks like React to build fast, responsive user interfaces.',
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹300',
       slots: 'Limited Seats',
@@ -78,8 +87,7 @@ const BrowseStreams = () => {
       id: 7,
       title: 'BackEnd Development',
       category: 'Development',
-      desc:
-        'Work with Node.js, APIs, authentication, and server-side programming to create scalable backends.',
+      desc: 'Work with Node.js, APIs, authentication, and server-side programming to create scalable backends.',
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹300',
       slots: 'Limited Seats',
@@ -90,8 +98,7 @@ const BrowseStreams = () => {
       id: 8,
       title: 'DataBase',
       category: 'Development',
-      desc:
-        'Learn SQL for relational databases and MongoDB for NoSQL applications to handle real-world data efficiently.',
+      desc: 'Learn SQL for relational databases and MongoDB for NoSQL applications to handle real-world data efficiently.',
       icon: <Database className="w-8 h-8 text-blue-400" />,
       price: '₹500',
       slots: 'Limited Seats',
@@ -102,8 +109,7 @@ const BrowseStreams = () => {
       id: 9,
       title: 'Python with Django + Flask',
       category: 'Development',
-      desc:
-        'Build production-ready web apps using Django’s structured approach and Flask’s lightweight flexibility.',
+      desc: 'Build production-ready web apps using Django’s structured approach and Flask’s lightweight flexibility.',
       icon: <BarChart3 className="w-8 h-8 text-blue-400" />,
       price: '₹500',
       slots: 'Limited Seats',
@@ -122,7 +128,6 @@ const BrowseStreams = () => {
   });
 
   return (
-
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
       <div className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -159,10 +164,11 @@ const BrowseStreams = () => {
               <button
                 key={category}
                 onClick={() => setActiveFilter(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilter === category
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                  : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700 hover:text-white'
-                  }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                  activeFilter === category
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
+                    : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700 hover:text-white'
+                }`}
               >
                 {category}
               </button>
@@ -206,8 +212,8 @@ const BrowseStreams = () => {
               </div>
 
               <button
-                onClick={(e) => {
-                  e.stopPropagation();   // prevents double trigger
+                onClick={e => {
+                  e.stopPropagation(); // prevents double trigger
                   handleClick(stream);
                 }}
                 className="w-full mt-6 bg-white text-black font-bold py-3 rounded-xl hover:bg-blue-50 transition-colors"
@@ -217,7 +223,7 @@ const BrowseStreams = () => {
             </div>
           ))}
         </div>
-        
+
         {filteredStreams.length === 0 && (
           <div className="text-center py-20 text-gray-500">
             <Filter size={48} className="mx-auto mb-4 opacity-20" />

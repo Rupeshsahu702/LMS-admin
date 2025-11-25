@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ChevronDown,
   ChevronUp,
-  PlayCircle,
+  Notebook,
   FileText,
   CheckCircle,
   Lock,
   UploadCloud,
   Award,
   CreditCard,
-  Menu,
-  X,
-  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
@@ -22,11 +21,21 @@ import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const StudentLearningPage = () => {
   const { coursename } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigateWithRedux();
-  const [activeModule, setActiveModule] = useState(1); // ID of expanded module
-  const [activeLesson, setActiveLesson] = useState(null); // Currently viewing lesson/quiz/task
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeModule, setActiveModule] = useState(1);
+  const [activeLesson, setActiveLesson] = useState(null);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   // Mock courses data
   const courses = {
     'full-stack-web-development': {
@@ -111,57 +120,55 @@ const StudentLearningPage = () => {
 
   const courseData = courses[coursename];
 
-  const renderContent = () => {
-    if (!activeLesson)
-      return (
-        <div className="flex flex-col items-center justify-center h-full text-zinc-500">
-          <PlayCircle size={64} className="mb-4 opacity-20" />
-          <h2 className="text-2xl font-bold text-zinc-300">Select a lesson to start</h2>
-          <p>Choose a module from the sidebar.</p>
-        </div>
-      );
-
-    if (activeLesson.type === 'video') {
-      return (
-        <div className="space-y-6">
-          <div className="aspect-video bg-black rounded-xl border border-zinc-800 flex items-center justify-center relative group cursor-pointer">
-            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
-            <PlayCircle
-              size={80}
-              className="text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all z-10"
-            />
-            <p className="absolute bottom-6 left-6 font-bold text-xl z-10">{activeLesson.title}</p>
-          </div>
-          <div className="prose prose-invert max-w-none">
-            <h3>Lesson Notes</h3>
-            <p>
-              In this lesson, we cover the core concepts of {activeLesson.title}. Make sure to
-              practice the examples shown in the video.
-            </p>
-          </div>
-          <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-white transition-colors">
-            Mark as Completed
-          </button>
-        </div>
-      );
-    }
-
-    if (activeLesson.type === 'quiz') {
-      return <QuizCard />;
-    }
-
-    if (activeLesson.type === 'task') {
-      return <AssignmentCard />;
-    }
-  };
+  const [bar, setbar] = React.useState(true);
 
   return (
-    <div className="flex h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white overflow-hidden">
-      {/* --- SIDEBAR (Course Modules) --- */}
-      <aside
-        className={`fixed inset-y-0 right-0 z-50 w-80 bg-zinc-900 border-l border-zinc-800 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:relative md:translate-x-0 flex flex-col`}
+    <div className="flex h-full relative bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
+      <div className="grow overflow-auto p-6 md:p-10">
+        {!activeLesson && (
+          <div className="flex flex-col items-center justify-center h-full text-zinc-500">
+            <Notebook size={64} className="mb-4 opacity-20" />
+            <h2 className="text-2xl font-bold text-zinc-300">Select a lesson to start</h2>
+            <p>Choose a module from the sidebar.</p>
+          </div>
+        )}
+        {activeLesson && activeLesson.type === 'video' && (
+          <div className="space-y-6">
+            <div className="aspect-video bg-black rounded-xl border border-zinc-800 flex items-center justify-center relative group cursor-pointer">
+              <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent"></div>
+              <Notebook
+                size={80}
+                className="text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all z-10"
+              />
+              <p className="absolute bottom-6 left-6 font-bold text-xl z-10">
+                {activeLesson.title}
+              </p>
+            </div>
+            <div className="prose prose-invert max-w-none">
+              <h3>Lesson Notes</h3>
+              <p>
+                In this lesson, we cover the core concepts of {activeLesson.title}. Make sure to
+                practice the examples shown in the video.
+              </p>
+            </div>
+            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-white transition-colors">
+              Mark as Completed
+            </button>
+          </div>
+        )}
+        {activeLesson && activeLesson.type === 'quiz' && <QuizCard />}
+        {activeLesson && activeLesson.type === 'task' && <AssignmentCard />}
+      </div>
+      <div className={`absolute transition-all top-4 ${bar === true ? 'right-80' : 'right-0'}`}>
+        <button className="p-4 bg-zinc-900 rounded-s-full" onClick={() => setbar(!bar)}>
+          {bar && <ChevronRight size={20} />}
+          {!bar && <ChevronLeft size={20} />}
+        </button>
+      </div>
+      <div
+        className={`z-20 absolute lg:static right-0 shrink-0 h-[calc(100vh-5rem)] overflow-auto transition-all bg-zinc-900 border-l border-zinc-800 ${bar ? 'w-80' : 'w-0'}`}
       >
-        <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
+        <div className="p-6 border-b border-zinc-800 bg-zinc-900 flex justify-between items-center sticky top-0">
           <div>
             <h2 className="font-bold text-lg leading-tight line-clamp-1">{courseData.title}</h2>
             <div className="flex items-center gap-2 mt-2 text-xs text-zinc-400">
@@ -174,12 +181,9 @@ const StudentLearningPage = () => {
               <span>{courseData.progress}% Done</span>
             </div>
           </div>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-zinc-400">
-            <X size={24} />
-          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {courseData.modules.map(module => (
             <div
               key={module.id}
@@ -213,7 +217,6 @@ const StudentLearningPage = () => {
                   ))}
               </button>
 
-              {/* Module Content (Accordion) */}
               {activeModule === module.id && !module.isLocked && (
                 <div className="bg-zinc-900/50 border-t border-zinc-800">
                   {module.lessons.map(lesson => (
@@ -221,11 +224,13 @@ const StudentLearningPage = () => {
                       key={lesson.id}
                       onClick={() => {
                         setActiveLesson(lesson);
-                        setIsMobileMenuOpen(false);
+                        if (isMobile) {
+                          setbar(false);
+                        }
                       }}
                       className={`w-full p-3 pl-11 flex items-center gap-3 text-sm hover:bg-blue-900/20 transition-colors border-l-2 ${activeLesson?.id === lesson.id ? 'border-blue-500 bg-blue-900/10 text-blue-400' : 'border-transparent text-zinc-400'}`}
                     >
-                      {lesson.type === 'video' && <PlayCircle size={14} />}
+                      {lesson.type === 'video' && <Notebook size={14} />}
                       {lesson.type === 'quiz' && <FileText size={14} />}
                       {lesson.type === 'task' && <UploadCloud size={14} />}
                       <span className="truncate">{lesson.title}</span>
@@ -238,8 +243,6 @@ const StudentLearningPage = () => {
               )}
             </div>
           ))}
-
-          {/* Capstone Section */}
           <div
             className={`border rounded-xl p-4 ${courseData.capstone.isLocked ? 'border-zinc-800 bg-zinc-900/30 opacity-60' : 'border-yellow-500/30 bg-yellow-900/10'}`}
           >
@@ -261,9 +264,6 @@ const StudentLearningPage = () => {
               </button>
             )}
           </div>
-
-          {/* Final Payment Prompt (Shown if Capstone is unlocked/completed) */}
-          {/* For demo, showing it as a disabled state at bottom */}
           <div className="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-xl">
             <div className="flex items-center gap-3 mb-2">
               <CreditCard size={20} className="text-blue-400" />
@@ -278,29 +278,6 @@ const StudentLearningPage = () => {
             </button>
           </div>
         </div>
-      </aside>
-
-      {/* --- MAIN CONTENT AREA --- */}
-      <div className="flex-1 flex flex-col min-w-0 md:mr-0">
-        {' '}
-        {/* md:mr-80 if sidebar was not flex */}
-        {/* Top Bar */}
-        <header className="h-14 border-b border-zinc-800 flex items-center justify-between px-6 bg-zinc-900/50 backdrop-blur">
-          <div className="flex items-center gap-4">
-            {/* Replaced Link with <a> for preview compatibility */}
-            <span
-              onClick={() => navigate('/student/my-courses')}
-              className="text-zinc-400 hover:text-white text-sm cursor-pointer flex items-center gap-1"
-            >
-              ← Back to Courses
-            </span>
-          </div>
-          <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-zinc-400">
-            <Menu size={24} />
-          </button>
-        </header>
-        {/* Lesson Content */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-10">{renderContent()}</div>
       </div>
     </div>
   );

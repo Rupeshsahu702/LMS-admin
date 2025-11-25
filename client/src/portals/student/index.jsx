@@ -21,7 +21,7 @@ const StudentPortal = () => {
   return (
     <Routes>
       <Route element={<StudentLayout />}>
-        <Route path="/" element={<StudentDashboardPage />} />
+        <Route path="/dashboard" element={<StudentDashboardPage />} />
         <Route path="/my-courses" element={<StudentMyCoursesPage />} />
         <Route path="/my-courses/:coursename" element={<StudentLearningPage />} />
         <Route path="/modules/:coursename" element={<StudentCourseModulesPage />} />

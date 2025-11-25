@@ -41,7 +41,7 @@ export default function ProgramsGrid({ programs }) {
             <a
               href={program.link}
               key={key}
-              onClick={(e) => handleInternalNav(e, program.link)}
+              onClick={e => handleInternalNav(e, program.link)}
               className="block"
               aria-label={`Open ${program.title}`}
             >
@@ -83,7 +83,7 @@ export default function ProgramsGrid({ programs }) {
                         <span className="text-lg font-bold text-white">{program.price}</span>
                       </div>
                       <button
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation(); // prevent anchor's click double-run
                           // reuse same navigation checks for chevron clicks
                           const isMouseEvent = typeof e.button === 'number';

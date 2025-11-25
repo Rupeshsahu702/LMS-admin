@@ -74,7 +74,12 @@ const ManageCourse = ({ course, onBack }) => {
       ...values,
       price: parseFloat(values.price),
       discountedPrice: values.discountedPrice ? parseFloat(values.discountedPrice) : undefined,
-      tags: values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(Boolean) : [],
+      tags: values.tags
+        ? values.tags
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(Boolean)
+        : [],
       difficultyIndex: values.difficultyIndex ? parseInt(values.difficultyIndex) : 1,
       thumbnail,
       slug: values.title.toLowerCase().replace(/\s+/g, '-'),

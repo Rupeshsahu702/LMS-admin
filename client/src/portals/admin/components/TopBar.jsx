@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { Search, Bell, User, ChevronLeft, ChevronRight, Settings, LogOut, UserCircle, Shield } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  User,
+  ChevronLeft,
+  ChevronRight,
+  Settings,
+  LogOut,
+  UserCircle,
+  Shield,
+} from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAdminSidebarOpen } from '@/redux/slice';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/common/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +20,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/common/components/ui/dropdown-menu";
+} from '@/common/components/ui/dropdown-menu';
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -25,44 +31,44 @@ const TopBar = () => {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      title: "New Instructor Registration",
-      description: "John Smith has registered as an instructor",
-      time: "5 min ago",
+      title: 'New Instructor Registration',
+      description: 'John Smith has registered as an instructor',
+      time: '5 min ago',
       read: false,
-      type: "instructor"
+      type: 'instructor',
     },
     {
       id: 2,
-      title: "Course Submitted for Review",
-      description: "Advanced React Development course awaiting approval",
-      time: "1 hour ago",
+      title: 'Course Submitted for Review',
+      description: 'Advanced React Development course awaiting approval',
+      time: '1 hour ago',
       read: false,
-      type: "course"
+      type: 'course',
     },
     {
       id: 3,
-      title: "Student Enrollment Spike",
-      description: "50+ new enrollments in Web Development course",
-      time: "2 hours ago",
+      title: 'Student Enrollment Spike',
+      description: '50+ new enrollments in Web Development course',
+      time: '2 hours ago',
       read: false,
-      type: "enrollment"
+      type: 'enrollment',
     },
     {
       id: 4,
-      title: "Course Completion Alert",
-      description: "30 students completed Python Basics this week",
-      time: "3 hours ago",
+      title: 'Course Completion Alert',
+      description: '30 students completed Python Basics this week',
+      time: '3 hours ago',
       read: true,
-      type: "completion"
+      type: 'completion',
     },
     {
       id: 5,
-      title: "Instructor Course Updated",
-      description: "Sarah Johnson updated JavaScript Fundamentals",
-      time: "5 hours ago",
+      title: 'Instructor Course Updated',
+      description: 'Sarah Johnson updated JavaScript Fundamentals',
+      time: '5 hours ago',
       read: true,
-      type: "course"
-    }
+      type: 'course',
+    },
   ]);
 
   const toggleSidebar = () => {
@@ -94,19 +100,15 @@ const TopBar = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   // Mark single notification as read
-  const markAsRead = (id) => {
+  const markAsRead = id => {
     setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
+      prev.map(notif => (notif.id === id ? { ...notif, read: true } : notif)),
     );
   };
 
   // Mark all notifications as read
   const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notif => ({ ...notif, read: true }))
-    );
+    setNotifications(prev => prev.map(notif => ({ ...notif, read: true })));
   };
 
   // Clear all notifications
@@ -158,19 +160,24 @@ const TopBar = () => {
               <Bell className="w-6 h-6 text-zinc-400 group-hover:text-white cursor-pointer transition-colors" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1.5 -right-0.5 size-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-semibold animate-pulse">
-                  <span className='p-4'>{unreadCount}</span>
+                  <span className="p-4">{unreadCount}</span>
                 </span>
               )}
             </button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-96 bg-zinc-900 border-zinc-800 text-zinc-100 p-0">
+          <PopoverContent
+            align="end"
+            className="w-96 bg-zinc-900 border-zinc-800 text-zinc-100 p-0"
+          >
             {/* Header with Actions */}
             <div className="p-4 border-b border-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-lg">Admin Notifications</h3>
                   <p className="text-sm text-zinc-400">
-                    {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
+                    {unreadCount > 0
+                      ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
+                      : 'All caught up!'}
                   </p>
                 </div>
                 {notifications.length > 0 && (
@@ -191,7 +198,7 @@ const TopBar = () => {
             {/* Notifications List */}
             {notifications.length > 0 ? (
               <div className="max-h-96 overflow-y-auto">
-                {notifications.map((notification) => (
+                {notifications.map(notification => (
                   <div
                     key={notification.id}
                     onClick={() => markAsRead(notification.id)}
@@ -203,17 +210,24 @@ const TopBar = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h4 className="font-medium text-sm">{notification.title}</h4>
-                          <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                            notification.type === 'instructor' ? 'bg-purple-500/20 text-purple-400' :
-                            notification.type === 'course' ? 'bg-blue-500/20 text-blue-400' :
-                            notification.type === 'enrollment' ? 'bg-green-500/20 text-green-400' :
-                            'bg-orange-500/20 text-orange-400'
-                          }`}>
+                          <span
+                            className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
+                              notification.type === 'instructor'
+                                ? 'bg-purple-500/20 text-purple-400'
+                                : notification.type === 'course'
+                                  ? 'bg-blue-500/20 text-blue-400'
+                                  : notification.type === 'enrollment'
+                                    ? 'bg-green-500/20 text-green-400'
+                                    : 'bg-orange-500/20 text-orange-400'
+                            }`}
+                          >
                             {notification.type}
                           </span>
                         </div>
                         <p className="text-xs text-zinc-400 mt-1">{notification.description}</p>
-                        <span className="text-xs text-zinc-500 mt-2 inline-block">{notification.time}</span>
+                        <span className="text-xs text-zinc-500 mt-2 inline-block">
+                          {notification.time}
+                        </span>
                       </div>
                       {!notification.read && (
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-1 flex-shrink-0 ml-2"></div>
@@ -255,7 +269,10 @@ const TopBar = () => {
               </div>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 bg-zinc-900 border-zinc-800 text-zinc-100">
+          <DropdownMenuContent
+            align="end"
+            className="w-64 bg-zinc-900 border-zinc-800 text-zinc-100"
+          >
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">Admin Dashboard</p>
