@@ -225,7 +225,7 @@ function Home() {
   const testimonial = [
     {
       id: 1,
-      image: 'images/testimonials/Pravin-R-Nair.jpeg',
+      image: 'client\src\assets\images\CEO-HOME-IMAGE.jpeg',
       quote:
         'You need to understand that you will make mistakes. I made so many when I first started ... But the more mistakes you make, and the more you fail initially, the stronger you become later on.',
       name: 'Pravin R Nair',
@@ -674,11 +674,10 @@ function Home() {
                 <button
                   key={index}
                   onClick={() => api?.scrollTo(index)}
-                  className={`rounded-full transition-all duration-300 ${
-                    current === index
+                  className={`rounded-full transition-all duration-300 ${current === index
                       ? 'w-8 h-2 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]'
                       : 'w-2 h-2 bg-zinc-700 hover:bg-blue-400 hover:shadow-[0_0_8px_rgba(96,165,250,0.4)] hover:scale-125'
-                  }`}
+                    }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
