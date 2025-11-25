@@ -1,22 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import validator from "validator";
 
 const userSchema = new mongoose.Schema(
   {
     // BASIC AUTH
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-      validate: [validator.isEmail, "Invalid email"],
-    },
-
-    password: { type: String, select: false }, // Login password IF using email
-
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, select: false },
     googleId: { type: String, select: false },
     githubId: { type: String, select: false },
 
@@ -24,18 +14,15 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     middleName: { type: String },
     lastName: { type: String },
-
     phoneNumber: { type: String },
     alternatePhone: { type: String },
-
     collegeName: { type: String },
-    courseName: { type: String }, // Degree like B.Tech/BCA
+    courseName: { type: String },
     yearOfStudy: { type: String },
 
     avatar: {
       type: String,
-      default:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+      default: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
     },
 
     // ROLES & ACCOUNT STATE
@@ -52,7 +39,7 @@ const userSchema = new mongoose.Schema(
       default: "pending",
     },
 
-    // ⚡ LMS LOGIN CREDENTIALS (Admin-assigned)
+    // LMS LOGIN
     lmsId: { type: String, unique: true, sparse: true },
     lmsPassword: { type: String, select: false },
 
@@ -66,54 +53,44 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpire: { type: Date },
 
-    lastLogin: { type: Date },
+    lastLogin: { type: Date }
   },
   { timestamps: true }
 );
 
-// HASH NORMAL LOGIN PASSWORD
+// Password hashing middleware
 userSchema.pre("save", async function (next) {
   if (this.isModified("password") && this.password) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
-
-  // Hash LMS password
   if (this.isModified("lmsPassword") && this.lmsPassword) {
     const salt = await bcrypt.genSalt(10);
     this.lmsPassword = await bcrypt.hash(this.lmsPassword, salt);
   }
-
   next();
 });
 
-// PASSWORD CHECK
+// Password checker
 userSchema.methods.matchPassword = function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.password);
 };
-
 userSchema.methods.matchLmsPassword = function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.lmsPassword);
 };
 
-// RESET TOKEN
+// Reset token logic
 userSchema.methods.createResetPasswordToken = function () {
   const rawToken = crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(rawToken)
-    .digest("hex");
+  this.resetPasswordToken = crypto.createHash("sha256").update(rawToken).digest("hex");
   this.resetPasswordExpire = Date.now() + 3600000;
   return rawToken;
 };
 
-// AUTO REFERRAL CODE
+// Generate referral code
 userSchema.pre("validate", function (next) {
   if (!this.myReferralCode && this.name) {
-    const prefix = this.name
-      .replace(/[^A-Za-z]/g, "")
-      .substring(0, 4)
-      .toUpperCase();
+    const prefix = this.name.replace(/[^A-Za-z]/g, "").substring(0, 4).toUpperCase();
     const rand = crypto.randomBytes(2).toString("hex").toUpperCase();
     this.myReferralCode = `${prefix}-${rand}`;
   }
