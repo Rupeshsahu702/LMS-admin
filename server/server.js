@@ -1,18 +1,20 @@
 import express from "express";
-import "dotenv/config";
+import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 import apiRoutes from "./routes/api/index.js";
-import "./config/passport.js";
+import configurePassport from "./config/passport.js";
 import connectCloudinary from "./config/cloudinary.js";
 
 // --- Config ---
-const app = express();
-const PORT = process.env.PORT || 5001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+configurePassport();
+const app = express();
+const PORT = process.env.PORT || 5001;
 
 // --- Database Connection ---
 connectDB();
