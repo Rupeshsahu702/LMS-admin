@@ -10,11 +10,10 @@ import {
   Building,
   Hash,
 } from 'lucide-react';
-// useNavigate removed to prevent Router errors in preview
-// import { useNavigate } from 'react-router-dom';
+import { toast } from "sonner"
+import { Toaster } from "@/common/components/ui/sonner"
 
 const EnrollmentPayment = () => {
-  // const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Form State
@@ -41,7 +40,6 @@ const EnrollmentPayment = () => {
         .then(() => alert('Copied to clipboard!'))
         .catch(err => console.error('Failed to copy: ', err));
     } else {
-      // Fallback
       const textArea = document.createElement('textarea');
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -63,9 +61,35 @@ const EnrollmentPayment = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    
     // Simulate API submission
     console.log('Submitting Payment Proof:', paymentData);
-    setIsSubmitted(true);
+    
+    // Show success toast
+    toast.success("Thank you for the payment!", {
+      description: "Your payment is being verified and your login credentials will be sent to your email within 24 hours.",
+      icon: (
+        <svg
+          className="w-5 h-5 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      ),
+      duration: 8000,
+    });
+
+    // Set submitted state after showing toast
+    setTimeout(() => {
+      setIsSubmitted(true);
+    }, 8000);
   };
 
   if (isSubmitted) {
@@ -78,13 +102,13 @@ const EnrollmentPayment = () => {
           <h2 className="text-3xl font-bold mb-4">Proof Submitted!</h2>
           <p className="text-zinc-400 mb-8">
             We have received your payment details. Our team will verify the transaction ID{' '}
-            <strong>{paymentData.transactionId}</strong> within 24 hours.
+            <strong>{paymentData.transactionId}</strong> and send you the login credentials within 24 hours.
           </p>
           <button
-            onClick={() => (window.location.href = '/app/dashboard')}
+            onClick={() => (window.location.href = '/')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-colors"
           >
-            Go to Dashboard
+            Go to Home page
           </button>
         </div>
       </div>
@@ -93,6 +117,9 @@ const EnrollmentPayment = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white flex flex-col">
+      {/* Add Toaster component here */}
+      <Toaster position="top-center" duration={8000} />
+      
       <header className="h-20 border-b border-zinc-800 flex items-center px-8 bg-zinc-900/50 backdrop-blur-md">
         <span className="text-2xl font-bold tracking-tighter">
           LMS<span className="text-blue-500">PORTAL</span>
@@ -301,7 +328,11 @@ const EnrollmentPayment = () => {
                 <button
                   type="submit"
                   disabled={!paymentData.transactionId || !paymentData.accountNumber}
-                  className={`flex-1 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${paymentData.transactionId ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-900/20' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'}`}
+                  className={`flex-1 py-3 rounded-xl font-bold text-white transition-all shadow-lg ${
+                    paymentData.transactionId
+                      ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-900/20'
+                      : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                  }`}
                 >
                   Submit Payment
                 </button>

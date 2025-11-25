@@ -16,9 +16,46 @@ import {
 } from '../../../common/components/ui/dropdown-menu';
 import { ChevronDown, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/common/components/ui/button';
+import { Popover, PopoverTrigger, PopoverContent } from '@/common/components/ui/popover';
+import { toast } from 'sonner';
+import { Toaster } from '@/common/components/ui/sonner';
+
 
 const PendingVerifications = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isVerifyPopoverOpen, setIsVerifyPopoverOpen] = useState(false);
+  const [openPopoverId, setOpenPopoverId] = useState(null);
+
+  const handleVerifyStudent = (studentData) => {
+    // Close the popover
+    setIsVerifyPopoverOpen(false);
+    setOpenPopoverId(null);
+
+    // Show toast notification
+    toast.success("Sending email to the student", {
+      description: `Verification email is being sent to ${studentData.email}`,
+      icon: (
+        <svg
+          className="w-5 h-5 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+      duration: 5000,
+    });
+
+    // Your API call to verify student here
+    // await verifyStudentPayment(studentData);
+  };
+
   const [filters, setFilters] = useState({
     college: 'All',
     year: 'All',
@@ -115,6 +152,7 @@ const PendingVerifications = () => {
 
   return (
     <div className="p-8 min-h-screen">
+      <Toaster position="top-center" />
       <div className="max-w-7xl mx-auto">
         {/* Filters */}
         <div className="bg-zinc-800 rounded-lg p-4 mb-6 shadow-sm border border-zinc-700">
@@ -272,13 +310,61 @@ const PendingVerifications = () => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="sm"
-                      onClick={() => handleVerify(student.name)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    <Popover
+                      open={openPopoverId === student.id}
+                      onOpenChange={(open) => setOpenPopoverId(open ? student.id : null)}
                     >
-                      Verify
-                    </Button>
+                      <PopoverTrigger asChild>
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          Verify
+                        </Button>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-80 bg-zinc-900 border-zinc-800 text-white">
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <h4 className="font-bold text-lg">Confirm Verification</h4>
+                            <p className="text-sm text-zinc-400">
+                              Do you really want to verify this student?
+                            </p>
+                          </div>
+
+                          <div className="space-y-2 py-3 border-y border-zinc-800">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-zinc-500">Name:</span>
+                              <span className="font-medium">{student.name}</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-zinc-500">Email:</span>
+                              <span className="font-medium">{student.email}</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-zinc-500">Payment ID:</span>
+                              <span className="font-mono text-blue-400">{student.paymentId}</span>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => setOpenPopoverId(null)} // ✅ This closes the popover
+                              className="flex-1 border-zinc-700 bg-red-300 text-zinc-900 hover:bg-red-400 hover:text-white"
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={() => handleVerifyStudent(student)}
+                              className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                            >
+                              Continue
+                            </Button>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </TableCell>
                 </TableRow>
               ))}
@@ -311,11 +397,10 @@ const PendingVerifications = () => {
                     variant={currentPage === page ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setCurrentPage(page)}
-                    className={`px-4 py-2 ${
-                      currentPage === page
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:bg-zinc-700'
-                    }`}
+                    className={`px-4 py-2 ${currentPage === page
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-zinc-800 border-zinc-700 text-zinc-200 hover:bg-zinc-700'
+                      }`}
                   >
                     {page}
                   </Button>

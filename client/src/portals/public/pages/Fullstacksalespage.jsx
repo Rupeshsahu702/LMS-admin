@@ -21,12 +21,46 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+import { toast } from "sonner"
+import { Toaster } from "@/common/components/ui/sonner"
+
 
 const Fullstack = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedModule, setExpandedModule] = useState(null);
   const [showCouponInput, setShowCouponInput] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
   const navigateAndStore = useNavigateWithRedux();
+
+  const handleApplyCoupon = () => {
+    if (!couponCode.trim()) {
+      toast.error("Please enter a coupon code", {
+        duration: 3000,
+      });
+      return;
+    }
+
+    toast.success("You have applied the coupon code!", {
+      description: `Coupon "${couponCode}" has been applied successfully.`,
+      icon: (
+        <svg
+          className="w-5 h-5 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      ),
+      duration: 5000,
+    });
+  };
+
 
   // --- UPDATED DATA FOR FULL STACK ROADMAP ---
   const courseDetails = {
@@ -197,6 +231,7 @@ const Fullstack = () => {
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white">
       {/* --- NAVBAR --- */}
+       <Toaster position="top-center" duration={5000} />
 
       {/* --- MAIN CONTAINER --- */}
       <div className="pt-20 pb-20">
@@ -412,10 +447,16 @@ const Fullstack = () => {
                       <div className="flex gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
                         <input
                           type="text"
+                          value={couponCode}  // Add this
+                          onChange={(e) => setCouponCode(e.target.value)}  // Add this
                           placeholder="Enter code"
                           className="bg-black border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm w-full focus:outline-none focus:border-blue-500 transition-colors"
                         />
-                        <button className="bg-zinc-800 hover:bg-zinc-700 text-white text-sm px-4 py-2 rounded-lg transition-colors border border-zinc-700">
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          className="bg-zinc-800 hover:bg-zinc-700 text-white text-sm px-4 py-2 rounded-lg transition-colors border border-zinc-700"
+                        >
                           Apply
                         </button>
                       </div>

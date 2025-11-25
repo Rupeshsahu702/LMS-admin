@@ -243,7 +243,7 @@ function Home() {
     },
   ];
 
-  
+
   // IBM-style testimonials
   const testimonial = [
     {
@@ -575,52 +575,58 @@ function Home() {
                 loop: true,
               }}
             >
-              <CarouselContent className="-ml-4">
-                {textTestimonials.map(testimonial => (
-                  <CarouselItem key={testimonial.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                    <div className="h-full">
-                      <div className="relative bg-black border-2 border-zinc-800 rounded-xl overflow-hidden hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300 shadow-lg h-full flex flex-col group">
-                        {/* Gradient border effect on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
+                <CarouselContent className="-ml-4">
+                  {textTestimonials.map(testimonial => (
+                    <CarouselItem key={testimonial.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                      <div className="h-full">
+                        <Link
+                          to={testimonial.linkedin}
+                          target="_blank"
+                          className="block h-full"
+                        >
+                          <div className="relative bg-black border-2 border-zinc-800 rounded-xl overflow-hidden hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300 shadow-lg h-full flex flex-col group">
+                            {/* Gradient border effect on hover */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
 
-                        {/* Testimonial Content */}
-                        <div className="relative p-6 flex-1 flex flex-col">
-                          {/* Star Rating */}
-                          <div className="flex gap-1 mb-4">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className="w-5 h-5 fill-yellow-500"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                          </div>
+                            {/* Testimonial Content */}
+                            <div className="relative p-6 flex-1 flex flex-col">
+                              {/* Star Rating */}
+                              <div className="flex gap-1 mb-4">
+                                {[...Array(5)].map((_, i) => (
+                                  <svg
+                                    key={i}
+                                    className="w-5 h-5 fill-yellow-500"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                ))}
+                              </div>
 
-                          {/* Testimonial Text */}
-                          <blockquote className="text-gray-300 text-sm leading-relaxed italic flex-1">
-                            "{testimonial.quote}"
-                          </blockquote>
-                        </div>
-
-                        {/* User Info */}
-                        <div className="relative p-4 bg-black border-t border-zinc-800/50">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold border-2 border-zinc-700 group-hover:border-blue-500 transition-colors shadow-lg">
-                              {testimonial.initial}
+                              {/* Testimonial Text */}
+                              <blockquote className="text-gray-300 text-sm leading-relaxed italic flex-1">
+                                "{testimonial.quote}"
+                              </blockquote>
                             </div>
-                            <div className="flex-1">
-                              <h4 className="font-bold text-white text-sm">{testimonial.name}</h4>
-                              <p className="text-xs text-blue-400">{testimonial.cohort}</p>
+
+                            {/* User Info */}
+                            <div className="relative p-4 bg-black border-t border-zinc-800/50">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold border-2 border-zinc-700 group-hover:border-blue-500 transition-colors shadow-lg">
+                                  {testimonial.initial}
+                                </div>
+                                <div className="flex-1">
+                                  <h4 className="font-bold text-white text-sm">{testimonial.name}</h4>
+                                  <p className="text-xs text-blue-400">{testimonial.cohort}</p>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
 
               {/* Enhanced Previous Button */}
               <CarouselPrevious className="hidden lg:flex -left-12 bg-zinc-900 border-2 border-zinc-700 hover:bg-zinc-800 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] text-white h-12 w-12 backdrop-blur-sm transition-all duration-300 hover:scale-110" />
@@ -728,8 +734,8 @@ function Home() {
                   key={index}
                   onClick={() => api?.scrollTo(index)}
                   className={`rounded-full transition-all duration-300 ${current === index
-                      ? 'w-8 h-2 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]'
-                      : 'w-2 h-2 bg-zinc-700 hover:bg-blue-400 hover:shadow-[0_0_8px_rgba(96,165,250,0.4)] hover:scale-125'
+                    ? 'w-8 h-2 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]'
+                    : 'w-2 h-2 bg-zinc-700 hover:bg-blue-400 hover:shadow-[0_0_8px_rgba(96,165,250,0.4)] hover:scale-125'
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
