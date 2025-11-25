@@ -5,7 +5,6 @@ import { isAuthenticated } from "../../middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
-//Step-1: Redirect to Google login
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
