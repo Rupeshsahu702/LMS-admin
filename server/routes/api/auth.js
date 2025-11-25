@@ -2,8 +2,40 @@ import express from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import { isAuthenticated } from "../../middlewares/isAuthenticated.js";
+import {
+  register,
+  login,
+  lmsLogin,
+  refreshAccessToken,
+  logout,
+  logoutAll,
+  getCurrentUser,
+  forgotPassword,
+  resetPassword,
+  getActiveSessions,
+  handleOAuthCallback,
+} from "../../controllers/authController.js";
 
 const router = express.Router();
+
+// ============================================
+// LOCAL AUTH ROUTES
+// ============================================
+
+router.post("/register", register);
+router.post("/login", login);
+router.post("/lms-login", lmsLogin);
+router.post("/refresh-token", refreshAccessToken);
+router.post("/logout", logout);
+router.post("/logout-all", isAuthenticated, logoutAll);
+router.get("/me", isAuthenticated, getCurrentUser);
+router.get("/sessions", isAuthenticated, getActiveSessions);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
+
+// ============================================
+// GOOGLE OAUTH ROUTES
+// ============================================
 
 router.get(
   "/google",
@@ -30,6 +62,10 @@ router.get(
     }
   }
 );
+
+// ============================================
+// GITHUB OAUTH ROUTES
+// ============================================
 
 router.get(
   "/github",
