@@ -38,6 +38,13 @@ export const getDashboard = async (req, res) => {
       "name xp streak hoursLearned quizzesCompleted assignmentsCompleted"
     );
 
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     // Get enrolled courses count
     const enrolledCourses = await Enrollment.countDocuments({ student: userId });
 
