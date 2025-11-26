@@ -28,17 +28,86 @@ const StudentsTable = ({ data = [] }) => {
     return 'bg-zinc-500';
   };
 
-  const getStatusBadgeVariant = status => {
-    switch (status) {
-      case 'Graded':
-        return 'bg-green-500/10 text-green-400 hover:bg-green-500/20 border-green-500/20';
-      case 'Submitted':
-        return 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border-yellow-500/20';
-      case 'In Progress':
-        return 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20';
-      default:
-        return 'bg-zinc-500/10 text-zinc-400 hover:bg-zinc-500/20 border-zinc-500/20';
-    }
+  const CapstoneStatusCell = ({ student, onStatusUpdate }) => {
+    const [currentStatus, setCurrentStatus] = useState(student.capstoneStatus);
+
+    const getStatusBadgeVariant = status => {
+      switch (status) {
+        case 'Graded':
+          return 'bg-green-500/10 text-green-400 hover:bg-green-500/20 border-green-500/20';
+        case 'Submitted':
+          return 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border-yellow-500/20';
+        case 'In Progress':
+          return 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border-blue-500/20';
+        default:
+          return 'bg-zinc-500/10 text-zinc-400 hover:bg-zinc-500/20 border-zinc-500/20';
+      }
+    };
+
+    const handleStatusChange = (newStatus) => {
+      setCurrentStatus(newStatus);
+      toast.success(`Capstone status updated to ${newStatus} for ${student.studentName}`);
+
+      // Call your API or parent component handler
+      if (onStatusUpdate) {
+        onStatusUpdate(student.id, newStatus);
+      }
+    };
+
+    return (
+      <div className="flex items-center gap-2">
+        <Badge
+          variant="secondary"
+          className={`${getStatusBadgeVariant(currentStatus)} font-medium border`}
+        >
+          {currentStatus}
+        </Badge>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+            >
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700 w-40">
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('Graded')}
+              className="text-green-400 hover:bg-zinc-700 cursor-pointer"
+              disabled={currentStatus === 'Graded'}
+            >
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-400"></span>
+                Graded
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('Submitted')}
+              className="text-yellow-400 hover:bg-zinc-700 cursor-pointer"
+              disabled={currentStatus === 'Submitted'}
+            >
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+                Submitted
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleStatusChange('In Progress')}
+              className="text-blue-400 hover:bg-zinc-700 cursor-pointer"
+              disabled={currentStatus === 'In Progress'}
+            >
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                In Progress
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
   };
 
   const PaymentStatusCell = ({ student, onPaymentStatusUpdate }) => {
@@ -258,55 +327,13 @@ const StudentsTable = ({ data = [] }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant="secondary"
-                        className={`${getStatusBadgeVariant(student.capstoneStatus)} font-medium border`}
-                      >
-                        {student.capstoneStatus}
-                      </Badge>
-
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(student.id, 'Graded')}
-                            className="text-green-400 hover:bg-zinc-700 cursor-pointer"
-                          >
-                            <span className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-green-400"></span>
-                              Graded
-                            </span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(student.id, 'Submitted')}
-                            className="text-yellow-400 hover:bg-zinc-700 cursor-pointer"
-                          >
-                            <span className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
-                              Submitted
-                            </span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(student.id, 'In Progress')}
-                            className="text-blue-400 hover:bg-zinc-700 cursor-pointer"
-                          >
-                            <span className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                              In Progress
-                            </span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
+                    <CapstoneStatusCell
+                      student={student}
+                      onStatusUpdate={(studentId, newStatus) => {
+                        // Your API call or state update logic
+                        console.log(`Update student ${studentId} to ${newStatus}`);
+                      }}
+                    />
                   </TableCell>
                   <TableCell>
                     <Popover
