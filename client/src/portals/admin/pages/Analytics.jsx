@@ -4,7 +4,7 @@ import React from 'react';
 import { Users, BookOpen, TrendingUp, Award, Clock, Target } from 'lucide-react';
 import DoughnutChart from '@/portals/admin/components/DoughnutChart';
 import ColumnWithRotatedLabels from '@/portals/admin/components/ColumnChart';
-import LineChart from '@/portals/admin/components/LineChart';
+import StudentGrowthChart from '@/portals/admin/components/StudentGrowthChart';
 import RadarChart from '@/portals/admin/components/OverallPerformanceMetrics';
 import SmoothLineChart from '@/portals/admin/components/EnrollmentCompletion&RevenueTrend';
 import StackedBarChart from '@/portals/admin/components/StackedBarChart';
@@ -186,7 +186,7 @@ export default function Analytics() {
               <h2 className="text-xl font-semibold text-zinc-100 mb-1">Total Student Growth</h2>
               <p className="text-sm text-zinc-400">Cumulative student registration over time</p>
             </div>
-            <LineChart data={studentGrowth} height={400} />
+            <StudentGrowthChart data={studentGrowth} height={400} />
           </div>
         </div>
 
@@ -391,13 +391,12 @@ export default function Analytics() {
                   </div>
                   <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
                     <div
-                      className={`h-full ${
-                        metric.status === 'excellent'
-                          ? 'bg-emerald-500'
-                          : metric.status === 'good'
-                            ? 'bg-blue-500'
-                            : 'bg-amber-500'
-                      }`}
+                      className={`h-full ${metric.status === 'excellent'
+                        ? 'bg-emerald-500'
+                        : metric.status === 'good'
+                          ? 'bg-blue-500'
+                          : 'bg-amber-500'
+                        }`}
                       style={{
                         width:
                           metric.status === 'excellent'
