@@ -1,4 +1,3 @@
-import React, { useLayoutEffect, useRef } from 'react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -19,11 +18,9 @@ export default function LineChart({ data, height = 400, onDateChange }) {
 
   // Default to start of current year and today
   const [startDate, setStartDate] = useState(
-    new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0]
+    new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0],
   );
-  const [endDate, setEndDate] = useState(
-    new Date().toISOString().split('T')[0]
-  );
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleDateChange = (type, value) => {
     if (type === 'start') setStartDate(value);
@@ -31,10 +28,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
 
     // Trigger parent callback to reload/filter data based on new range
     if (onDateChange) {
-      onDateChange(
-        type === 'start' ? value : startDate,
-        type === 'end' ? value : endDate
-      );
+      onDateChange(type === 'start' ? value : startDate, type === 'end' ? value : endDate);
     }
   };
 
@@ -63,7 +57,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
         panY: false,
         wheelX: 'panX',
         wheelY: 'zoomX',
-      })
+      }),
     );
 
     const chartData =
@@ -86,7 +80,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
         renderer: am5xy.AxisRendererX.new(root, {
           minGridDistance: 50,
         }),
-      })
+      }),
     );
 
     xAxis.get('renderer').labels.template.setAll({
@@ -103,7 +97,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(root, {
         renderer: am5xy.AxisRendererY.new(root, {}),
-      })
+      }),
     );
 
     yAxis.get('renderer').labels.template.setAll({
@@ -126,7 +120,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
         valueXField: 'date',
         stroke: am5.color('#3b82f6'),
         fill: am5.color('#3b82f6'),
-      })
+      }),
     );
 
     series.strokes.template.setAll({
@@ -161,7 +155,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
           strokeWidth: 1,
           stroke: am5.color('#52525b'),
         }),
-      })
+      }),
     );
 
     series.get('tooltip').label.setAll({
@@ -175,7 +169,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
       am5xy.XYCursor.new(root, {
         behavior: 'none',
         xAxis: xAxis,
-      })
+      }),
     );
 
     series.data.setAll(chartData);
@@ -234,7 +228,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
             <input
               type="date"
               value={startDate}
-              onChange={(e) => handleDateChange('start', e.target.value)}
+              onChange={e => handleDateChange('start', e.target.value)}
               style={{
                 background: '#27272a', // zinc-800
                 border: '1px solid #3f3f46', // zinc-700
@@ -260,7 +254,7 @@ export default function LineChart({ data, height = 400, onDateChange }) {
             <input
               type="date"
               value={endDate}
-              onChange={(e) => handleDateChange('end', e.target.value)}
+              onChange={e => handleDateChange('end', e.target.value)}
               style={{
                 background: '#27272a', // zinc-800
                 border: '1px solid #3f3f46', // zinc-700
@@ -287,3 +281,4 @@ export default function LineChart({ data, height = 400, onDateChange }) {
     </div>
   );
 }
+
