@@ -3,11 +3,11 @@
 import React from 'react';
 import { Users, BookOpen, TrendingUp, Award, Clock, Target } from 'lucide-react';
 import DoughnutChart from '@/portals/admin/components/DoughnutChart';
-import ColumnWithRotatedLabels from '@/portals/admin/components/ColumnChart';
-import LineChart from '@/portals/admin/components/LineChart';
-import RadarChart from '@/portals/admin/components/RadarChart';
-import SmoothLineChart from '@/portals/admin/components/SmoothLineChart';
-import StackedBarChart from '@/portals/admin/components/StackedBarChart';
+import ColumnChart from '@/portals/admin/components/ColumnChart';
+import StudentGrowthChart from '@/portals/admin/components/StudentGrowthChart';
+import OverallPerformanceMetrics from '@/portals/admin/components/OverallPerformanceMetrics';
+import EnrollmentCompletion from '@/portals/admin/components/EnrollmentCompletion&RevenueTrend';
+import TopPerformingCoursesChart from '../components/TopPerformingCoursesChart';
 
 // Sample data - replace with your actual API data
 const courseCompletionData = [
@@ -87,12 +87,62 @@ const studentGrowth = [
   { date: new Date(2024, 6, 1).getTime(), value: 2394 },
 ];
 
-// Stacked Bar Chart Data (Weekly Progress)
-const weeklyProgress = [
-  { category: 'Week 1', completed: 45, inProgress: 30, notStarted: 25 },
-  { category: 'Week 2', completed: 52, inProgress: 28, notStarted: 20 },
-  { category: 'Week 3', completed: 61, inProgress: 25, notStarted: 14 },
-  { category: 'Week 4', completed: 68, inProgress: 22, notStarted: 10 },
+// Recent Course Enrollment Trends (for Radial Histogram)
+const recentEnrollmentTrends = [
+  {
+    month: 'Jan',
+    'React Masterclass': 42,
+    'Python Data Science': 35,
+    'UI/UX Design': 31,
+    'Digital Marketing': 28,
+    'Node.js Backend': 26,
+    'Mobile App Dev': 24,
+  },
+  {
+    month: 'Feb',
+    'React Masterclass': 45,
+    'Python Data Science': 38,
+    'UI/UX Design': 33,
+    'Digital Marketing': 29,
+    'Node.js Backend': 28,
+    'Mobile App Dev': 25,
+  },
+  {
+    month: 'Mar',
+    'React Masterclass': 48,
+    'Python Data Science': 41,
+    'UI/UX Design': 35,
+    'Digital Marketing': 31,
+    'Node.js Backend': 29,
+    'Mobile App Dev': 27,
+  },
+  {
+    month: 'Apr',
+    'React Masterclass': 46,
+    'Python Data Science': 39,
+    'UI/UX Design': 34,
+    'Digital Marketing': 30,
+    'Node.js Backend': 28,
+    'Mobile App Dev': 26,
+  },
+  {
+    month: 'May',
+    'React Masterclass': 51,
+    'Python Data Science': 43,
+    'UI/UX Design': 37,
+    'Digital Marketing': 33,
+    'Node.js Backend': 31,
+    'Mobile App Dev': 28,
+  },
+  {
+    month: 'Jun',
+    'React Masterclass': 54,
+    'Python Data Science': 45,
+    'UI/UX Design': 39,
+    'Digital Marketing': 35,
+    'Node.js Backend': 32,
+    'Mobile App Dev': 30,
+  },
 ];
 
 // Stats cards data
@@ -177,7 +227,7 @@ export default function Analytics() {
               </h2>
               <p className="text-sm text-zinc-400">360° view of key performance indicators</p>
             </div>
-            <RadarChart data={performanceMetrics} height={400} />
+            <OverallPerformanceMetrics data={performanceMetrics} height={400} />
           </div>
 
           {/* Student Growth Line Chart */}
@@ -186,7 +236,7 @@ export default function Analytics() {
               <h2 className="text-xl font-semibold text-zinc-100 mb-1">Total Student Growth</h2>
               <p className="text-sm text-zinc-400">Cumulative student registration over time</p>
             </div>
-            <LineChart data={studentGrowth} height={400} />
+            <StudentGrowthChart data={studentGrowth} height={400} />
           </div>
         </div>
 
@@ -200,7 +250,7 @@ export default function Analytics() {
               Track student enrollments, course completions, and revenue over time
             </p>
           </div>
-          <SmoothLineChart
+          <EnrollmentCompletion
             data={enrollmentTrend}
             height={400}
             series={[
@@ -256,7 +306,7 @@ export default function Analytics() {
                 New student enrollments over the past 6 months
               </p>
             </div>
-            <ColumnWithRotatedLabels data={monthlyEnrollments} height={320} />
+            <ColumnChart data={monthlyEnrollments} height={320} />
           </div>
 
           {/* Course Completions by Month */}
@@ -267,19 +317,22 @@ export default function Analytics() {
               </h2>
               <p className="text-sm text-zinc-400">Number of courses completed each month</p>
             </div>
-            <ColumnWithRotatedLabels data={courseCompletionByMonth} height={320} />
+            <ColumnChart data={courseCompletionByMonth} height={320} />
           </div>
         </div>
 
-        {/* Weekly Progress Stacked Bar - Full Width */}
+        {/* Top Performing Courses - Radial Histogram - Full Width */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 mb-6">
           <div className="mb-4">
-            <h2 className="text-xl font-semibold text-zinc-100 mb-1">Weekly Course Progress</h2>
+            <h2 className="text-xl font-semibold text-zinc-100 mb-1">
+              Top Performing Courses - Enrollment Trends
+            </h2>
             <p className="text-sm text-zinc-400">
-              Track completed, in-progress, and not started courses by week
+              Recent 6-month enrollment trends for top-performing courses shown in radial histogram
+              format
             </p>
           </div>
-          <StackedBarChart data={weeklyProgress} height={350} />
+          <TopPerformingCoursesChart data={recentEnrollmentTrends} height={550} />
         </div>
 
         {/* Assessment and Engagement */}
@@ -319,34 +372,64 @@ export default function Analytics() {
 
         {/* Additional Insights Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Top Performing Courses */}
+          {/* Top Leaderboard Performers */}
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-zinc-100 mb-4">Top Performing Courses</h3>
-            <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-zinc-100 mb-4">Top Leaderboard Performers</h3>
+            <div className="space-y-2.5">
               {[
-                { name: 'React Masterclass', completion: 94, students: 245 },
-                { name: 'Python for Data Science', completion: 89, students: 198 },
-                { name: 'UI/UX Design Fundamentals', completion: 87, students: 176 },
-                { name: 'Digital Marketing 101', completion: 85, students: 162 },
-              ].map((course, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-zinc-200">{course.name}</p>
-                    <p className="text-xs text-zinc-500">{course.students} students</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-16 h-2 bg-zinc-800 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500"
-                        style={{ width: `${course.completion}%` }}
-                      />
+                { name: 'Sarah Johnson', course: 'Web Development Pro', score: 96 },
+                { name: 'Michael Chen', course: 'Data Analytics', score: 90 },
+                { name: 'Emily Davis', course: 'Digital Marketing', score: 89 },
+                { name: 'James Wilson', course: 'UI/UX Design', score: 85 },
+                { name: 'Lisa Anderson', course: 'React Masterclass', score: 83 },
+              ].map((performer, index) => {
+                const rank = index + 1;
+                const rankColors =
+                  rank === 1
+                    ? 'from-amber-500 to-amber-600'
+                    : rank === 2
+                      ? 'from-slate-400 to-slate-500'
+                      : rank === 3
+                        ? 'from-amber-700 to-amber-800'
+                        : 'from-zinc-700 to-zinc-800';
+
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-3 p-3 bg-zinc-800/40 border border-zinc-700/50 rounded-lg hover:bg-zinc-800/60 transition-colors"
+                  >
+                    {/* Rank Badge */}
+                    <div
+                      className={`w-8 h-8 rounded-full bg-gradient-to-br ${rankColors} flex items-center justify-center shrink-0 shadow-lg`}
+                    >
+                      <span className="text-xs font-bold text-white">#{rank}</span>
                     </div>
-                    <span className="text-sm font-medium text-emerald-400">
-                      {course.completion}%
-                    </span>
+
+                    {/* Name and Course */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-0.5">
+                        <p className="text-sm font-semibold text-zinc-100 truncate">
+                          {performer.name}
+                        </p>
+                        <span className="text-sm font-bold text-emerald-400 shrink-0">
+                          {performer.score}
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500 truncate">{performer.course}</p>
+                    </div>
+
+                    {/* Score Progress Bar */}
+                    <div className="w-16 shrink-0">
+                      <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full"
+                          style={{ width: `${performer.score}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -361,7 +444,7 @@ export default function Analytics() {
                 { name: 'James Wilson', course: 'UI/UX Design', time: '1 day ago' },
               ].map((cert, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shrink-0">
                     <Award className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -417,3 +500,4 @@ export default function Analytics() {
     </div>
   );
 }
+

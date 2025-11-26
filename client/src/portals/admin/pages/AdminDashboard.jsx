@@ -2,7 +2,7 @@ import React from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import StatsCardsSection from '../components/StatsCardsSection';
 import EnrollmentsTable from '../components/EnrollmentsTable';
-import ColumnWithRotatedLabels from '../components/ColumnChart';
+import ColumnChart from '../components/ColumnChart';
 import DoughnutChart from '../components/DoughnutChart';
 
 function AdminDashboard() {
@@ -32,7 +32,7 @@ function AdminDashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-2 gap-5 mb-5 ">
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-2">
-          <ColumnWithRotatedLabels data={chartData} height={350} />
+          <ColumnChart data={chartData} height={350} />
         </div>
         <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-2">
           <DoughnutChart data={donutData} height={360} innerRadiusPercent={60} />
@@ -46,3 +46,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
