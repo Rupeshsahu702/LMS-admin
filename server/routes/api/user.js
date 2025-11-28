@@ -1,5 +1,5 @@
 import express from "express";
-import { userController } from "../../controllers/index.js";
+import { userController } from "../../controllers/public/index.js";
 import { StudentEnrollmentValidation } from "../../validation/index.js";
 
 const router = express.Router();

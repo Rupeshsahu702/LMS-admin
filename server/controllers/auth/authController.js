@@ -1,7 +1,6 @@
 import crypto from "crypto";
-import { User, RefreshToken } from "../models/index.js";
+import { User, RefreshToken } from "../../models/index.js";
 import ms from "ms";
-
 
 /**
  * Generates secure cookie options for access tokens.
@@ -36,10 +35,8 @@ const getRefreshTokenCookieOptions = () => ({
     httpOnly: true, // Prevents XSS attacks
     secure: true, // HTTPS only in production
     sameSite: "strict", // Prevents CSRF attacks
-    maxAge: ms(process.env.REFRESH_TOKEN_EXPIRY), 
+    maxAge: ms(process.env.REFRESH_TOKEN_EXPIRY),
 });
-
-
 
 /**
  * Authenticates a user with email and password credentials.
@@ -144,7 +141,6 @@ export const login = async (req, res) => {
     }
 };
 
-
 /**
  * Authenticates students using Learning Management System (LMS) issued credentials.
  * Validates LMS ID and password, checks account status, generates tokens, and sets secure cookies.
@@ -239,8 +235,6 @@ export const lmsLogin = async (req, res) => {
         });
     }
 };
-
-
 
 /**
  * Refreshes access and refresh tokens with automatic rotation and reuse detection.
@@ -395,7 +389,6 @@ export const refreshAccessToken = async (req, res) => {
     }
 };
 
-
 /**
  * Logs out the current user session by revoking the refresh token and clearing authentication cookies.
  * Only invalidates the current device/session.
@@ -443,7 +436,6 @@ export const logout = async (req, res) => {
     }
 };
 
-
 /**
  * Logs out user from all devices by revoking all refresh tokens associated with the user account.
  * Clears authentication cookies for the current session and invalidates all other active sessions.
@@ -480,7 +472,6 @@ export const logoutAll = async (req, res) => {
         });
     }
 };
-
 
 /**
  * Initiates password reset process by generating a secure reset token.
@@ -536,7 +527,6 @@ export const forgotPassword = async (req, res) => {
         });
     }
 };
-
 
 /**
  * Resets user password using a valid reset token from forgot password flow.

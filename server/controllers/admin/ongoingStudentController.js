@@ -1,4 +1,4 @@
-import { User } from "../models/index.js";
+import { User } from "../../models/index.js";
 
 /**
  * Get all pending users (students awaiting verification)

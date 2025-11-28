@@ -1,4 +1,4 @@
-import { User, RefreshToken } from "../models/index.js";
+import { User, RefreshToken } from "../../models/index.js";
 
 export const createEnrollment = async (req, res) => {
     try {

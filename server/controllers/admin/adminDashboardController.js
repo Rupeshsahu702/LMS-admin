@@ -1,4 +1,4 @@
-import { User, Course, Enrollment } from "../models/index.js";
+import { User, Course, Enrollment } from "../../models/index.js";
 
 /**
  * @desc    Get all dashboard stats at once (RECOMMENDED)

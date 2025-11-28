@@ -198,7 +198,8 @@ export default function ColumnChart({ data, height = 400, onDateChange }) {
     <div
       style={{
         width: '100%',
-        background: '#18181b', // bg-zinc-900 (Container background)
+        background: '#18181b',
+        borderRadius: '20px', // bg-zinc-900 (Container background)
       }}
     >
       {/* Header and Filter Controls */}

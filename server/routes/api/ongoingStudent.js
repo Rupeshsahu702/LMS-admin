@@ -1,9 +1,8 @@
 // routes/admin/pendingUsers.routes.js
 import express from "express";
-import { ongoingStudentController } from "../../controllers/index.js";
+import { ongoingStudentController } from "../../controllers/admin/index.js";
 
 const router = express.Router();
-
 
 router.get("/", ongoingStudentController.getOngoingUsers);
 
