@@ -14,6 +14,7 @@ import {
   Viewport,
   ItemIndicator,
   ItemText,
+  Icon,
 } from '@radix-ui/react-select';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -42,9 +43,9 @@ function SelectTrigger({ className, size = 'default', children, ...props }) {
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon asChild>
+      <Icon asChild>
         <ChevronDownIcon className="size-4 opacity-50" />
-      </SelectPrimitive.Icon>
+      </Icon>
     </Trigger>
   );
 }
