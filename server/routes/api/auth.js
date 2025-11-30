@@ -17,7 +17,11 @@ router.post(
     authValidation.validateLmsLogin,
     authController.lmsLogin
 );
-router.post("/refresh-token", authController.refreshAccessToken);
+router.post(
+    "/refresh-token",
+    authValidation.validateRefreshToken,
+    authController.refreshAccessToken
+);
 router.post("/logout", authController.logout);
 router.post("/logout-all", isAuthenticated, authController.logoutAll);
 // router.get("/me", isAuthenticated, getCurrentUser);
