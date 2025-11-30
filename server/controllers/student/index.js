@@ -33,6 +33,3 @@ export * from "./referral.controller.js";
 
 // Support
 export * from "./support.controller.js";
-
-// Streak
-export * from "./streak.controller.js";

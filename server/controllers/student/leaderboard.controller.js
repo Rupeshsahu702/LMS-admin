@@ -87,7 +87,6 @@ export const getLeaderboard = async (req, res) => {
                 userEntry: userEntry
                     ? {
                           xp: userEntry.xp,
-                          streak: userEntry.streak,
                           rank: userRank,
                       }
                     : null,

@@ -237,7 +237,7 @@ const StudentLearningPage = () => {
 
       {/* Sidebar */}
       <div
-        className={`z-20 absolute lg:static right-0 shrink-0 h-[calc(100vh-5rem)] overflow-auto transition-all bg-zinc-900 border border-zinc-700 ${bar ? 'w-80' : 'w-0'}`}
+        className={`z-20 absolute lg:static right-0 shrink-0 h-[calc(100vh-5rem)] overflow-auto transition-all bg-zinc-900 border border-zinc-800 ${bar ? 'w-80' : 'w-0'}`}
       >
         {/* Course Header */}
         <div className="p-6 border-b border-zinc-800 bg-zinc-900 flex justify-between items-center sticky top-0">

@@ -17,7 +17,6 @@ const leaderboardSchema = new mongoose.Schema(
         xp: { type: Number, default: 0 },
 
         // Learning Stats
-        streak: { type: Number, default: 0 },
         hoursLearned: { type: Number, default: 0 },
         quizzesCompleted: { type: Number, default: 0 },
         assignmentsCompleted: { type: Number, default: 0 },

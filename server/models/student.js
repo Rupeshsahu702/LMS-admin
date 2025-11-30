@@ -34,8 +34,6 @@ const studentSchema = new mongoose.Schema(
 
         // GAMIFICATION
         xp: { type: Number, default: 0 },
-        streak: { type: Number, default: 0 },
-        lastStreakDate: { type: Date },
         hoursLearned: { type: Number, default: 0 },
         quizzesCompleted: { type: Number, default: 0 },
         assignmentsCompleted: { type: Number, default: 0 },

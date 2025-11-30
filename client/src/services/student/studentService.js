@@ -170,11 +170,11 @@ export const getSupportQueries = async () => {
 };
 
 // ============================================
-// STREAK
+// LOGOUT FROM ALL DEVICES
 // ============================================
 
-export const updateStreak = async () => {
-  const response = await api.post('/student/streak/update');
+export const logoutFromAllDevices = async () => {
+  const response = await api.post('/auth/logout-all');
   return response.data;
 };
 
@@ -205,7 +205,7 @@ const studentService = {
   applyReferralCode,
   createSupportQuery,
   getSupportQueries,
-  updateStreak,
+  logoutFromAllDevices,
 };
 
 export default studentService;

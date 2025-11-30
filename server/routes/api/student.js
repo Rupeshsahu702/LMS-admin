@@ -48,9 +48,6 @@ import {
     // Support
     createSupportQuery,
     getSupportQueries,
-
-    // Streak
-    updateStreak,
 } from "../../controllers/student/index.js";
 
 const router = express.Router();
@@ -126,10 +123,5 @@ router.post("/referral/apply", applyReferralCode);
 // ============================================
 router.post("/support", createSupportQuery);
 router.get("/support", getSupportQueries);
-
-// ============================================
-// STREAK
-// ============================================
-router.post("/streak/update", updateStreak);
 
 export default router;

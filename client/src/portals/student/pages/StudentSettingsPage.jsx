@@ -3,6 +3,7 @@ import { Shield, Lock, LogOut, User, Loader2 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 
 import { useProfile, useUpdatePrivacy, useChangePassword } from '../hooks';
+import { logoutFromAllDevices } from '@/services/student/studentService';
 
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 import { logout, clearStudentData } from '@/redux/slices';
@@ -19,6 +20,7 @@ const StudentSettingsPage = () => {
   const [isProfileLocked, setIsProfileLocked] = useState(false);
   const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
   const [isOAuthUser, setIsOAuthUser] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   // Populate initial privacy setting from profile
   useEffect(() => {
@@ -65,14 +67,26 @@ const StudentSettingsPage = () => {
     }
   };
 
-  const handleLogout = (allDevices = false) => {
-    // Clear auth state and student data
-    dispatch(logout());
-    dispatch(clearStudentData());
-    if (allDevices) {
-      alert('Logged out from all devices.');
+  const handleLogout = async (allDevices = false) => {
+    try {
+      setLogoutLoading(true);
+
+      if (allDevices) {
+        // Call API to revoke all refresh tokens on server
+        await logoutFromAllDevices();
+      }
+
+      // Clear auth state and student data locally
+      dispatch(logout());
+      dispatch(clearStudentData());
+
+      navigate('/student/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+      alert(err.response?.data?.message || 'Failed to logout');
+    } finally {
+      setLogoutLoading(false);
     }
-    navigate('/student/login');
   };
 
   if (profileLoading) {
@@ -222,14 +236,18 @@ const StudentSettingsPage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => handleLogout(false)}
-                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-xl font-bold transition-colors"
+                  disabled={logoutLoading}
+                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
+                  {logoutLoading && <Loader2 size={16} className="animate-spin" />}
                   Log Out
                 </button>
                 <button
                   onClick={() => handleLogout(true)}
-                  className="flex-1 bg-red-900/20 border border-red-900/50 text-red-400 hover:bg-red-900/30 py-3 rounded-xl font-bold transition-colors"
+                  disabled={logoutLoading}
+                  className="flex-1 bg-red-900/20 border border-red-900/50 text-red-400 hover:bg-red-900/30 py-3 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
+                  {logoutLoading && <Loader2 size={16} className="animate-spin" />}
                   Log Out from All Devices
                 </button>
               </div>
