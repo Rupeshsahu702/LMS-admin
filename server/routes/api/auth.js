@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import { isAuthenticated } from "../../middlewares/isAuthenticated.js";
 import { authValidation } from "../../validation/index.js";
-import { authController } from "../../controllers/auth/index.js";
+import * as authController from "../../controllers/auth/index.js";
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const router = express.Router();
 
 // router.post("/register", register);
 router.post("/login", authValidation.validateLogin, authController.login);
-router.post("/lms-login", authController.lmsLogin);
+router.post("/lms-login", authValidation.validateLmsLogin, authController.lmsLogin);
 router.post("/refresh-token", authController.refreshAccessToken);
 router.post("/logout", authController.logout);
 router.post("/logout-all", isAuthenticated, authController.logoutAll);
