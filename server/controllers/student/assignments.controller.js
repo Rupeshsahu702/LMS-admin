@@ -137,6 +137,7 @@ export const getCourseAssignments = async (req, res) => {
         res.json({
             success: true,
             data: {
+                courseId: course._id,
                 courseTitle: course.title,
                 assignments,
             },

@@ -59,9 +59,7 @@ export const getLeaderboard = async (req, res) => {
                 name: student.name,
                 avatar: student.avatar,
                 xp: entry.xp,
-                streak: entry.streak,
                 quizzesCompleted: entry.quizzesCompleted,
-                hoursLearned: entry.hoursLearned,
                 // Only show social links if profile is not locked
                 ...(isLocked
                     ? {}

@@ -8,7 +8,9 @@ import {
   getCourseProgress,
   getQuizQuestions,
   submitQuiz,
+  getQuizzesByCourse,
   getCourseQuizzes,
+  getAssignmentsByCourse,
   getCourseAssignments,
   submitAssignment,
 } from '@/services/student/studentService';
@@ -237,6 +239,7 @@ export const useSubmitQuiz = () => {
  */
 export const useCourseQuizzes = slug => {
   const [quizzes, setQuizzes] = useState([]);
+  const [courseId, setCourseId] = useState(null);
   const [courseTitle, setCourseTitle] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -250,6 +253,7 @@ export const useCourseQuizzes = slug => {
       const response = await getCourseQuizzes(slug);
       if (response.success) {
         setQuizzes(response.data.quizzes);
+        setCourseId(response.data.courseId);
         setCourseTitle(response.data.courseTitle);
       }
     } catch (err) {
@@ -264,7 +268,7 @@ export const useCourseQuizzes = slug => {
     fetchQuizzes();
   }, [fetchQuizzes]);
 
-  return { quizzes, courseTitle, loading, error, refetch: fetchQuizzes };
+  return { quizzes, courseId, courseTitle, loading, error, refetch: fetchQuizzes };
 };
 
 /**
@@ -272,6 +276,7 @@ export const useCourseQuizzes = slug => {
  */
 export const useCourseAssignments = slug => {
   const [assignments, setAssignments] = useState([]);
+  const [courseId, setCourseId] = useState(null);
   const [courseTitle, setCourseTitle] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -285,6 +290,7 @@ export const useCourseAssignments = slug => {
       const response = await getCourseAssignments(slug);
       if (response.success) {
         setAssignments(response.data.assignments);
+        setCourseId(response.data.courseId);
         setCourseTitle(response.data.courseTitle);
       }
     } catch (err) {
@@ -299,7 +305,7 @@ export const useCourseAssignments = slug => {
     fetchAssignments();
   }, [fetchAssignments]);
 
-  return { assignments, courseTitle, loading, error, refetch: fetchAssignments };
+  return { assignments, courseId, courseTitle, loading, error, refetch: fetchAssignments };
 };
 
 /**
@@ -325,4 +331,66 @@ export const useSubmitAssignment = () => {
   };
 
   return { submit, loading, error };
+};
+
+/**
+ * Hook for fetching all courses with quiz progress
+ */
+export const useQuizzesByCourse = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchCourses = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getQuizzesByCourse();
+      if (response.success) {
+        setCourses(response.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch quizzes by course:', err);
+      setError(err.response?.data?.message || 'Failed to load quizzes');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
+  return { courses, loading, error, refetch: fetchCourses };
+};
+
+/**
+ * Hook for fetching all courses with assignment progress
+ */
+export const useAssignmentsByCourse = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchCourses = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getAssignmentsByCourse();
+      if (response.success) {
+        setCourses(response.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch assignments by course:', err);
+      setError(err.response?.data?.message || 'Failed to load assignments');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
+
+  return { courses, loading, error, refetch: fetchCourses };
 };

@@ -103,7 +103,6 @@ const StudentLeaderboardPage = () => {
           <div className="grid grid-cols-12 gap-4 text-zinc-500 text-xs uppercase font-bold p-6 border-b border-zinc-800 bg-black/20">
             <div className="col-span-6 sm:col-span-5">Rank & Student</div>
             <div className="col-span-2 text-center hidden sm:block">XP Earned</div>
-            <div className="col-span-2 text-center hidden sm:block">Streak</div>
             <div className="col-span-6 sm:col-span-3 text-right">Quizzes Aced</div>
           </div>
 
@@ -111,14 +110,14 @@ const StudentLeaderboardPage = () => {
             {leaderboardData.map(user => (
               <div
                 key={user.rank}
-                className={`grid grid-cols-12 gap-4 items-center p-4 rounded-2xl border transition-all duration-300 hover:scale-[1.01] cursor-default ${
+                className={`grid grid-cols-3 gap-4 items-center p-4 rounded-2xl border transition-all duration-300 hover:scale-[1.01] cursor-default ${
                   user.isMe
                     ? 'bg-blue-900/20 border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.15)]'
                     : 'bg-zinc-900/50 border-transparent hover:border-zinc-700 hover:bg-zinc-800'
                 }`}
               >
                 {/* Rank & Avatar */}
-                <div className="col-span-6 sm:col-span-5 flex items-center gap-4">
+                <div className=" sm:col-span-5 flex items-center gap-4">
                   <div
                     className={`w-8 h-8 flex shrink-0 items-center justify-center font-bold rounded-full ${
                       user.rank === 1
@@ -150,26 +149,17 @@ const StudentLeaderboardPage = () => {
                       <span className="flex items-center gap-1">
                         <Zap size={10} /> {user.xp}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <Flame size={10} /> {user.streak}
-                      </span>
                     </p>
                   </div>
                 </div>
 
                 {/* XP */}
-                <div className="col-span-2 text-center hidden sm:flex items-center justify-center font-mono font-medium text-blue-400">
+                <div className=" text-center hidden sm:flex items-center justify-center font-mono font-medium text-blue-400">
                   <Zap size={16} className="mr-2 opacity-70" /> {user.xp.toLocaleString()}
                 </div>
 
-                {/* Streak */}
-                <div className="col-span-2 text-center hidden sm:flex items-center justify-center font-mono font-medium text-orange-400">
-                  <Flame size={16} className="mr-2 opacity-70" /> {user.streak}
-                </div>
-
                 {/* Quizzes */}
-                <div className="col-span-6 sm:col-span-3 text-right font-mono font-medium text-purple-400 flex items-center justify-end">
-                  <span className="mr-2 text-white hidden sm:inline">Total:</span>
+                <div className=" sm:col-span-3 text-right font-mono font-medium text-purple-400 flex items-center justify-end">
                   <Target size={16} className="mr-2 opacity-70" /> {user.quizzes}
                 </div>
               </div>
