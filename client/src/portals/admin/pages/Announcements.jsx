@@ -200,7 +200,7 @@ export default function Announcements() {
             <Button
               onClick={handleCancel}
               variant="outline"
-              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700"
+              className="border-zinc-700 text-zinc-700 hover:shadow-2xl"
             >
               Cancel
             </Button>
