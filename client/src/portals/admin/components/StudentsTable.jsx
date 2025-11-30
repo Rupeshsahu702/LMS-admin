@@ -357,7 +357,7 @@ const StudentsTable = ({ data = [] }) => {
         cell: ({ row }) => <div className="text-zinc-200">{row.getValue('year')}</div>,
       },
       {
-        header: 'Payment Status ₹',
+        header: 'Payment Status',
         accessorKey: 'paymentStatus',
         meta: { filterVariant: 'dropdown' },
         cell: ({ row }) => (
