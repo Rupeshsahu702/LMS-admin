@@ -124,7 +124,7 @@ export const getCourseAssignments = async (req, res) => {
         course.modules.forEach((module) => {
             module.tasks.forEach((task) => {
                 const submission = submissions.find(
-                    (s) => s.lessonId.toString() === task._id.toString()
+                    (s) => s.taskId?.toString() === task._id.toString()
                 );
 
                 assignments.push({
@@ -208,14 +208,15 @@ export const submitAssignment = async (req, res) => {
             {
                 student: req.userId,
                 course: courseId,
-                lessonId: taskId,
+                taskId: taskId,
                 type: "assignment",
             },
             {
                 enrollment: enrollment._id,
                 student: req.userId,
                 course: courseId,
-                lessonId: taskId,
+                moduleId: moduleId,
+                taskId: taskId,
                 type: "assignment",
                 githubLink,
                 status: "submitted",

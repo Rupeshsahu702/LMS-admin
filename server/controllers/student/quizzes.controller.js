@@ -122,7 +122,7 @@ export const getCourseQuizzes = async (req, res) => {
         course.modules.forEach((module) => {
             module.quizzes.forEach((quiz) => {
                 const submission = submissions.find(
-                    (s) => s.lessonId.toString() === quiz._id.toString()
+                    (s) => s.quizId?.toString() === quiz._id.toString()
                 );
 
                 quizzes.push({
@@ -319,14 +319,15 @@ export const submitQuiz = async (req, res) => {
             {
                 student: req.userId,
                 course: courseId,
-                lessonId: quizId,
+                quizId: quizId,
                 type: "quiz",
             },
             {
                 enrollment: enrollment._id,
                 student: req.userId,
                 course: courseId,
-                lessonId: quizId,
+                moduleId: moduleId,
+                quizId: quizId,
                 type: "quiz",
                 quizScore: score,
                 totalQuestions: quiz.questions.length,

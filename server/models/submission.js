@@ -21,7 +21,7 @@ const submissionSchema = new mongoose.Schema(
         },
 
         // Reference to the module containing the quiz/task
-        moduleId: { type: mongoose.Schema.Types.ObjectId, required: true },
+        moduleId: { type: mongoose.Schema.Types.ObjectId },
 
         // For quiz submissions
         quizId: { type: mongoose.Schema.Types.ObjectId },
