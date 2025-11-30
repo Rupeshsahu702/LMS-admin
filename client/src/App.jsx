@@ -28,9 +28,9 @@ const App = () => {
         }
       >
         <Routes>
-          <Route path="/*" element={<PublicPortal />} />
           <Route path="/admin/*" element={<AdminPortal />} />
           <Route path="/student/*" element={<StudentPortal />} />
+          <Route path="/*" element={<PublicPortal />} />
         </Routes>
       </Suspense>
     </>
