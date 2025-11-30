@@ -10,11 +10,25 @@ import {
  */
 export const getProfile = async (req, res) => {
     try {
-        const student = await Student.findById(req.userId).select(
-            "-lmsPassword -resetPasswordToken -resetPasswordExpire -googleId -githubId"
-        );
+        const student = await Student.findById(req.userId)
+            .select("+googleId +githubId")
+            .select("-lmsPassword -resetPasswordToken -resetPasswordExpire");
 
-        res.json({ success: true, data: student });
+        // Transform to include isOAuthUser flag
+        const studentObj = student.toObject();
+        const isOAuthUser = !!(studentObj.googleId || studentObj.githubId);
+        
+        // Remove OAuth IDs from response
+        delete studentObj.googleId;
+        delete studentObj.githubId;
+
+        res.json({ 
+            success: true, 
+            data: {
+                ...studentObj,
+                isOAuthUser,
+            }
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

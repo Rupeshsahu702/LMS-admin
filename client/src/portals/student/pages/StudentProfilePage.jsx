@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Camera,
   Save,
@@ -10,36 +10,65 @@ import {
   Building,
   BookOpen,
   Calendar,
+  Loader2,
 } from 'lucide-react';
+import { useProfile, useUpdateProfile, useUpdateAvatar } from '../hooks';
 
 const StudentProfilePage = () => {
   const fileInputRef = useRef(null);
-  const [avatar, setAvatar] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=Alex');
+  const { profile, loading, error, refetch } = useProfile();
+  const { update: updateProfileApi, loading: updating } = useUpdateProfile();
+  const { update: updateAvatarApi, loading: uploadingAvatar } = useUpdateAvatar();
+
+  const [avatar, setAvatar] = useState('');
   const [formData, setFormData] = useState({
-    firstName: 'Alex',
-    lastName: 'Johnson',
-    college: 'Indore Institute of Science & Technology',
-    course: 'B.Tech Computer Science',
-    year: '3rd Year',
-    linkedin: 'https://linkedin.com/in/alex',
-    github: 'https://github.com/alexcode',
+    name: '',
+    lastName: '',
+    collegeName: '',
+    courseName: '',
+    yearOfStudy: '',
+    linkedin: '',
+    github: '',
     portfolio: '',
   });
 
   // eslint-disable-next-line no-unused-vars
   const [isEditing, setIsEditing] = useState(false); // Toggle read/edit mode
 
+  // Populate form with profile data
+  useEffect(() => {
+    if (profile) {
+      setAvatar(profile.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default');
+      setFormData({
+        name: profile.name || '',
+        lastName: profile.lastName || '',
+        collegeName: profile.collegeName || '',
+        courseName: profile.courseName || '',
+        yearOfStudy: profile.yearOfStudy || '',
+        linkedin: profile.linkedin || '',
+        github: profile.github || '',
+        portfolio: profile.portfolio || '',
+      });
+    }
+  }, [profile]);
+
   const handleInputChange = e => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = e => {
+  const handleImageUpload = async e => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatar(reader.result);
+      reader.onloadend = async () => {
+        const base64 = reader.result;
+        setAvatar(base64);
+        try {
+          await updateAvatarApi(base64);
+        } catch (err) {
+          console.error('Failed to upload avatar:', err);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -49,11 +78,42 @@ const StudentProfilePage = () => {
     fileInputRef.current.click();
   };
 
-  const handleSave = e => {
+  const handleSave = async e => {
     e.preventDefault();
-    setIsEditing(false);
-    alert('Profile updated successfully!');
+    try {
+      await updateProfileApi({
+        name: formData.name,
+        lastName: formData.lastName,
+        collegeName: formData.collegeName,
+        courseName: formData.courseName,
+        yearOfStudy: formData.yearOfStudy,
+        linkedin: formData.linkedin,
+        github: formData.github,
+        portfolio: formData.portfolio,
+      });
+      setIsEditing(false);
+      refetch();
+      alert('Profile updated successfully!');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to update profile');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white flex overflow-hidden">
@@ -74,10 +134,15 @@ const StudentProfilePage = () => {
                   </div>
                   <button
                     onClick={triggerFileInput}
-                    className="absolute bottom-1 right-1 p-2 bg-blue-600 rounded-full text-white hover:bg-blue-500 transition-colors shadow-lg border-2 border-black"
+                    disabled={uploadingAvatar}
+                    className="absolute bottom-1 right-1 p-2 bg-blue-600 rounded-full text-white hover:bg-blue-500 transition-colors shadow-lg border-2 border-black disabled:opacity-50"
                     title="Change Photo"
                   >
-                    <Camera size={16} />
+                    {uploadingAvatar ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <Camera size={16} />
+                    )}
                   </button>
                   <input
                     type="file"
@@ -90,18 +155,20 @@ const StudentProfilePage = () => {
 
                 <div className="flex-1 mb-2">
                   <h2 className="text-3xl font-bold">
-                    {formData.firstName} {formData.lastName}
+                    {formData.name} {formData.lastName}
                   </h2>
                   <p className="text-zinc-400 flex items-center gap-2 mt-1">
-                    <Building size={16} /> {formData.college || 'Add College Name'}
+                    <Building size={16} /> {formData.collegeName || 'Add College Name'}
                   </p>
                 </div>
 
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg shadow-white/10"
+                  disabled={updating}
+                  className="flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg shadow-white/10 disabled:opacity-50"
                 >
-                  <Save size={18} /> Save Changes
+                  {updating ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}{' '}
+                  Save Changes
                 </button>
               </div>
             </div>
@@ -122,8 +189,8 @@ const StudentProfilePage = () => {
                       </label>
                       <input
                         type="text"
-                        name="firstName"
-                        value={formData.firstName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
                         className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
                         placeholder="John"
@@ -155,8 +222,8 @@ const StudentProfilePage = () => {
                         />
                         <input
                           type="text"
-                          name="college"
-                          value={formData.college}
+                          name="collegeName"
+                          value={formData.collegeName}
                           onChange={handleInputChange}
                           className="w-full bg-black border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
                           placeholder="Institute Name"
@@ -175,8 +242,8 @@ const StudentProfilePage = () => {
                         />
                         <input
                           type="text"
-                          name="course"
-                          value={formData.course}
+                          name="courseName"
+                          value={formData.courseName}
                           onChange={handleInputChange}
                           className="w-full bg-black border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
                           placeholder="B.Tech CS"
@@ -194,8 +261,8 @@ const StudentProfilePage = () => {
                           size={18}
                         />
                         <select
-                          name="year"
-                          value={formData.year}
+                          name="yearOfStudy"
+                          value={formData.yearOfStudy}
                           onChange={handleInputChange}
                           className="w-full bg-black border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors appearance-none cursor-pointer"
                           required

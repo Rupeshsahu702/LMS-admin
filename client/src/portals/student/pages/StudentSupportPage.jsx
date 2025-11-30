@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Mail,
   MessageSquare,
@@ -9,15 +9,29 @@ import {
   BookOpen,
   Award,
   ChevronDown,
+  Clock,
+  Loader2,
 } from 'lucide-react';
+import { useSupportQueries, useCreateSupportQuery, useProfile } from '../hooks';
 
 const StudentSupportPage = () => {
+  const { profile } = useProfile();
+  const { queries, loading: queriesLoading, refetch } = useSupportQueries();
+  const { create: createQuery, loading: creating } = useCreateSupportQuery();
+
   const [category, setCategory] = useState('Select a topic');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [email, setEmail] = useState('alex.johnson@example.com'); // Pre-filled for logged-in user
+  const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isSent, setIsSent] = useState(false);
-  const [isSending, setIsSending] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Pre-fill email from profile
+  useEffect(() => {
+    if (profile?.email) {
+      setEmail(profile.email);
+    }
+  }, [profile]);
 
   const categories = [
     { id: 'courses', label: 'My Courses', icon: <BookOpen size={18} /> },
@@ -27,16 +41,21 @@ const StudentSupportPage = () => {
     { id: 'other', label: 'Other', icon: <MessageSquare size={18} /> },
   ];
 
-  const handleSend = e => {
+  const handleSend = async e => {
     e.preventDefault();
-    if (category === 'Select a topic' || !message) return;
+    if (category === 'Select a topic' || !message || !email) return;
 
-    setIsSending(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSending(false);
+    try {
+      await createQuery({
+        email,
+        category: categories.find(c => c.label === category)?.id || 'other',
+        message,
+      });
       setIsSent(true);
-    }, 1500);
+      refetch();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to send message');
+    }
   };
 
   return (
@@ -131,16 +150,16 @@ const StudentSupportPage = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={isSending || category === 'Select a topic' || !message}
+                    disabled={creating || category === 'Select a topic' || !message}
                     className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
-                      isSending || category === 'Select a topic' || !message
+                      creating || category === 'Select a topic' || !message
                         ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:shadow-blue-600/25'
                     }`}
                   >
-                    {isSending ? (
+                    {creating ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <Loader2 size={18} className="animate-spin" />
                         Sending...
                       </>
                     ) : (
@@ -150,6 +169,46 @@ const StudentSupportPage = () => {
                     )}
                   </button>
                 </form>
+
+                {/* Previous Queries Toggle */}
+                {queries.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-zinc-800">
+                    <button
+                      onClick={() => setShowHistory(!showHistory)}
+                      className="text-sm text-zinc-400 hover:text-white flex items-center gap-2"
+                    >
+                      <Clock size={16} />
+                      {showHistory ? 'Hide' : 'View'} Previous Queries ({queries.length})
+                    </button>
+
+                    {showHistory && (
+                      <div className="mt-4 space-y-3 max-h-64 overflow-y-auto">
+                        {queries.map((query, index) => (
+                          <div
+                            key={query._id || index}
+                            className="p-4 bg-black rounded-xl border border-zinc-800"
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="text-xs font-medium text-blue-400 uppercase">
+                                {query.category}
+                              </span>
+                              <span className="text-xs text-zinc-500">
+                                {new Date(query.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="text-sm text-zinc-300 line-clamp-2">{query.message}</p>
+                            {query.response && (
+                              <div className="mt-2 pt-2 border-t border-zinc-800">
+                                <p className="text-xs text-green-400">Admin Response:</p>
+                                <p className="text-sm text-zinc-400">{query.response}</p>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               // Success State
