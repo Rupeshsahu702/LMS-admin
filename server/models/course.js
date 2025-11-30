@@ -8,35 +8,24 @@ const questionSchema = new mongoose.Schema(
         questionText: { type: String, required: true },
         options: [{ type: String, required: true }],
         correctAnswer: { type: Number, required: true },
-        explanation: { type: String },
     },
     { _id: true }
 );
 
-// Lessons
-const lessonSchema = new mongoose.Schema(
+// Quiz schema for modules
+const quizSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
-        type: {
-            type: String,
-            enum: ["video", "text", "quiz", "assignment", "project"],
-            required: true,
-        },
-        contentUrls: [{ type: String }],
-        duration: { type: Number },
-        isFreePreview: { type: Boolean, default: false },
-        notes: { type: String },
+        questions: [questionSchema],
     },
     { _id: true }
 );
 
-// Assignments / Tasks
+// Tasks/Assignments
 const taskSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
         description: { type: String },
-        dueInDays: { type: Number },
-        attachments: [{ type: String }],
     },
     { _id: true }
 );
@@ -45,21 +34,13 @@ const taskSchema = new mongoose.Schema(
 const moduleSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
-        timeline: { type: String },
+        maxTimelineInDays: { type: Number, required: true },
         description: { type: String },
-
         textLinks: [{ type: String }],
         videoLinks: [{ type: String }],
 
-        lessons: [lessonSchema],
+        quizzes: [quizSchema],
         tasks: [taskSchema],
-
-        quizzes: [
-            {
-                title: { type: String },
-                questions: [questionSchema],
-            },
-        ],
 
         order: { type: Number, default: 0 },
     },
@@ -71,9 +52,6 @@ const capstoneSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
         description: { type: String },
-        requirements: [{ type: String }],
-        deliverables: [{ type: String }],
-        isLocked: { type: Boolean, default: true },
     },
     { _id: true }
 );
@@ -84,29 +62,18 @@ const courseSchema = new mongoose.Schema(
         slug: { type: String, lowercase: true, index: true },
         description: { type: String, required: true },
         thumbnail: { type: String },
-
         stream: { type: String, required: true, index: true },
         level: {
             type: String,
             enum: ["Beginner", "Intermediate", "Advanced"],
             default: "Beginner",
         },
-
         price: { type: Number, default: 500 },
-        discountedPrice: { type: Number },
-
+        totalDuration: { type: String },
+        isPublished: { type: Boolean, default: false, index: true },
+        tags: [{ type: String }],
         modules: [moduleSchema],
         capstoneProjects: [capstoneSchema],
-
-        totalDuration: { type: String },
-        enrolledCount: { type: Number, default: 0, index: true },
-        isPublished: { type: Boolean, default: false, index: true },
-
-        courseVersion: { type: String, default: "1.0.0" },
-        tags: [{ type: String }],
-        difficultyIndex: { type: Number, default: 1, min: 0, max: 5 },
-
-        instructor: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
     },
     { timestamps: true }
 );

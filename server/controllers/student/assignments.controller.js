@@ -3,6 +3,27 @@ import { submitAssignmentSchema } from "../../validation/student.zod.js";
 import { updateLeaderboard } from "./leaderboard.controller.js";
 
 /**
+ * Helper function to calculate progress percentage
+ */
+const calculateProgress = (course, completedQuizzes, completedTasks) => {
+    let totalItems = 0;
+    let completedItems = 0;
+
+    course.modules.forEach((module) => {
+        totalItems += module.quizzes.length + module.tasks.length;
+        completedItems += module.quizzes.filter((q) =>
+            completedQuizzes.includes(q._id.toString())
+        ).length;
+        completedItems += module.tasks.filter((t) =>
+            completedTasks.includes(t._id.toString())
+        ).length;
+    });
+
+    if (totalItems === 0) return 0;
+    return Math.round((completedItems / totalItems) * 100);
+};
+
+/**
  * GET /api/student/assignments
  * Get all courses with assignment progress
  */
@@ -16,9 +37,17 @@ export const getAssignmentsByCourse = async (req, res) => {
         const coursesWithAssignments = enrollments.map((enrollment) => {
             const course = enrollment.course;
             let totalAssignments = 0;
+            let completedAssignments = 0;
+
+            const completedTaskIds = enrollment.completedTasks.map((id) =>
+                id.toString()
+            );
 
             course.modules.forEach((module) => {
                 totalAssignments += module.tasks.length;
+                completedAssignments += module.tasks.filter((t) =>
+                    completedTaskIds.includes(t._id.toString())
+                ).length;
             });
 
             return {
@@ -27,8 +56,13 @@ export const getAssignmentsByCourse = async (req, res) => {
                 slug: course.slug,
                 thumbnail: course.thumbnail,
                 totalAssignments,
-                completedAssignments: 0, // Would need to fetch from submissions
-                progress: 0,
+                completedAssignments,
+                progress:
+                    totalAssignments > 0
+                        ? Math.round(
+                              (completedAssignments / totalAssignments) * 100
+                          )
+                        : 0,
             };
         });
 
@@ -73,6 +107,10 @@ export const getCourseAssignments = async (req, res) => {
             type: "assignment",
         });
 
+        const completedTaskIds = enrollment.completedTasks.map((id) =>
+            id.toString()
+        );
+
         const assignments = [];
         course.modules.forEach((module) => {
             module.tasks.forEach((task) => {
@@ -86,8 +124,8 @@ export const getCourseAssignments = async (req, res) => {
                     moduleTitle: module.title,
                     title: task.title,
                     description: task.description,
-                    dueInDays: task.dueInDays,
                     isSubmitted: !!submission,
+                    isCompleted: completedTaskIds.includes(task._id.toString()),
                     status: submission?.status || "pending",
                     grade: submission?.grade,
                     feedback: submission?.feedback,
@@ -125,6 +163,13 @@ export const submitAssignment = async (req, res) => {
         const { courseId, moduleId, taskId, githubLink, additionalNotes } =
             validation.data;
 
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Course not found" });
+        }
+
         const enrollment = await Enrollment.findOne({
             student: req.userId,
             course: courseId,
@@ -157,6 +202,32 @@ export const submitAssignment = async (req, res) => {
             },
             { upsert: true, new: true }
         );
+
+        // Mark task as completed if not already
+        if (!enrollment.completedTasks.includes(taskId)) {
+            enrollment.completedTasks.push(taskId);
+
+            // Recalculate progress
+            const completedQuizzes = enrollment.completedQuizzes.map((id) =>
+                id.toString()
+            );
+            const completedTasks = enrollment.completedTasks.map((id) =>
+                id.toString()
+            );
+            enrollment.progressPercentage = calculateProgress(
+                course,
+                completedQuizzes,
+                completedTasks
+            );
+
+            // Check if course is completed
+            if (enrollment.progressPercentage === 100) {
+                enrollment.isCompleted = true;
+                enrollment.completionDate = new Date();
+            }
+
+            await enrollment.save();
+        }
 
         // Update user stats
         await Student.findByIdAndUpdate(req.userId, {

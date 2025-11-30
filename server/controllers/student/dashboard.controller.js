@@ -57,31 +57,31 @@ export const getDashboard = async (req, res) => {
             .sort({ updatedAt: -1 })
             .populate("course", "title slug modules");
 
-        // Get upcoming deadlines (assignments/quizzes due)
+        // Get pending tasks from enrolled courses
         const enrollments = await Enrollment.find({
             student: userId,
             isCompleted: false,
-        }).populate("course", "modules");
+        }).populate("course", "title modules");
 
-        const upcomingDeadlines = [];
+        const pendingTasks = [];
         enrollments.forEach((enrollment) => {
+            const completedTaskIds = enrollment.completedTasks.map((id) =>
+                id.toString()
+            );
             enrollment.course.modules.forEach((module) => {
-                module.tasks.forEach((task) => {
-                    if (task.dueInDays) {
-                        upcomingDeadlines.push({
+                module.tasks?.forEach((task) => {
+                    if (!completedTaskIds.includes(task._id.toString())) {
+                        pendingTasks.push({
                             id: task._id,
                             title: task.title,
                             type: "Assignment",
                             courseName: enrollment.course.title,
-                            dueInDays: task.dueInDays,
+                            moduleTitle: module.title,
                         });
                     }
                 });
             });
         });
-
-        // Sort by due date
-        upcomingDeadlines.sort((a, b) => a.dueInDays - b.dueInDays);
 
         res.json({
             success: true,
@@ -99,10 +99,10 @@ export const getDashboard = async (req, res) => {
                           title: activeEnrollment.course.title,
                           slug: activeEnrollment.course.slug,
                           progress: activeEnrollment.progressPercentage,
-                          nextLesson: getNextLesson(activeEnrollment),
+                          nextModule: getNextModule(activeEnrollment),
                       }
                     : null,
-                upcomingDeadlines: upcomingDeadlines.slice(0, 5),
+                pendingTasks: pendingTasks.slice(0, 5),
             },
         });
     } catch (error) {
@@ -111,16 +111,24 @@ export const getDashboard = async (req, res) => {
     }
 };
 
-// Helper function to get next lesson
-const getNextLesson = (enrollment) => {
+// Helper function to get next module with incomplete items
+const getNextModule = (enrollment) => {
     const course = enrollment.course;
-    const completedLessons = enrollment.completedLessons || [];
+    const completedQuizzes = enrollment.completedQuizzes || [];
+    const completedTasks = enrollment.completedTasks || [];
 
     for (const module of course.modules) {
-        for (const lesson of module.lessons) {
-            if (!completedLessons.includes(lesson._id.toString())) {
-                return lesson.title;
-            }
+        // Check if module has any incomplete quizzes
+        const hasIncompleteQuiz = module.quizzes?.some(
+            (quiz) => !completedQuizzes.includes(quiz._id.toString())
+        );
+        // Check if module has any incomplete tasks
+        const hasIncompleteTask = module.tasks?.some(
+            (task) => !completedTasks.includes(task._id.toString())
+        );
+
+        if (hasIncompleteQuiz || hasIncompleteTask) {
+            return module.title;
         }
     }
     return "Course completed!";

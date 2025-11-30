@@ -86,11 +86,10 @@ export const submitAssignmentSchema = z.object({
     additionalNotes: z.string().optional(),
 });
 
-// Lesson Completion Schema
-export const markLessonCompleteSchema = z.object({
+// Module Access Schema (replaces Lesson Completion)
+export const markModuleAccessedSchema = z.object({
     courseId: z.string().min(1, "Course ID is required"),
     moduleId: z.string().min(1, "Module ID is required"),
-    lessonId: z.string().min(1, "Lesson ID is required"),
 });
 
 // Leaderboard Query Schema

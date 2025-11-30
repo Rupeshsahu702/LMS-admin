@@ -1,6 +1,28 @@
 import { submitQuizSchema } from "../../validation/student.zod.js";
 import { updateLeaderboard } from "./leaderboard.controller.js";
 import { Student, Course, Enrollment, Submission } from "../../models/index.js";
+
+/**
+ * Helper function to calculate progress percentage
+ */
+const calculateProgress = (course, completedQuizzes, completedTasks) => {
+    let totalItems = 0;
+    let completedItems = 0;
+
+    course.modules.forEach((module) => {
+        totalItems += module.quizzes.length + module.tasks.length;
+        completedItems += module.quizzes.filter((q) =>
+            completedQuizzes.includes(q._id.toString())
+        ).length;
+        completedItems += module.tasks.filter((t) =>
+            completedTasks.includes(t._id.toString())
+        ).length;
+    });
+
+    if (totalItems === 0) return 0;
+    return Math.round((completedItems / totalItems) * 100);
+};
+
 /**
  * GET /api/student/quizzes
  * Get all courses with quiz progress
@@ -17,13 +39,16 @@ export const getQuizzesByCourse = async (req, res) => {
             let totalQuizzes = 0;
             let completedQuizzes = 0;
 
+            const completedQuizIds = enrollment.completedQuizzes.map((id) =>
+                id.toString()
+            );
+
             course.modules.forEach((module) => {
                 totalQuizzes += module.quizzes.length;
+                completedQuizzes += module.quizzes.filter((q) =>
+                    completedQuizIds.includes(q._id.toString())
+                ).length;
             });
-
-            // Count completed quizzes from submissions
-            // This would need to be fetched from Submission model
-            // For now, returning basic data
 
             return {
                 id: course._id,
@@ -80,6 +105,10 @@ export const getCourseQuizzes = async (req, res) => {
             type: "quiz",
         });
 
+        const completedQuizIds = enrollment.completedQuizzes.map((id) =>
+            id.toString()
+        );
+
         const quizzes = [];
         course.modules.forEach((module) => {
             module.quizzes.forEach((quiz) => {
@@ -93,7 +122,7 @@ export const getCourseQuizzes = async (req, res) => {
                     moduleTitle: module.title,
                     title: quiz.title,
                     questionsCount: quiz.questions.length,
-                    isCompleted: !!submission,
+                    isCompleted: completedQuizIds.includes(quiz._id.toString()),
                     score: submission
                         ? `${submission.quizScore}/${submission.totalQuestions}`
                         : null,
@@ -273,6 +302,32 @@ export const submitQuiz = async (req, res) => {
             },
             { upsert: true, new: true }
         );
+
+        // Mark quiz as completed if not already
+        if (!enrollment.completedQuizzes.includes(quizId)) {
+            enrollment.completedQuizzes.push(quizId);
+
+            // Recalculate progress
+            const completedQuizzes = enrollment.completedQuizzes.map((id) =>
+                id.toString()
+            );
+            const completedTasks = enrollment.completedTasks.map((id) =>
+                id.toString()
+            );
+            enrollment.progressPercentage = calculateProgress(
+                course,
+                completedQuizzes,
+                completedTasks
+            );
+
+            // Check if course is completed
+            if (enrollment.progressPercentage === 100) {
+                enrollment.isCompleted = true;
+                enrollment.completionDate = new Date();
+            }
+
+            await enrollment.save();
+        }
 
         // Update user stats
         await Student.findByIdAndUpdate(req.userId, {

@@ -30,8 +30,9 @@ import {
     getCourseAssignments,
     submitAssignment,
 
-    // Lessons
-    markLessonComplete,
+    // Module Progress
+    markModuleAccessed,
+    getCourseProgress,
 
     // Certificates
     getCertificates,
@@ -81,6 +82,7 @@ router.put("/settings/password", changePassword);
 router.get("/courses", getMyCourses);
 router.get("/courses/:slug", getCourseDetails);
 router.get("/courses/:slug/modules", getCourseModules);
+router.get("/courses/:slug/progress", getCourseProgress);
 
 // ============================================
 // QUIZZES
@@ -98,9 +100,9 @@ router.get("/courses/:slug/assignments", getCourseAssignments);
 router.post("/assignments/submit", submitAssignment);
 
 // ============================================
-// LESSONS
+// MODULE PROGRESS
 // ============================================
-router.post("/lessons/complete", markLessonComplete);
+router.post("/modules/access", markModuleAccessed);
 
 // ============================================
 // CERTIFICATES

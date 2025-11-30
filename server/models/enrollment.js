@@ -41,10 +41,14 @@ const enrollmentSchema = new mongoose.Schema(
         lmsIssuedId: { type: String },
         lmsIssuedPassword: { type: String },
 
-        completedLessons: [{ type: mongoose.Schema.Types.ObjectId }],
+        // Progress tracking - completed quizzes and tasks
+        completedQuizzes: [{ type: mongoose.Schema.Types.ObjectId }],
+        completedTasks: [{ type: mongoose.Schema.Types.ObjectId }],
+        completedModules: [{ type: mongoose.Schema.Types.ObjectId }],
+
         progressPercentage: { type: Number, default: 0 },
 
-        lastAccessedLesson: { type: mongoose.Schema.Types.ObjectId },
+        lastAccessedModule: { type: mongoose.Schema.Types.ObjectId },
 
         isCompleted: { type: Boolean, default: false },
         completionDate: { type: Date },

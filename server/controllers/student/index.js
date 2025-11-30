@@ -19,7 +19,7 @@ export * from "./quizzes.controller.js";
 // Assignments
 export * from "./assignments.controller.js";
 
-// Lessons
+// Module Progress (replaced lessons.controller.js)
 export * from "./lessons.controller.js";
 
 // Certificates

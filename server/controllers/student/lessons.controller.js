@@ -1,13 +1,20 @@
-import { markLessonCompleteSchema } from "../../validation/student.zod.js";
 import { updateLeaderboard } from "./leaderboard.controller.js";
 import { Student, Course, Enrollment } from "../../models/index.js";
+import { z } from "zod";
+
+// Validation schemas for module progress
+const markModuleAccessedSchema = z.object({
+    courseId: z.string().min(1, "Course ID is required"),
+    moduleId: z.string().min(1, "Module ID is required"),
+});
+
 /**
- * POST /api/student/lessons/complete
- * Mark lesson as complete
+ * POST /api/student/modules/access
+ * Mark module as last accessed (for tracking progress through text/video content)
  */
-export const markLessonComplete = async (req, res) => {
+export const markModuleAccessed = async (req, res) => {
     try {
-        const validation = markLessonCompleteSchema.safeParse(req.body);
+        const validation = markModuleAccessedSchema.safeParse(req.body);
         if (!validation.success) {
             return res.status(400).json({
                 success: false,
@@ -15,7 +22,7 @@ export const markLessonComplete = async (req, res) => {
             });
         }
 
-        const { courseId, moduleId, lessonId } = validation.data;
+        const { courseId, moduleId } = validation.data;
 
         const enrollment = await Enrollment.findOne({
             student: req.userId,
@@ -30,45 +37,109 @@ export const markLessonComplete = async (req, res) => {
             });
         }
 
-        // Add lesson to completed lessons if not already there
-        if (!enrollment.completedLessons.includes(lessonId)) {
-            enrollment.completedLessons.push(lessonId);
-            enrollment.lastAccessedLesson = lessonId;
+        // Update last accessed module
+        enrollment.lastAccessedModule = moduleId;
+        await enrollment.save();
 
-            // Recalculate progress
-            const course = await Course.findById(courseId);
-            const totalLessons = course.modules.reduce(
-                (acc, module) => acc + module.lessons.length,
-                0
-            );
-            enrollment.progressPercentage = Math.round(
-                (enrollment.completedLessons.length / totalLessons) * 100
-            );
-
-            // Check if course is completed
-            if (enrollment.progressPercentage === 100) {
-                enrollment.isCompleted = true;
-                enrollment.completionDate = new Date();
-            }
-
-            await enrollment.save();
-
-            // Update user XP and hours
-            await Student.findByIdAndUpdate(req.userId, {
-                $inc: { xp: 20, hoursLearned: 0.5 },
-            });
-
-            // Update leaderboard
-            await updateLeaderboard(req.userId, courseId, 20);
-        }
+        // Update streak and XP for accessing content
+        await Student.findByIdAndUpdate(req.userId, {
+            $inc: { xp: 5, hoursLearned: 0.1 },
+        });
 
         res.json({
             success: true,
             data: {
-                progress: enrollment.progressPercentage,
-                isCompleted: enrollment.isCompleted,
+                lastAccessedModule: moduleId,
             },
-            message: "Lesson marked as complete",
+            message: "Module access recorded",
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/**
+ * GET /api/student/courses/:slug/progress
+ * Get detailed progress for a course
+ */
+export const getCourseProgress = async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        const course = await Course.findOne({ slug });
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Course not found",
+            });
+        }
+
+        const enrollment = await Enrollment.findOne({
+            student: req.userId,
+            course: course._id,
+            paymentStatus: "paid",
+        });
+
+        if (!enrollment) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not enrolled in this course",
+            });
+        }
+
+        // Calculate totals
+        const totalQuizzes = course.modules.reduce(
+            (acc, module) => acc + (module.quizzes?.length || 0),
+            0
+        );
+        const totalTasks = course.modules.reduce(
+            (acc, module) => acc + (module.tasks?.length || 0),
+            0
+        );
+
+        // Get progress per module
+        const moduleProgress = course.modules.map((module) => {
+            const moduleQuizIds = module.quizzes?.map((q) => q._id.toString()) || [];
+            const moduleTaskIds = module.tasks?.map((t) => t._id.toString()) || [];
+
+            const completedModuleQuizzes = enrollment.completedQuizzes.filter((id) =>
+                moduleQuizIds.includes(id.toString())
+            ).length;
+            const completedModuleTasks = enrollment.completedTasks.filter((id) =>
+                moduleTaskIds.includes(id.toString())
+            ).length;
+
+            const totalModuleItems = moduleQuizIds.length + moduleTaskIds.length;
+            const completedModuleItems = completedModuleQuizzes + completedModuleTasks;
+
+            return {
+                moduleId: module._id,
+                title: module.title,
+                totalQuizzes: moduleQuizIds.length,
+                completedQuizzes: completedModuleQuizzes,
+                totalTasks: moduleTaskIds.length,
+                completedTasks: completedModuleTasks,
+                progressPercentage:
+                    totalModuleItems > 0
+                        ? Math.round((completedModuleItems / totalModuleItems) * 100)
+                        : 100,
+            };
+        });
+
+        res.json({
+            success: true,
+            data: {
+                courseId: course._id,
+                courseTitle: course.title,
+                totalQuizzes,
+                totalTasks,
+                completedQuizzes: enrollment.completedQuizzes.length,
+                completedTasks: enrollment.completedTasks.length,
+                progressPercentage: enrollment.progressPercentage,
+                isCompleted: enrollment.isCompleted,
+                lastAccessedModule: enrollment.lastAccessedModule,
+                moduleProgress,
+            },
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

@@ -105,11 +105,16 @@ export const submitAssignment = async assignmentData => {
 };
 
 // ============================================
-// LESSONS
+// MODULE PROGRESS
 // ============================================
 
-export const markLessonComplete = async lessonData => {
-  const response = await api.post('/student/lessons/complete', lessonData);
+export const markModuleAccessed = async moduleData => {
+  const response = await api.post('/student/modules/access', moduleData);
+  return response.data;
+};
+
+export const getCourseProgress = async slug => {
+  const response = await api.get(`/student/courses/${slug}/progress`);
   return response.data;
 };
 
@@ -191,7 +196,8 @@ const studentService = {
   getAssignmentsByCourse,
   getCourseAssignments,
   submitAssignment,
-  markLessonComplete,
+  markModuleAccessed,
+  getCourseProgress,
   getCertificates,
   getCourseCertificate,
   getLeaderboard,
