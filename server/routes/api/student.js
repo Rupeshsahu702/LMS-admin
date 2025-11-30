@@ -50,7 +50,7 @@ import {
   
   // Streak
   updateStreak,
-} from "../../controllers/studentController.js";
+} from "../../controllers/student/index.js";
 
 const router = express.Router();
 

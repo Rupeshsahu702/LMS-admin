@@ -5,7 +5,6 @@ import { Strategy as GitHubStrategy } from "passport-github2";
 import { User } from "../models/index.js";
 
 const configurePassport = () => {
-    console.log(process.env.GOOGLE_CLIENT_ID);
 
     passport.use(
         new GoogleStrategy(
