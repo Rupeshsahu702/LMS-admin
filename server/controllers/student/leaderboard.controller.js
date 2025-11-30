@@ -103,14 +103,33 @@ export const getLeaderboard = async (req, res) => {
 /**
  * Helper function to update leaderboard
  * Exported for use in other controllers
+ * @param {string} userId - The student's ID
+ * @param {string} courseId - The course ID (optional for course-specific leaderboard)
+ * @param {number} xpGained - XP points gained
+ * @param {object} stats - Additional stats to increment { quizzesCompleted, assignmentsCompleted }
  */
-export const updateLeaderboard = async (userId, courseId, xpGained) => {
+export const updateLeaderboard = async (
+    userId,
+    courseId,
+    xpGained,
+    stats = {}
+) => {
     try {
+        const incrementFields = { xp: xpGained };
+
+        // Add optional stat increments
+        if (stats.quizzesCompleted) {
+            incrementFields.quizzesCompleted = stats.quizzesCompleted;
+        }
+        if (stats.assignmentsCompleted) {
+            incrementFields.assignmentsCompleted = stats.assignmentsCompleted;
+        }
+
         // Update global leaderboard
         await Leaderboard.findOneAndUpdate(
             { student: userId, type: "global" },
             {
-                $inc: { xp: xpGained },
+                $inc: incrementFields,
                 $set: { student: userId, type: "global" },
             },
             { upsert: true }
@@ -121,8 +140,12 @@ export const updateLeaderboard = async (userId, courseId, xpGained) => {
             await Leaderboard.findOneAndUpdate(
                 { student: userId, type: "course", course: courseId },
                 {
-                    $inc: { xp: xpGained },
-                    $set: { student: userId, type: "course", course: courseId },
+                    $inc: incrementFields,
+                    $set: {
+                        student: userId,
+                        type: "course",
+                        course: courseId,
+                    },
                 },
                 { upsert: true }
             );

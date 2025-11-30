@@ -1,4 +1,3 @@
-import { updateLeaderboard } from "./leaderboard.controller.js";
 import { Student, Course, Enrollment } from "../../models/index.js";
 import { z } from "zod";
 
@@ -40,11 +39,6 @@ export const markModuleAccessed = async (req, res) => {
         // Update last accessed module
         enrollment.lastAccessedModule = moduleId;
         await enrollment.save();
-
-        // Update streak and XP for accessing content
-        await Student.findByIdAndUpdate(req.userId, {
-            $inc: { xp: 5, hoursLearned: 0.1 },
-        });
 
         res.json({
             success: true,
@@ -99,18 +93,22 @@ export const getCourseProgress = async (req, res) => {
 
         // Get progress per module
         const moduleProgress = course.modules.map((module) => {
-            const moduleQuizIds = module.quizzes?.map((q) => q._id.toString()) || [];
-            const moduleTaskIds = module.tasks?.map((t) => t._id.toString()) || [];
+            const moduleQuizIds =
+                module.quizzes?.map((q) => q._id.toString()) || [];
+            const moduleTaskIds =
+                module.tasks?.map((t) => t._id.toString()) || [];
 
-            const completedModuleQuizzes = enrollment.completedQuizzes.filter((id) =>
-                moduleQuizIds.includes(id.toString())
+            const completedModuleQuizzes = enrollment.completedQuizzes.filter(
+                (id) => moduleQuizIds.includes(id.toString())
             ).length;
-            const completedModuleTasks = enrollment.completedTasks.filter((id) =>
-                moduleTaskIds.includes(id.toString())
+            const completedModuleTasks = enrollment.completedTasks.filter(
+                (id) => moduleTaskIds.includes(id.toString())
             ).length;
 
-            const totalModuleItems = moduleQuizIds.length + moduleTaskIds.length;
-            const completedModuleItems = completedModuleQuizzes + completedModuleTasks;
+            const totalModuleItems =
+                moduleQuizIds.length + moduleTaskIds.length;
+            const completedModuleItems =
+                completedModuleQuizzes + completedModuleTasks;
 
             return {
                 moduleId: module._id,
@@ -121,7 +119,9 @@ export const getCourseProgress = async (req, res) => {
                 completedTasks: completedModuleTasks,
                 progressPercentage:
                     totalModuleItems > 0
-                        ? Math.round((completedModuleItems / totalModuleItems) * 100)
+                        ? Math.round(
+                              (completedModuleItems / totalModuleItems) * 100
+                          )
                         : 100,
             };
         });

@@ -1,4 +1,6 @@
 import { Student } from "../../models/index.js";
+import { updateLeaderboard } from "./leaderboard.controller.js";
+
 /**
  * POST /api/student/streak/update
  * Update daily streak (called on login or activity)
@@ -21,6 +23,9 @@ export const updateStreak = async (req, res) => {
             ? Math.floor((today - lastStreak) / oneDayMs)
             : null;
 
+        let xpEarned = 0;
+        let streakBonus = false;
+
         if (daysDiff === null || daysDiff > 1) {
             // Reset streak
             student.streak = 1;
@@ -29,7 +34,11 @@ export const updateStreak = async (req, res) => {
             student.streak += 1;
             // Bonus XP for streak milestones
             if (student.streak % 7 === 0) {
-                student.xp += 100; // Weekly streak bonus
+                xpEarned = 100; // Weekly streak bonus
+                streakBonus = true;
+                student.xp += xpEarned;
+                // Update leaderboard with streak bonus XP
+                await updateLeaderboard(req.userId, null, xpEarned);
             }
         }
         // If daysDiff === 0, streak already counted today
@@ -39,7 +48,11 @@ export const updateStreak = async (req, res) => {
 
         res.json({
             success: true,
-            data: { streak: student.streak },
+            data: {
+                streak: student.streak,
+                xpEarned,
+                streakBonus,
+            },
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

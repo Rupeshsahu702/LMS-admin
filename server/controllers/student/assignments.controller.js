@@ -204,8 +204,9 @@ export const submitAssignment = async (req, res) => {
             { upsert: true, new: true }
         );
 
-        // Mark task as completed if not already
-        if (!enrollment.completedTasks.includes(taskId)) {
+        // Mark task as completed if not already and award XP
+        const isFirstSubmission = !enrollment.completedTasks.includes(taskId);
+        if (isFirstSubmission) {
             enrollment.completedTasks.push(taskId);
 
             // Recalculate progress
@@ -228,20 +229,24 @@ export const submitAssignment = async (req, res) => {
             }
 
             await enrollment.save();
+
+            // Update user stats - only on first submission
+            await Student.findByIdAndUpdate(req.userId, {
+                $inc: { xp: 50, assignmentsCompleted: 1 },
+            });
+
+            // Update leaderboard with XP and assignment completion - only on first submission
+            await updateLeaderboard(req.userId, courseId, 50, {
+                assignmentsCompleted: 1,
+            });
         }
-
-        // Update user stats
-        await Student.findByIdAndUpdate(req.userId, {
-            $inc: { xp: 50, assignmentsCompleted: 1 },
-        });
-
-        // Update leaderboard
-        await updateLeaderboard(req.userId, courseId, 50);
 
         res.json({
             success: true,
             data: submission,
-            message: "Assignment submitted successfully",
+            message: isFirstSubmission
+                ? "Assignment submitted successfully! You earned 50 XP!"
+                : "Assignment updated successfully",
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

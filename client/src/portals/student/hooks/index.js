@@ -11,4 +11,5 @@ export {
   useAssignmentsByCourse,
   useCourseAssignments,
   useSubmitAssignment,
+  useLeaderboard,
 } from './useCourses';

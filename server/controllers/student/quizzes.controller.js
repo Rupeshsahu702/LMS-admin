@@ -304,8 +304,9 @@ export const submitQuiz = async (req, res) => {
             { upsert: true, new: true }
         );
 
-        // Mark quiz as completed if not already
-        if (!enrollment.completedQuizzes.includes(quizId)) {
+        // Mark quiz as completed if not already and award XP
+        const isFirstCompletion = !enrollment.completedQuizzes.includes(quizId);
+        if (isFirstCompletion) {
             enrollment.completedQuizzes.push(quizId);
 
             // Recalculate progress
@@ -328,15 +329,17 @@ export const submitQuiz = async (req, res) => {
             }
 
             await enrollment.save();
+
+            // Update user stats - only on first completion
+            await Student.findByIdAndUpdate(req.userId, {
+                $inc: { xp: score * 10, quizzesCompleted: 1 },
+            });
+
+            // Update leaderboard with XP and quiz completion - only on first completion
+            await updateLeaderboard(req.userId, courseId, score * 10, {
+                quizzesCompleted: 1,
+            });
         }
-
-        // Update user stats
-        await Student.findByIdAndUpdate(req.userId, {
-            $inc: { xp: score * 10, quizzesCompleted: 1 },
-        });
-
-        // Update leaderboard
-        await updateLeaderboard(req.userId, courseId, score * 10);
 
         res.json({
             success: true,
@@ -345,8 +348,11 @@ export const submitQuiz = async (req, res) => {
                 totalQuestions: quiz.questions.length,
                 percentage: Math.round((score / quiz.questions.length) * 100),
                 results,
+                isFirstCompletion,
             },
-            message: `Quiz submitted! You scored ${score}/${quiz.questions.length}`,
+            message: isFirstCompletion
+                ? `Quiz submitted! You scored ${score}/${quiz.questions.length} and earned ${score * 10} XP!`
+                : `Quiz submitted! You scored ${score}/${quiz.questions.length}`,
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

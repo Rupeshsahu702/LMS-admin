@@ -13,6 +13,7 @@ import {
   getAssignmentsByCourse,
   getCourseAssignments,
   submitAssignment,
+  getLeaderboard,
 } from '@/services/student/studentService';
 
 /**
@@ -393,4 +394,56 @@ export const useAssignmentsByCourse = () => {
   }, [fetchCourses]);
 
   return { courses, loading, error, refetch: fetchCourses };
+};
+
+/**
+ * Hook for fetching leaderboard data
+ */
+export const useLeaderboard = (type = 'global', courseId = null) => {
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [userRank, setUserRank] = useState(null);
+  const [userEntry, setUserEntry] = useState(null);
+  const [pagination, setPagination] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchLeaderboard = useCallback(
+    async (page = 1) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const params = { type, limit: 50, page };
+        if (type === 'course' && courseId) {
+          params.courseId = courseId;
+        }
+        const response = await getLeaderboard(params);
+        if (response.success) {
+          setLeaderboard(response.data.leaderboard);
+          setUserRank(response.data.userRank);
+          setUserEntry(response.data.userEntry);
+          setPagination(response.data.pagination);
+        }
+      } catch (err) {
+        console.error('Failed to fetch leaderboard:', err);
+        setError(err.response?.data?.message || 'Failed to load leaderboard');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [type, courseId],
+  );
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
+
+  return {
+    leaderboard,
+    userRank,
+    userEntry,
+    pagination,
+    loading,
+    error,
+    refetch: fetchLeaderboard,
+  };
 };
