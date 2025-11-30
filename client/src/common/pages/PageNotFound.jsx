@@ -38,7 +38,7 @@ const PageNotFound = () => {
             <Home className="size-5" />
             Back to Home
           </Link>
-          
+
           <Link
             to="/browse"
             className="flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-600 hover:border-blue-500 hover:text-blue-400 font-bold text-lg transition-all duration-300"

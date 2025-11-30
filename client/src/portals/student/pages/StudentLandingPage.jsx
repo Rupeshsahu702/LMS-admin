@@ -84,8 +84,8 @@ const StudentLandingPage = () => {
             </h1>
 
             <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10">
-              Your gateway to mastering tech skills through internship-based, project-driven learning. 
-              Access courses, track progress, and earn certificates.
+              Your gateway to mastering tech skills through internship-based, project-driven
+              learning. Access courses, track progress, and earn certificates.
             </p>
 
             {/* CTA Buttons */}
@@ -127,7 +127,8 @@ const StudentLandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Learn with Us?</h2>
             <p className="text-zinc-400 max-w-2xl mx-auto">
-              Experience a unique learning approach that combines theory with practical implementation
+              Experience a unique learning approach that combines theory with practical
+              implementation
             </p>
           </div>
 
@@ -157,14 +158,18 @@ const StudentLandingPage = () => {
                 Your Personal <span className="text-blue-400">Learning Dashboard</span>
               </h2>
               <p className="text-zinc-400 text-lg mb-8">
-                Track your courses, assignments, quizzes, and achievements all in one place. 
-                Our intuitive dashboard helps you stay organized and motivated throughout your learning journey.
+                Track your courses, assignments, quizzes, and achievements all in one place. Our
+                intuitive dashboard helps you stay organized and motivated throughout your learning
+                journey.
               </p>
 
               <div className="space-y-4">
                 {[
                   { icon: <Target className="size-5" />, text: 'Personalized learning paths' },
-                  { icon: <Clock className="size-5" />, text: 'Track your study hours and streaks' },
+                  {
+                    icon: <Clock className="size-5" />,
+                    text: 'Track your study hours and streaks',
+                  },
                   { icon: <Award className="size-5" />, text: 'Earn badges and certificates' },
                   { icon: <PlayCircle className="size-5" />, text: 'Access video lessons anytime' },
                 ].map((item, index) => (
@@ -188,7 +193,7 @@ const StudentLandingPage = () => {
             {/* Dashboard Mockup */}
             <div className="relative">
               <div className="absolute -inset-4 bg-blue-500/20 blur-xl rounded-3xl"></div>
-              
+
               <div className="relative bg-zinc-900 border border-zinc-700 rounded-2xl p-6 shadow-2xl">
                 <div className="flex items-center justify-between mb-6 border-b border-zinc-700 pb-4">
                   <div className="flex gap-2">
@@ -222,14 +227,17 @@ const StudentLandingPage = () => {
                       <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 bg-black/40 rounded-xl border border-zinc-800">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium">Data Science Basics</span>
                       <span className="text-xs text-purple-400">45%</span>
                     </div>
                     <div className="w-full bg-zinc-800 rounded-full h-2">
-                      <div className="bg-purple-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+                      <div
+                        className="bg-purple-500 h-2 rounded-full"
+                        style={{ width: '45%' }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -246,7 +254,7 @@ const StudentLandingPage = () => {
           <p className="text-zinc-400 text-lg mb-8">
             Join thousands of students who are already building their tech careers with Code2Dbug
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/student/login"
@@ -255,7 +263,7 @@ const StudentLandingPage = () => {
               <BookOpen className="size-5" />
               Login to LMS
             </Link>
-            
+
             <Link
               to="/"
               className="flex items-center gap-2 px-8 py-4 rounded-full border border-zinc-600 hover:border-blue-500 hover:text-blue-400 font-bold text-lg transition-all duration-300"
