@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { navigateToLogin } from './navigationService';
+
 // ============================================
 // API CONFIGURATION
 // ============================================
@@ -111,7 +113,7 @@ api.interceptors.response.use(
 
       if (!refreshToken) {
         clearAuth();
-        window.location.href = '/student/login';
+        navigateToLogin();
         return Promise.reject(error);
       }
 
@@ -133,21 +135,25 @@ api.interceptors.response.use(
         isRefreshing = false;
         onRefreshError(refreshError);
         clearAuth();
-        window.location.href = '/student/login';
+        navigateToLogin();
         return Promise.reject(refreshError);
       }
     }
 
-    // Handle other auth errors
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      if (
-        error.response?.data?.code === 'REFRESH_TOKEN_INVALID' ||
-        error.response?.data?.code === 'TOKEN_REUSE_DETECTED' ||
-        error.response?.data?.code === 'REFRESH_TOKEN_REVOKED' ||
-        error.response?.data?.code === 'ACCOUNT_BLOCKED'
-      ) {
+    // Handle 401 Unauthorized - redirect to login
+    if (error.response?.status === 401) {
+      // Only redirect if not already trying to refresh token
+      if (!originalRequest._retry) {
         clearAuth();
-        window.location.href = '/student/login';
+        navigateToLogin();
+      }
+    }
+
+    // Handle 403 Forbidden for blocked accounts
+    if (error.response?.status === 403) {
+      if (error.response?.data?.code === 'ACCOUNT_BLOCKED') {
+        clearAuth();
+        navigateToLogin();
       }
     }
 

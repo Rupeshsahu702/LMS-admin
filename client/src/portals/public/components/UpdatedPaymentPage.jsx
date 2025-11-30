@@ -11,9 +11,12 @@ import {
   Hash,
 } from 'lucide-react';
 import { toast } from 'sonner';
+
 import { Toaster } from '@/common/components/ui/sonner';
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const EnrollmentPayment = () => {
+  const navigate = useNavigateWithRedux();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Form State
@@ -107,7 +110,7 @@ const EnrollmentPayment = () => {
             24 hours.
           </p>
           <button
-            onClick={() => (window.location.href = '/')}
+            onClick={() => navigate('/')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-colors"
           >
             Go to Home page
