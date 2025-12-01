@@ -1,50 +1,74 @@
-import { createSlice } from '@reduxjs/toolkit';
+// Re-export everything from slices for backward compatibility
+// This file is kept for backward compatibility - use imports from ./slices directly
 
-const savedToken = localStorage.getItem('token');
-const savedUser = localStorage.getItem('user');
-
-const initialState = {
-  token: savedToken || null,
-  user: savedUser ? JSON.parse(savedUser) : null,
-  loading: false,
-  currentNavigation: '/',
-  studentSidebarOpen: false,
-  adminSidebarOpen: false,
-};
-
-const globalSlice = createSlice({
-  name: 'global',
-  initialState,
-
-  reducers: {
-    login: (state, action) => {
-      const { token, user } = action.payload;
-
-      state.token = token;
-      state.user = user;
-
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-    },
-    logout: state => {
-      state.token = null;
-      state.user = null;
-
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    },
-    setNavigation: (state, action) => {
-      state.currentNavigation = action.payload;
-    },
-    setStudentSidebarOpen: (state, action) => {
-      state.studentSidebarOpen = action.payload;
-    },
-    setAdminSidebarOpen: (state, action) => {
-      state.adminSidebarOpen = action.payload;
-    },
-  },
-});
-
-export const { login, logout, setNavigation, setStudentSidebarOpen, setAdminSidebarOpen } =
-  globalSlice.actions;
-export default globalSlice.reducer;
+export {
+  // Auth
+  login,
+  logout,
+  updateTokens,
+  updateUser,
+  selectAuth,
+  selectUser,
+  selectToken,
+  selectAccessToken,
+  selectRefreshToken,
+  selectIsAuthenticated,
+  // UI
+  setNavigation,
+  setStudentSidebarOpen,
+  setAdminSidebarOpen,
+  setGlobalLoading,
+  addNotification,
+  removeNotification,
+  clearNotifications,
+  selectUI,
+  selectCurrentNavigation,
+  selectStudentSidebarOpen,
+  selectAdminSidebarOpen,
+  selectGlobalLoading,
+  selectNotifications,
+  // Student
+  fetchDashboard,
+  fetchProfile,
+  fetchMyCourses,
+  fetchCourseDetails,
+  fetchCourseModules,
+  fetchQuizzesByCourse,
+  fetchCourseQuizzes,
+  fetchAssignmentsByCourse,
+  fetchCourseAssignments,
+  fetchCertificates,
+  fetchLeaderboard,
+  fetchReferralInfo,
+  fetchSupportQueries,
+  clearStudentData,
+  updateProfileLocal,
+  invalidateDashboard,
+  invalidateProfile,
+  invalidateCourses,
+  invalidateCertificates,
+  selectDashboard,
+  selectDashboardData,
+  selectDashboardLoading,
+  selectProfile,
+  selectProfileData,
+  selectProfileLoading,
+  selectCourses,
+  selectCoursesList,
+  selectCoursesLoading,
+  selectCourseDetails,
+  selectCourseModules,
+  selectQuizzes,
+  selectQuizzesByCourse,
+  selectCourseQuizzes,
+  selectAssignments,
+  selectAssignmentsByCourse,
+  selectCourseAssignments,
+  selectCertificates,
+  selectCertificatesList,
+  selectLeaderboard,
+  selectReferral,
+  selectReferralData,
+  selectSupport,
+  selectSupportQueries,
+} from './slices';

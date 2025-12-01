@@ -11,7 +11,12 @@ import {
   Shield,
 } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setAdminSidebarOpen } from '@/redux/slice';
+
+import {
+  setAdminSidebarOpen,
+  selectAdminSidebarOpen,
+  selectCurrentNavigation,
+} from '@/redux/slices';
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/components/ui/popover';
 import {
   DropdownMenu,
@@ -24,8 +29,8 @@ import {
 
 const TopBar = () => {
   const dispatch = useDispatch();
-  const currentNavigation = useSelector(state => state.global.currentNavigation);
-  const adminSidebarOpen = useSelector(state => state.global.adminSidebarOpen);
+  const currentNavigation = useSelector(selectCurrentNavigation);
+  const adminSidebarOpen = useSelector(selectAdminSidebarOpen);
 
   // State for managing notifications
   const [notifications, setNotifications] = useState([

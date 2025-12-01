@@ -2,55 +2,53 @@ import express from "express";
 import { isAuthenticated } from "../../middlewares/isAuthenticated.js";
 
 import {
-  // Dashboard
-  getDashboard,
-  
-  // Profile
-  getProfile,
-  updateProfile,
-  updateAvatar,
-  
-  // Settings
-  updatePrivacy,
-  changePassword,
-  
-  // Courses
-  getMyCourses,
-  getCourseDetails,
-  getCourseModules,
-  
-  // Quizzes
-  getQuizzesByCourse,
-  getCourseQuizzes,
-  getQuizQuestions,
-  submitQuiz,
-  
-  // Assignments
-  getAssignmentsByCourse,
-  getCourseAssignments,
-  submitAssignment,
-  
-  // Lessons
-  markLessonComplete,
-  
-  // Certificates
-  getCertificates,
-  getCourseCertificate,
-  
-  // Leaderboard
-  getLeaderboard,
-  
-  // Referral
-  getReferralInfo,
-  applyReferralCode,
-  
-  // Support
-  createSupportQuery,
-  getSupportQueries,
-  
-  // Streak
-  updateStreak,
-} from "../../controllers/studentController.js";
+    // Dashboard
+    getDashboard,
+
+    // Profile
+    getProfile,
+    updateProfile,
+    updateAvatar,
+
+    // Settings
+    updatePrivacy,
+    changePassword,
+
+    // Courses
+    getMyCourses,
+    getCourseDetails,
+    getCourseModules,
+
+    // Quizzes
+    getQuizzesByCourse,
+    getCourseQuizzes,
+    getQuizQuestions,
+    submitQuiz,
+
+    // Assignments
+    getAssignmentsByCourse,
+    getCourseAssignments,
+    submitAssignment,
+
+    // Module Progress
+    markModuleAccessed,
+    getCourseProgress,
+
+    // Certificates
+    getCertificates,
+    getCourseCertificate,
+
+    // Leaderboard
+    getLeaderboard,
+
+    // Referral
+    getReferralInfo,
+    applyReferralCode,
+
+    // Support
+    createSupportQuery,
+    getSupportQueries,
+} from "../../controllers/student/index.js";
 
 const router = express.Router();
 
@@ -81,6 +79,7 @@ router.put("/settings/password", changePassword);
 router.get("/courses", getMyCourses);
 router.get("/courses/:slug", getCourseDetails);
 router.get("/courses/:slug/modules", getCourseModules);
+router.get("/courses/:slug/progress", getCourseProgress);
 
 // ============================================
 // QUIZZES
@@ -98,9 +97,9 @@ router.get("/courses/:slug/assignments", getCourseAssignments);
 router.post("/assignments/submit", submitAssignment);
 
 // ============================================
-// LESSONS
+// MODULE PROGRESS
 // ============================================
-router.post("/lessons/complete", markLessonComplete);
+router.post("/modules/access", markModuleAccessed);
 
 // ============================================
 // CERTIFICATES
@@ -124,10 +123,5 @@ router.post("/referral/apply", applyReferralCode);
 // ============================================
 router.post("/support", createSupportQuery);
 router.get("/support", getSupportQueries);
-
-// ============================================
-// STREAK
-// ============================================
-router.post("/streak/update", updateStreak);
 
 export default router;

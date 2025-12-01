@@ -4,9 +4,14 @@ import { useSelector } from 'react-redux';
 import StudentSidebar from '../components/StudentSidebar';
 import StudentTopBar from '../components/StudentTopBar';
 
+import { selectStudentSidebarOpen, selectCurrentNavigation } from '@/redux/slices';
+
 const StudentLayout = () => {
-  const studentSidebarOpen = useSelector(state => state.global.studentSidebarOpen);
-  const currentNavigation = useSelector(state => state.global.currentNavigation);
+  const studentSidebarOpen = useSelector(selectStudentSidebarOpen);
+  const currentNavigation = useSelector(selectCurrentNavigation);
+
+  // Check if we're on the learning page (my-courses/:coursename)
+  const isLearningPage = currentNavigation.split('/').at(-2) === 'my-courses';
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -15,13 +20,11 @@ const StudentLayout = () => {
       >
         <StudentSidebar />
       </div>
-      <div className="grow flex overflow-auto flex-col">
+      <div className={`grow flex flex-col ${isLearningPage ? 'overflow-hidden' : 'overflow-auto'}`}>
         <div className="w-full shrink-0 sticky top-0 z-10">
           <StudentTopBar />
         </div>
-        <div
-          className={`grow ${currentNavigation.split('/').at(-2) === 'my-courses' ? '' : 'container mx-auto'}`}
-        >
+        <div className={`grow ${isLearningPage ? 'overflow-hidden' : 'container mx-auto'}`}>
           <Outlet />
         </div>
       </div>

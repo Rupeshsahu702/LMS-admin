@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Github, GraduationCap, Loader2, Eye, EyeOff, BookOpen } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Loader2, Eye, EyeOff, BookOpen } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import authService from '@/services/global/authService';
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+import { login, selectIsAuthenticated } from '@/redux/slices';
 
 const StudentLoginPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigateWithRedux();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/student/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,6 +36,10 @@ const StudentLoginPage = () => {
     try {
       const response = await authService.lmsLogin(lmsId, lmsPassword);
       if (response.success) {
+        // Extract auth data from response - tokens are already stored in localStorage by authService
+        const { accessToken, refreshToken, user } = response.data;
+        // Store auth data in Redux for app-wide access
+        dispatch(login({ accessToken, refreshToken, user }));
         navigate('/student/dashboard');
       }
     } catch (err) {

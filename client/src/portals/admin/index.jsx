@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLayout from './layout/AdminLayout.jsx';
 import Announcements from './pages/Announcements';
@@ -8,14 +9,13 @@ import Settings from './pages/Settings';
 import Analytics from './pages/Analytics';
 import Support from './pages/Support';
 import Courses from './pages/Courses';
-import AdminLogin from './pages/AdminLogin';
+import StudentDetailPage from './pages/StudentDetailPage';
 
 const AdminPortal = () => {
   return (
     <Routes>
       <Route element={<AdminLayout />}>
         <Route path="/" element={<AdminDashboard />} />
-        <Route path="/login" element={<AdminLogin />} />
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/students" element={<Students />} />
         <Route path="/certificate" element={<CertificateManagement />} />
@@ -24,6 +24,7 @@ const AdminPortal = () => {
         <Route path="/settings" element={<Settings />} />
         <Route path="/support" element={<Support />} />
       </Route>
+      <Route path="/student/:studentId" element={<StudentDetailPage />} />
     </Routes>
   );
 };

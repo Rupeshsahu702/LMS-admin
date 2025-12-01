@@ -10,8 +10,10 @@ import {
   Megaphone,
   FileBadge,
 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+import { selectCurrentNavigation, logout, clearStudentData } from '@/redux/slices';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,24 +44,15 @@ const sidebarContent = [
 
 const Sidebar = () => {
   const navigateAndStore = useNavigateWithRedux();
-  const activeTab = useSelector(state => state.global.currentNavigation);
+  const dispatch = useDispatch();
+  const activeTab = useSelector(selectCurrentNavigation);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = async () => {
     try {
-      // Clear authentication token from localStorage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userInfo');
-
-      // Clear session storage if you use it
-      sessionStorage.clear();
-
-      // Optional: Call logout API endpoint
-      // await fetch('/api/logout', { method: 'POST' });
-
-      // Optional: Clear Redux state
-      // dispatch(clearUserData());
-      // dispatch(resetStore());
+      // Clear Redux auth state
+      dispatch(logout());
+      dispatch(clearStudentData());
 
       console.log('Logout successful');
     } catch (error) {

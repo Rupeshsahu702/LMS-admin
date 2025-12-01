@@ -1,15 +1,11 @@
-import { authApi } from '@/services/global/authService';
-
-// Use authApi which has token refresh interceptor built-in
-// baseURL for student endpoints
-const STUDENT_BASE = '/student';
+import api from '../api';
 
 // ============================================
 // DASHBOARD
 // ============================================
 
 export const getDashboard = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/dashboard`);
+  const response = await api.get('/student/dashboard');
   return response.data;
 };
 
@@ -18,17 +14,17 @@ export const getDashboard = async () => {
 // ============================================
 
 export const getProfile = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/profile`);
+  const response = await api.get('/student/profile');
   return response.data;
 };
 
 export const updateProfile = async profileData => {
-  const response = await authApi.put(`${STUDENT_BASE}/profile`, profileData);
+  const response = await api.put('/student/profile', profileData);
   return response.data;
 };
 
 export const updateAvatar = async avatarUrl => {
-  const response = await authApi.put(`${STUDENT_BASE}/profile/avatar`, { avatar: avatarUrl });
+  const response = await api.put('/student/profile/avatar', { avatar: avatarUrl });
   return response.data;
 };
 
@@ -37,12 +33,12 @@ export const updateAvatar = async avatarUrl => {
 // ============================================
 
 export const updatePrivacy = async isProfileLocked => {
-  const response = await authApi.put(`${STUDENT_BASE}/settings/privacy`, { isProfileLocked });
+  const response = await api.put('/student/settings/privacy', { isProfileLocked });
   return response.data;
 };
 
 export const changePassword = async passwordData => {
-  const response = await authApi.put(`${STUDENT_BASE}/settings/password`, passwordData);
+  const response = await api.put('/student/settings/password', passwordData);
   return response.data;
 };
 
@@ -51,17 +47,17 @@ export const changePassword = async passwordData => {
 // ============================================
 
 export const getMyCourses = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses`);
+  const response = await api.get('/student/courses');
   return response.data;
 };
 
 export const getCourseDetails = async slug => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses/${slug}`);
+  const response = await api.get(`/student/courses/${slug}`);
   return response.data;
 };
 
 export const getCourseModules = async slug => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses/${slug}/modules`);
+  const response = await api.get(`/student/courses/${slug}/modules`);
   return response.data;
 };
 
@@ -70,22 +66,22 @@ export const getCourseModules = async slug => {
 // ============================================
 
 export const getQuizzesByCourse = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/quizzes`);
+  const response = await api.get('/student/quizzes');
   return response.data;
 };
 
 export const getCourseQuizzes = async slug => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses/${slug}/quizzes`);
+  const response = await api.get(`/student/courses/${slug}/quizzes`);
   return response.data;
 };
 
 export const getQuizQuestions = async (slug, quizId) => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses/${slug}/quizzes/${quizId}`);
+  const response = await api.get(`/student/courses/${slug}/quizzes/${quizId}`);
   return response.data;
 };
 
 export const submitQuiz = async quizData => {
-  const response = await authApi.post(`${STUDENT_BASE}/quizzes/submit`, quizData);
+  const response = await api.post('/student/quizzes/submit', quizData);
   return response.data;
 };
 
@@ -94,26 +90,31 @@ export const submitQuiz = async quizData => {
 // ============================================
 
 export const getAssignmentsByCourse = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/assignments`);
+  const response = await api.get('/student/assignments');
   return response.data;
 };
 
 export const getCourseAssignments = async slug => {
-  const response = await authApi.get(`${STUDENT_BASE}/courses/${slug}/assignments`);
+  const response = await api.get(`/student/courses/${slug}/assignments`);
   return response.data;
 };
 
 export const submitAssignment = async assignmentData => {
-  const response = await authApi.post(`${STUDENT_BASE}/assignments/submit`, assignmentData);
+  const response = await api.post('/student/assignments/submit', assignmentData);
   return response.data;
 };
 
 // ============================================
-// LESSONS
+// MODULE PROGRESS
 // ============================================
 
-export const markLessonComplete = async lessonData => {
-  const response = await authApi.post(`${STUDENT_BASE}/lessons/complete`, lessonData);
+export const markModuleAccessed = async moduleData => {
+  const response = await api.post('/student/modules/access', moduleData);
+  return response.data;
+};
+
+export const getCourseProgress = async slug => {
+  const response = await api.get(`/student/courses/${slug}/progress`);
   return response.data;
 };
 
@@ -122,12 +123,12 @@ export const markLessonComplete = async lessonData => {
 // ============================================
 
 export const getCertificates = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/certificates`);
+  const response = await api.get('/student/certificates');
   return response.data;
 };
 
 export const getCourseCertificate = async courseSlug => {
-  const response = await authApi.get(`${STUDENT_BASE}/certificates/${courseSlug}`);
+  const response = await api.get(`/student/certificates/${courseSlug}`);
   return response.data;
 };
 
@@ -136,7 +137,7 @@ export const getCourseCertificate = async courseSlug => {
 // ============================================
 
 export const getLeaderboard = async (params = {}) => {
-  const response = await authApi.get(`${STUDENT_BASE}/leaderboard`, { params });
+  const response = await api.get('/student/leaderboard', { params });
   return response.data;
 };
 
@@ -145,12 +146,12 @@ export const getLeaderboard = async (params = {}) => {
 // ============================================
 
 export const getReferralInfo = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/referral`);
+  const response = await api.get('/student/referral');
   return response.data;
 };
 
 export const applyReferralCode = async referralCode => {
-  const response = await authApi.post(`${STUDENT_BASE}/referral/apply`, { referralCode });
+  const response = await api.post('/student/referral/apply', { referralCode });
   return response.data;
 };
 
@@ -159,20 +160,52 @@ export const applyReferralCode = async referralCode => {
 // ============================================
 
 export const createSupportQuery = async queryData => {
-  const response = await authApi.post(`${STUDENT_BASE}/support`, queryData);
+  const response = await api.post('/student/support', queryData);
   return response.data;
 };
 
 export const getSupportQueries = async () => {
-  const response = await authApi.get(`${STUDENT_BASE}/support`);
+  const response = await api.get('/student/support');
   return response.data;
 };
 
 // ============================================
-// STREAK
+// LOGOUT FROM ALL DEVICES
 // ============================================
 
-export const updateStreak = async () => {
-  const response = await authApi.post(`${STUDENT_BASE}/streak/update`);
+export const logoutFromAllDevices = async () => {
+  const response = await api.post('/auth/logout-all');
   return response.data;
 };
+
+// Export all student service functions as a single object
+const studentService = {
+  getDashboard,
+  getProfile,
+  updateProfile,
+  updateAvatar,
+  updatePrivacy,
+  changePassword,
+  getMyCourses,
+  getCourseDetails,
+  getCourseModules,
+  getQuizzesByCourse,
+  getCourseQuizzes,
+  getQuizQuestions,
+  submitQuiz,
+  getAssignmentsByCourse,
+  getCourseAssignments,
+  submitAssignment,
+  markModuleAccessed,
+  getCourseProgress,
+  getCertificates,
+  getCourseCertificate,
+  getLeaderboard,
+  getReferralInfo,
+  applyReferralCode,
+  createSupportQuery,
+  getSupportQueries,
+  logoutFromAllDevices,
+};
+
+export default studentService;

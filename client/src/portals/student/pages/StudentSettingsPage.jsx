@@ -1,29 +1,101 @@
-import { useState } from 'react';
-import { Shield, Lock, LogOut, User, Save } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Shield, Lock, LogOut, User, Loader2 } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+
+import { useProfile, useUpdatePrivacy, useChangePassword } from '../hooks';
+import { logoutFromAllDevices } from '@/services/student/studentService';
+
+import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
+import { logout, clearStudentData } from '@/redux/slices';
 
 // Reusing Sidebar Layout
 
 const StudentSettingsPage = () => {
+  const navigate = useNavigateWithRedux();
+  const dispatch = useDispatch();
+  const { profile, loading: profileLoading, refetch } = useProfile();
+  const { update: updatePrivacyApi, loading: privacyLoading } = useUpdatePrivacy();
+  const { change: changePasswordApi, loading: passwordLoading } = useChangePassword();
+
   const [isProfileLocked, setIsProfileLocked] = useState(false);
   const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
+  const [isOAuthUser, setIsOAuthUser] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
-  const handlePasswordChange = e => {
+  // Populate initial privacy setting from profile
+  useEffect(() => {
+    if (profile) {
+      setIsProfileLocked(profile.isProfileLocked || false);
+      // Check if user logged in via OAuth (no password)
+      setIsOAuthUser(profile.isOAuthUser || false);
+    }
+  }, [profile]);
+
+  const handlePrivacyToggle = async () => {
+    const newValue = !isProfileLocked;
+    setIsProfileLocked(newValue);
+    try {
+      await updatePrivacyApi(newValue);
+      refetch();
+    } catch (err) {
+      // Revert on error
+      setIsProfileLocked(!newValue);
+      alert(err.response?.data?.message || 'Failed to update privacy settings');
+    }
+  };
+
+  const handlePasswordChange = async e => {
     e.preventDefault();
     if (passwordData.new !== passwordData.confirm) {
       alert('New passwords do not match!');
       return;
     }
-    alert('Password changed successfully!');
-    setPasswordData({ current: '', new: '', confirm: '' });
-  };
-
-  const handleLogout = (allDevices = false) => {
-    if (allDevices) {
-      alert('Logged out from all devices.');
-    } else {
-      alert('Logged out successfully.');
+    if (passwordData.new.length < 8) {
+      alert('Password must be at least 8 characters!');
+      return;
+    }
+    try {
+      await changePasswordApi({
+        currentPassword: passwordData.current,
+        newPassword: passwordData.new,
+        confirmPassword: passwordData.confirm,
+      });
+      alert('Password changed successfully!');
+      setPasswordData({ current: '', new: '', confirm: '' });
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to change password');
     }
   };
+
+  const handleLogout = async (allDevices = false) => {
+    try {
+      setLogoutLoading(true);
+
+      if (allDevices) {
+        // Call API to revoke all refresh tokens on server
+        await logoutFromAllDevices();
+      }
+
+      // Clear auth state and student data locally
+      dispatch(logout());
+      dispatch(clearStudentData());
+
+      navigate('/student/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+      alert(err.response?.data?.message || 'Failed to logout');
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+
+  if (profileLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-blue-500 selection:text-white flex overflow-hidden">
@@ -49,11 +121,18 @@ const StudentSettingsPage = () => {
                     type="checkbox"
                     className="sr-only peer"
                     checked={isProfileLocked}
-                    onChange={() => setIsProfileLocked(!isProfileLocked)}
+                    onChange={handlePrivacyToggle}
+                    disabled={privacyLoading}
                   />
                   <div className="w-14 h-7 bg-zinc-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
                   <span className="ml-3 text-sm font-medium text-white">
-                    {isProfileLocked ? 'Locked' : 'Public'}
+                    {privacyLoading ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : isProfileLocked ? (
+                      'Locked'
+                    ) : (
+                      'Public'
+                    )}
                   </span>
                 </label>
               </div>
@@ -86,54 +165,67 @@ const StudentSettingsPage = () => {
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                 <Lock size={20} className="text-orange-500" /> Security
               </h2>
-              <form onSubmit={handlePasswordChange} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                    Current Password
-                  </label>
-                  <input
-                    type="password"
-                    value={passwordData.current}
-                    onChange={e => setPasswordData({ ...passwordData, current: e.target.value })}
-                    className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                    placeholder="Enter current password"
-                  />
+              {isOAuthUser ? (
+                <div className="p-4 rounded-xl bg-zinc-800/50 border border-zinc-700">
+                  <p className="text-sm text-zinc-400">
+                    You signed in using Google/GitHub OAuth. Password change is not available for
+                    OAuth accounts.
+                  </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              ) : (
+                <form onSubmit={handlePasswordChange} className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      New Password
+                      Current Password
                     </label>
                     <input
                       type="password"
-                      value={passwordData.new}
-                      onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
+                      value={passwordData.current}
+                      onChange={e => setPasswordData({ ...passwordData, current: e.target.value })}
                       className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="Min 8 characters"
+                      placeholder="Enter current password"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      Confirm New Password
-                    </label>
-                    <input
-                      type="password"
-                      value={passwordData.confirm}
-                      onChange={e => setPasswordData({ ...passwordData, confirm: e.target.value })}
-                      className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
-                      placeholder="Re-enter new password"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        value={passwordData.new}
+                        onChange={e => setPasswordData({ ...passwordData, new: e.target.value })}
+                        className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
+                        placeholder="Min 8 characters"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        value={passwordData.confirm}
+                        onChange={e =>
+                          setPasswordData({ ...passwordData, confirm: e.target.value })
+                        }
+                        className="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition-colors"
+                        placeholder="Re-enter new password"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className="border border-zinc-700 hover:bg-zinc-800 text-white px-6 py-2 rounded-lg font-bold transition-colors"
-                  >
-                    Change Password
-                  </button>
-                </div>
-              </form>
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={passwordLoading}
+                      className="border border-zinc-700 hover:bg-zinc-800 text-white px-6 py-2 rounded-lg font-bold transition-colors disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {passwordLoading && <Loader2 size={16} className="animate-spin" />}
+                      Change Password
+                    </button>
+                  </div>
+                </form>
+              )}
             </section>
 
             {/* 4. Logout Zone */}
@@ -144,14 +236,18 @@ const StudentSettingsPage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => handleLogout(false)}
-                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-xl font-bold transition-colors"
+                  disabled={logoutLoading}
+                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
+                  {logoutLoading && <Loader2 size={16} className="animate-spin" />}
                   Log Out
                 </button>
                 <button
                   onClick={() => handleLogout(true)}
-                  className="flex-1 bg-red-900/20 border border-red-900/50 text-red-400 hover:bg-red-900/30 py-3 rounded-xl font-bold transition-colors"
+                  disabled={logoutLoading}
+                  className="flex-1 bg-red-900/20 border border-red-900/50 text-red-400 hover:bg-red-900/30 py-3 rounded-xl font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
+                  {logoutLoading && <Loader2 size={16} className="animate-spin" />}
                   Log Out from All Devices
                 </button>
               </div>

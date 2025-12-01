@@ -1,9 +1,10 @@
 import React from 'react';
+
 import DashboardHeader from '../components/DashboardHeader';
 import StatsCardsSection from '../components/StatsCardsSection';
 import EnrollmentsTable from '../components/EnrollmentsTable';
-import ColumnChart from '../components/ColumnChart';
-import DoughnutChart from '../components/DoughnutChart';
+import CourseEnrollmentChart from '../components/CourseEnrollmentChart';
+import ReferralSourceChart from '../components/ReferralSourceChart';
 
 function AdminDashboard() {
   const chartData = [
@@ -15,31 +16,23 @@ function AdminDashboard() {
     { category: 'Devops', value: 20 },
     { category: 'Frontend', value: 22 },
   ];
+
   const donutData = [
     { category: 'Direct', value: 45, color: '#145efc' },
     { category: 'Referral', value: 25, color: '#FFB84D' },
-    { category: 'Organic', value: 20, color: '#4DFF88' },
-    { category: 'Ads', value: 10, color: '#B84DFF' },
   ];
+
   return (
     <main className="flex-1 overflow-y-auto p-8">
-      {/* Header with Time Filters */}
       <DashboardHeader />
-
-      {/* Statistics Cards */}
       <StatsCardsSection />
 
       {/* Charts Section */}
-      <div className="grid grid-cols-2 gap-5 mb-5 ">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-2">
-          <ColumnChart data={chartData} height={350} />
-        </div>
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-2">
-          <DoughnutChart data={donutData} height={360} innerRadiusPercent={60} />
-        </div>
+      <div className="grid grid-cols-2 gap-5 mb-5">
+        <CourseEnrollmentChart data={chartData} />
+        <ReferralSourceChart data={donutData} />
       </div>
 
-      {/* Recent Enrollments Table */}
       <EnrollmentsTable />
     </main>
   );

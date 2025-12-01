@@ -41,12 +41,17 @@ const CreateCourse = ({ onBack }) => {
     {
       id: 1,
       title: '',
-      timeline: '',
+      maxTimelineInDays: '',
       description: '',
       textLinks: [''],
       videoLinks: [''],
-      lessons: [],
-      tasks: [],
+      tasks: [
+        {
+          id: 1,
+          title: '',
+          description: '',
+        },
+      ],
       quizzes: [
         {
           id: 1,
@@ -56,7 +61,6 @@ const CreateCourse = ({ onBack }) => {
               questionText: '',
               options: ['', ''],
               correctAnswer: 0,
-              explanation: '',
             },
           ],
         },
@@ -71,9 +75,6 @@ const CreateCourse = ({ onBack }) => {
       id: 1,
       title: '',
       description: '',
-      requirements: [''],
-      deliverables: [''],
-      isLocked: true,
     },
   ]);
 
@@ -108,19 +109,20 @@ const CreateCourse = ({ onBack }) => {
       difficultyIndex: values.difficultyIndex ? parseInt(values.difficultyIndex) : 1,
       modules: modules.map((module, index) => ({
         title: module.title,
-        timeline: module.timeline,
+        maxTimelineInDays: module.maxTimelineInDays ? parseInt(module.maxTimelineInDays) : 7,
         description: module.description,
         textLinks: module.textLinks.filter(link => link.trim() !== ''),
         videoLinks: module.videoLinks.filter(link => link.trim() !== ''),
-        lessons: module.lessons,
-        tasks: module.tasks,
+        tasks: module.tasks.map(task => ({
+          title: task.title,
+          description: task.description,
+        })),
         quizzes: module.quizzes.map(quiz => ({
           title: quiz.title,
           questions: quiz.questions.map(q => ({
             questionText: q.questionText,
             options: q.options.filter(opt => opt.trim() !== ''),
             correctAnswer: q.correctAnswer,
-            explanation: q.explanation,
           })),
         })),
         order: index,
@@ -128,9 +130,6 @@ const CreateCourse = ({ onBack }) => {
       capstoneProjects: capstoneProjects.map(project => ({
         title: project.title,
         description: project.description,
-        requirements: project.requirements.filter(req => req.trim() !== ''),
-        deliverables: project.deliverables.filter(del => del.trim() !== ''),
-        isLocked: project.isLocked,
       })),
       isPublished: false,
       enrolledCount: 0,
@@ -151,12 +150,17 @@ const CreateCourse = ({ onBack }) => {
       {
         id: modules.length + 1,
         title: '',
-        timeline: '',
+        maxTimelineInDays: '',
         description: '',
         textLinks: [''],
         videoLinks: [''],
-        lessons: [],
-        tasks: [],
+        tasks: [
+          {
+            id: 1,
+            title: '',
+            description: '',
+          },
+        ],
         quizzes: [
           {
             id: 1,
@@ -166,7 +170,6 @@ const CreateCourse = ({ onBack }) => {
                 questionText: '',
                 options: ['', ''],
                 correctAnswer: 0,
-                explanation: '',
               },
             ],
           },
@@ -260,7 +263,6 @@ const CreateCourse = ({ onBack }) => {
                       questionText: '',
                       options: ['', ''],
                       correctAnswer: 0,
-                      explanation: '',
                     },
                   ],
                 },
@@ -314,7 +316,6 @@ const CreateCourse = ({ onBack }) => {
                           questionText: '',
                           options: ['', ''],
                           correctAnswer: 0,
-                          explanation: '',
                         },
                       ],
                     }
@@ -429,9 +430,6 @@ const CreateCourse = ({ onBack }) => {
         id: capstoneProjects.length + 1,
         title: '',
         description: '',
-        requirements: [''],
-        deliverables: [''],
-        isLocked: true,
       },
     ]);
   };
@@ -1124,23 +1122,6 @@ const CreateCourse = ({ onBack }) => {
                                       Add Option
                                     </Button>
                                   </div>
-
-                                  {/* Explanation */}
-                                  <InputGroupTextarea
-                                    value={question.explanation}
-                                    onChange={e =>
-                                      updateQuestion(
-                                        module.id,
-                                        quiz.id,
-                                        questionIndex,
-                                        'explanation',
-                                        e.target.value,
-                                      )
-                                    }
-                                    placeholder="Explain the correct answer (optional)..."
-                                    rows={2}
-                                    className="resize-none bg-zinc-700 border-zinc-600 text-zinc-100 placeholder:text-zinc-500"
-                                  />
                                 </div>
                               ))}
                             </div>

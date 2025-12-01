@@ -2,7 +2,9 @@ import { z } from "zod";
 
 export const userSchema = z.object({
     // BASIC AUTH
-    email: z.email(),
+    email: z.string().email(),
+    password: z.string().min(8).optional(),
+
     googleId: z.string().optional(),
     githubId: z.string().optional(),
 
@@ -20,21 +22,25 @@ export const userSchema = z.object({
 
     avatar: z.string().optional(),
 
-  // SOCIAL LINKS
-  linkedin: z.string().url().optional().or(z.literal("")),
-  github: z.string().url().optional().or(z.literal("")),
-  portfolio: z.string().url().optional().or(z.literal("")),
+    // SOCIAL LINKS
+    linkedin: z.string().url().optional().or(z.literal("")),
+    github: z.string().url().optional().or(z.literal("")),
+    portfolio: z.string().url().optional().or(z.literal("")),
 
-  // PRIVACY
-  isProfileLocked: z.boolean().optional(),
+    // PRIVACY
+    isProfileLocked: z.boolean().optional(),
 
-  // GAMIFICATION
-  xp: z.number().int().optional(),
-  hoursLearned: z.number().optional(),
+    // GAMIFICATION
+    xp: z.number().int().optional(),
+    streak: z.number().int().optional(),
+    lastStreakDate: z.date().optional(),
+    hoursLearned: z.number().optional(),
+    quizzesCompleted: z.number().int().optional(),
+    assignmentsCompleted: z.number().int().optional(),
 
-  // ROLES & ACCOUNT STATE
-  role: z.enum(["student", "admin"]).optional(),
-  accountStatus: z.enum(["pending", "verified", "blocked"]).optional(),
+    // ROLES & ACCOUNT STATE
+    role: z.enum(["student", "admin"]).optional(),
+    accountStatus: z.enum(["pending", "verified", "blocked"]).optional(),
 
     // ⚡ LMS LOGIN CREDENTIALS (Admin-assigned)
     lmsId: z.string().optional(),

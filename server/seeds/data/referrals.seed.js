@@ -1,33 +1,32 @@
 import { faker } from "@faker-js/faker";
-import Referral from "../../models/Referral.js";
-import User from "../../models/User.js";
+import { Referral, Student } from "../../models/index.js";
 
 export const seedReferrals = async () => {
-    // Get users who can be referrers (verified accounts with referral codes)
-    const potentialReferrers = await User.find({
+    // Get students who can be referrers (verified accounts with referral codes)
+    const potentialReferrers = await Student.find({
         accountStatus: "verified",
         myReferralCode: { $exists: true },
     }).select("_id myReferralCode");
 
-    // Get users who were referred (have referredBy field)
-    const referredUsers = await User.find({
+    // Get students who were referred (have referredBy field)
+    const referredStudents = await Student.find({
         referredBy: { $exists: true, $ne: null },
     }).select("_id referredBy");
 
     if (potentialReferrers.length === 0) {
         console.log(
-            "⚠️  Skipping referrals: No users with referral codes found"
+            "⚠️  Skipping referrals: No students with referral codes found"
         );
         return;
     }
 
     const referrals = [];
 
-    // Create referrals for users who have referredBy field
-    for (const referee of referredUsers) {
+    // Create referrals for students who have referredBy field
+    for (const referee of referredStudents) {
         // Find the referrer by matching referral code
         const referrer = potentialReferrers.find(
-            (user) => user.myReferralCode === referee.referredBy
+            (student) => student.myReferralCode === referee.referredBy
         );
 
         if (referrer && referrer._id.toString() !== referee._id.toString()) {
@@ -41,15 +40,15 @@ export const seedReferrals = async () => {
         }
     }
 
-    // Create additional random referrals (users who joined via referral link)
+    // Create additional random referrals (students who joined via referral link)
     const additionalReferrals = faker.number.int({ min: 15, max: 30 });
-    const allUsers = await User.find({
+    const allStudents = await Student.find({
         accountStatus: { $in: ["verified", "pending"] },
     }).select("_id");
 
-    for (let i = 0; i < additionalReferrals && allUsers.length > 1; i++) {
+    for (let i = 0; i < additionalReferrals && allStudents.length > 1; i++) {
         const referrer = faker.helpers.arrayElement(potentialReferrers);
-        const referee = faker.helpers.arrayElement(allUsers);
+        const referee = faker.helpers.arrayElement(allStudents);
 
         // Ensure referrer and referee are different
         if (referrer._id.toString() !== referee._id.toString()) {
@@ -80,7 +79,7 @@ export const seedReferrals = async () => {
         }
     }
 
-    // Update referrer's referralCount in User model
+    // Update referrer's referralCount in Student model
     const referrerCounts = {};
     referrals.forEach((ref) => {
         const referrerId = ref.referrer.toString();
@@ -88,20 +87,22 @@ export const seedReferrals = async () => {
     });
 
     // Bulk update referral counts
-    const bulkOps = Object.entries(referrerCounts).map(([userId, count]) => ({
-        updateOne: {
-            filter: { _id: userId },
-            update: { $set: { referralCount: count } },
-        },
-    }));
+    const bulkOps = Object.entries(referrerCounts).map(
+        ([studentId, count]) => ({
+            updateOne: {
+                filter: { _id: studentId },
+                update: { $set: { referralCount: count } },
+            },
+        })
+    );
 
     if (bulkOps.length > 0) {
-        await User.bulkWrite(bulkOps);
+        await Student.bulkWrite(bulkOps);
     }
 
     // Check for premium unlock (if referralCount >= threshold, e.g., 5)
     const PREMIUM_THRESHOLD = 5;
-    await User.updateMany(
+    await Student.updateMany(
         { referralCount: { $gte: PREMIUM_THRESHOLD } },
         { $set: { isPremiumUnlocked: true } }
     );
@@ -111,12 +112,14 @@ export const seedReferrals = async () => {
     console.log(
         `📊 ${
             Object.keys(referrerCounts).length
-        } users have successful referrals`
+        } students have successful referrals`
     );
 
-    const premiumUnlocked = await User.countDocuments({
+    const premiumUnlocked = await Student.countDocuments({
         referralCount: { $gte: PREMIUM_THRESHOLD },
         isPremiumUnlocked: true,
     });
-    console.log(`🎉 ${premiumUnlocked} users unlocked premium via referrals`);
+    console.log(
+        `🎉 ${premiumUnlocked} students unlocked premium via referrals`
+    );
 };

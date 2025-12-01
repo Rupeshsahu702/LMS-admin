@@ -14,15 +14,26 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 
-import { setStudentSidebarOpen } from '../../../redux/slice';
-
+import {
+  setStudentSidebarOpen,
+  selectCurrentNavigation,
+  selectUser,
+  selectProfileData,
+} from '@/redux/slices';
 import { useNavigateWithRedux } from '@/common/hooks/useNavigateWithRedux';
 
 const StudentNavbar = () => {
   const navigateAndStore = useNavigateWithRedux();
   const dispatch = useDispatch();
 
-  const activeTab = useSelector(state => state.global.currentNavigation);
+  const activeTab = useSelector(selectCurrentNavigation);
+  const user = useSelector(selectUser);
+  const profile = useSelector(selectProfileData);
+
+  // Use profile data if available, fallback to user data
+  const displayName = profile?.name || user?.name || 'Student';
+  const displayAvatar = profile?.avatar || user?.avatar;
+  const studentId = user?.id?.toString().slice(-4) || '----';
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -89,12 +100,25 @@ const StudentNavbar = () => {
           onClick={() => navigateAndStore('/student/profile')}
           className="flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 transition-colors cursor-pointer"
         >
-          <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-sm text-white shadow-md">
-            AJ
-          </div>
+          {displayAvatar ? (
+            <img
+              src={displayAvatar}
+              alt={displayName}
+              className="w-10 h-10 rounded-full object-cover shadow-md"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center font-bold text-sm text-white shadow-md">
+              {displayName
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2)}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate text-white">studentName</p>
-            <p className="text-xs text-zinc-500 truncate">Student ID: 9021</p>
+            <p className="text-sm font-medium truncate text-white">{displayName}</p>
+            <p className="text-xs text-zinc-500 truncate">ID: {studentId}</p>
           </div>
         </div>
       </div>

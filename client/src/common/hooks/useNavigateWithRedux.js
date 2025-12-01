@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { setNavigation } from '@/redux/slice';
+import { setNavigation } from '@/redux/slices';
 
 export const useNavigateWithRedux = () => {
   const dispatch = useDispatch();

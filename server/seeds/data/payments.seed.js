@@ -1,8 +1,5 @@
 import { faker } from "@faker-js/faker";
-import Payment from "../../models/Payment.js";
-import User from "../../models/User.js";
-import Course from "../../models/Course.js";
-import Enrollment from "../../models/Enrollment.js";
+import { Payment, Enrollment } from "../../models/index.js";
 
 // Indian Banks
 const indianBanks = [
@@ -95,9 +92,9 @@ export const seedPayments = async () => {
 
         const bankName = faker.helpers.arrayElement(indianBanks);
         const status = faker.helpers.weightedArrayElement([
-            { weight: 6, value: "verified" },
-            { weight: 2, value: "submitted" },
-            { weight: 1, value: "rejected" },
+            { weight: 6, value: "Verified" },
+            { weight: 2, value: "Submitted" },
+            { weight: 1, value: "Rejected" },
         ]);
 
         // Generate account holder name (usually student's name or parent's name)
@@ -132,13 +129,13 @@ export const seedPayments = async () => {
         };
 
         // Add admin remarks for verified/rejected payments
-        if (status === "verified") {
+        if (status === "Verified") {
             payment.adminRemarks = faker.helpers.arrayElement(verifiedRemarks);
             payment.updatedAt = faker.date.between({
                 from: payment.createdAt,
                 to: new Date(),
             });
-        } else if (status === "rejected") {
+        } else if (status === "Rejected") {
             payment.adminRemarks = faker.helpers.arrayElement(rejectedRemarks);
             payment.updatedAt = faker.date.between({
                 from: payment.createdAt,
@@ -175,7 +172,7 @@ export const seedPayments = async () => {
             screenshotUrl: `https://storage.example.com/payments/${faker.string.uuid()}.jpg`,
             amount: 500,
             currency: "INR",
-            status: "submitted", // Resubmitted, waiting for verification
+            status: "Submitted", // Resubmitted, waiting for verification
             createdAt: faker.date.recent({ days: 7 }),
         });
     }
@@ -183,9 +180,9 @@ export const seedPayments = async () => {
     await Payment.insertMany(payments);
 
     const statusCounts = {
-        verified: payments.filter((p) => p.status === "verified").length,
-        submitted: payments.filter((p) => p.status === "submitted").length,
-        rejected: payments.filter((p) => p.status === "rejected").length,
+        verified: payments.filter((p) => p.status === "Verified").length,
+        submitted: payments.filter((p) => p.status === "Submitted").length,
+        rejected: payments.filter((p) => p.status === "Rejected").length,
     };
 
     console.log(`✅ ${payments.length} payments seeded`);
